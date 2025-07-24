@@ -1,1 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Quantico&display=swap');
 @import "tailwindcss";
+
+
+*{
+    font-family: "Quantico", sans-serif;
+}
