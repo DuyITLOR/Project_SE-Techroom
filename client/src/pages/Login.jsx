@@ -19,26 +19,41 @@ const Login = () => {
     if (userName === 'admin') {
       setStep(2)
       setRole('admin')
+      console.log(userName)
+
     } else if (userName === 'DuyITLOR') {
       setStep(2)
-      setRole('user')
+      setRole('student')
     } else {
-      Altert("Invalid username. Please try again.")
+      alert("Invalid username. Please try again.")
     }
   }
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await axios.post('http://localhost:4000/api/login', {
-        username: userName,
-        password: password
-      })
-      navigate('/home')
-    } catch (err) {
-      alert("Login failed: " + (err.response?.data?.message || "Unknown error"))
+    // try {
+    //   const res = await axios.post('http://localhost:4000/api/login', {
+    //     username: userName,
+    //     password: password
+    //   })
+    //   navigate('/home')
+    // } catch (err) {
+    //   alert("Login failed: " + (err.response?.data?.message || "Unknown error"))
+    // }
+    if (userName === 'admin' && password === 'admin123') {
+      localStorage.setItem('isAuthenticated', 'true')
+      localStorage.setItem('role', 'admin')
+      navigate('/admin/Dashboard')
     }
+
+    
+    if (userName === 'DuyITLOR' && token === '123456') {
+      localStorage.setItem('isAuthenticated', 'true')
+      localStorage.setItem('role', 'student')
+      navigate('/student/Dashboard')
+    }
+
   };
 
   return (
@@ -70,9 +85,42 @@ const Login = () => {
                     Continue</button>
                 </div>
               </>
-
-
             )}
+
+            {step === 2 && role === 'admin' && (
+              <>
+                <label className=' text-left md-1 '>Password</label>
+                <input type="password" value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className='w-full px-3 py-2 mb-6 mt-2 rounded border border-white text-white focus:outline-none'
+                  placeholder='Enter password' />
+
+                <div className='flex justify-end'>
+                  <button
+                    type='submit'
+                    className='px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded items-center '>
+                    Login</button>
+                </div>
+              </>
+            )}
+
+            {step === 2 && role === 'student' && (
+              <>
+                <label className=' text-left md-1 '>Token</label>
+                <input type="text" value={token}
+                  onChange={(e) => setToken(e.target.value)}
+                  className='w-full px-3 py-2 mb-6 mt-2 rounded border border-white text-white focus:outline-none'
+                  placeholder='Enter token' />
+
+                <div className='flex justify-end'>
+                  <button
+                    type='submit'
+                    className='px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded items-center '>
+                    Login</button>
+                </div>
+              </>
+            )}
+
           </form>
         </div>
       </div>
