@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import Headers from '../components/Header'
 import Footer from '../components/Footer'
+// import SideBar from '../components/SideBar'
 import { useNavigate } from 'react-router-dom'
 import background from '../assets/background_Login.webp'
+
 
 const Login = () => {
   const [step, setStep] = useState(1)
@@ -41,6 +43,7 @@ const Login = () => {
 
   return (
     <>
+      {/* <SideBar/> */}
       <Headers />
       <div
         className="min-h-screen bg-cover bg-center bg-no-repeat"
