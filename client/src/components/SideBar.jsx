@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MenuItem from "./MenuItem";
 import StudentIcon from "../assets/user.svg?react";
 import TeacherIcon from "../assets/Teacher_icon.svg?react";
@@ -11,6 +11,7 @@ import RoadmapIcon from "../assets/map.svg?react";
 import MenuIcon from "../assets/menu.svg?react";
 
 const SideBar = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
   const menu = [
     { text: "Students", icon: StudentIcon, color: "#FF0000" },
     { text: "Teachers", icon: TeacherIcon, color: "#FF7002" },
@@ -34,7 +35,11 @@ const SideBar = () => {
             text={item.text}
             icon={item.icon}
             iconColor={item.color}
-            active={item.active}
+            isActive={idx === activeIndex}
+            onClick={() => {
+              console.log("Clicked", idx);
+              setActiveIndex(idx);
+            }}
           />
         ))}
       </div>
