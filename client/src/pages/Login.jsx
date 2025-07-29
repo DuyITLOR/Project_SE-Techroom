@@ -79,7 +79,7 @@ const Login = () => {
 
                 <div className='flex justify-end'>
                   <button
-                    type='button'
+                    type='submit'
                     onClick={handleNext}
                     className='px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded items-center '>
                     Continue</button>
