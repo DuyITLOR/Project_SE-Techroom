@@ -2,7 +2,7 @@ import React from 'react'
 
 const TitleBanner = ({title, subTitle, Icon}) => {
   return (
-    <div className='px-4 py-6'>
+    <div>
         <div className='w-full h-[90px] px-2 py-2 flex justify-left items-center rounded-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] bg-[linear-gradient(90deg,_rgba(17,0,255,0.74)_-1.2%,_rgba(220,252,232,0.82)_94.58%)]
         shrink-0
         '>

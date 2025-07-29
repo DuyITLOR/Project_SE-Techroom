@@ -5,3 +5,7 @@
 *{
     font-family: "Quantico", sans-serif;
 }
+
+body {
+    background: linear-gradient(244deg, rgba(248, 250, 252, 0.90) 0%, rgba(241, 245, 249, 0.90) 100%);
+  }

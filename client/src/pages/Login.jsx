@@ -41,6 +41,8 @@ const Login = () => {
     // } catch (err) {
     //   alert("Login failed: " + (err.response?.data?.message || "Unknown error"))
     // }
+
+    
     if (userName === 'admin' && password === 'admin123') {
       localStorage.setItem('isAuthenticated', 'true')
       localStorage.setItem('role', 'admin')
