@@ -4,7 +4,7 @@ import RoboticLogo from '../assets/Robotic_Logo.svg'
 const Footer = () => {
   return (
     <>
-      <div className='w-full h-auto bg-[linear-gradient(90deg,_#162C4B_100%,_#111827_100%)]  flex items-center justify-center'>
+      <div className='w-full max-h-[250px] h-auto bg-[linear-gradient(90deg,_#162C4B_100%,_#111827_100%)]  flex items-center justify-center'>
         <div className='max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 justify-between items-center gap-x-30 px-4 pt-2'>
           <div className='flex justify-center sm:justify-start mb-4 sm:mb-0'>
             <img src={RoboticLogo} alt="logo" className='w-[180px] sm:w-[220px] md:w-[250px] object-contain self-start' />

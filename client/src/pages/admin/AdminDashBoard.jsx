@@ -43,12 +43,17 @@ const AdminDashBoard = () => {
                 name="Total Accounts"
             />
           </div>
+
+   
+
         </div>
+
+        <Footer />
 
       </div>
     </div>
 
-    <Footer />
+
   </div>
   )
 }
