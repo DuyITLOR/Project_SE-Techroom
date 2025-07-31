@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <>
       <div className='w-full max-h-[250px] h-auto bg-[linear-gradient(90deg,_#162C4B_100%,_#111827_100%)]  flex items-center justify-center'>
-        <div className='max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 justify-between items-center gap-x-30 px-4 pt-2'>
+        <div className='w-full grid grid-cols-1 sm:grid-cols-3 justify-between items-center gap-x-24 px-4 pt-2'>
           <div className='flex justify-start sm:justify-start mb-4 sm:mb-0'>
             <img src={RoboticLogo} 
             alt="logo" 
