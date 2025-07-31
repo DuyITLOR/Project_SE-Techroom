@@ -4,7 +4,7 @@ import db from '../config/db.js'
 const router = express.Router()
 
 router.post('/login', (req, res) => {
-  const { username, password } = req.body
+  const { username, password, step} = req.body
 
   if (!username || !password) {
     return res.status(400).json({ message: 'Missing credentials' })
