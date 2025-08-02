@@ -9,52 +9,60 @@ import background from '../assets/background_Login.webp'
 
 const Login = () => {
   const [step, setStep] = useState(1)
-  const [userName, setUserName] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [token, setToken] = useState('')
   const [role, setRole] = useState('')
   const navigate = useNavigate()
 
   const handleNext = async (e) => {
-    if (userName === 'admin') {
-      setStep(2)
-      setRole('admin')
-      console.log(userName)
+    e.preventDefault()
 
-    } else if (userName === 'DuyITLOR') {
-      setStep(2)
-      setRole('student')
-    } else {
-      alert("Invalid username. Please try again.")
+    try {
+      const res = await axios.post('http://localhost:4000/api/auth', {
+        username
+      })
+      if(res.data.success) {
+        setStep(2)
+        setRole(res.data.role)
+        localStorage.setItem('username', res.data.username)
+      } 
+      else {
+        alert(res.data.message)
+      }
+    } catch (err) {
+      alert("Login failed: " + (err.message || "Unknown error"))
     }
+
   }
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    const storedUsername = username || localStorage.getItem('username')
+    const credential = role === 'student' ? token : password
 
-    // try {
-    //   const res = await axios.post('http://localhost:4000/api/login', {
-    //     username: userName,
-    //     password: password
-    //   })
-    //   navigate('/home')
-    // } catch (err) {
-    //   alert("Login failed: " + (err.response?.data?.message || "Unknown error"))
-    // }
-
-    
-    if (userName === 'admin' && password === 'admin123') {
-      localStorage.setItem('isAuthenticated', 'true')
-      localStorage.setItem('role', 'admin')
-      navigate('/admin/Dashboard')
+    try {
+      const res = await axios.post('http://localhost:4000/api/auth/authenticate', {
+        username: storedUsername, 
+        password: credential
+      })
+      if(res.data.success) {
+        localStorage.setItem('isAuthenticated', 'true')
+        if (role === 'admin') {
+          navigate('/admin/Dashboard')
+        } else if (role === 'student') {
+          navigate('/student/Dashboard')
+        } else {
+          navigate('/teacher/Dashboard')
+        }
+      } 
+      else {
+        alert(res.data.message)
+      }
+    } catch (err) {
+      alert("Login failed: " + (err.message || "Unknown error"))
     }
-
     
-    if (userName === 'DuyITLOR' && token === '123456') {
-      localStorage.setItem('isAuthenticated', 'true')
-      localStorage.setItem('role', 'student')
-      navigate('/student/Dashboard')
-    }
 
   };
 
@@ -74,8 +82,8 @@ const Login = () => {
             {step === 1 && (
               <>
                 <label className=' text-left md-1 '>Username</label>
-                <input type="text" value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
+                <input type="text" value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className='w-full px-3 py-2 mb-6 mt-2 rounded border border-white text-white focus:outline-none'
                   placeholder='Enter username' />
 
