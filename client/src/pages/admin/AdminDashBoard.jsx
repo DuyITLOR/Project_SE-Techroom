@@ -7,20 +7,49 @@ import SearchBar from '../../components/SearchBar'
 import AdminIcon from "../../assets/shield.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
 import SummaryCard from '../../components/SummaryCard'
-import TableContent from '../../components/TableContent'
+
+
+import exampleData from '../../assets/ExampleData'
+import PaginatedTable from '../../components/Table/PaginatedTable'
 
 const AdminDashBoard = () => {
 
+  const [currentPage, setCurrentPage] = React.useState(1);
 
-  const exampleData = [
-    {
-      id: 1,
-      name: "Lê Nhựt Duy",
-      dob: "15/11/2005",
-      phone: "0914813749",
-      password: "Ind12345",
-    },
-  ];
+  const onDelete = (items) => {
+    console.log("Delete items: ", items);
+  }
+
+  const onEdit = (items) => {
+    console.log("Edit items: ", items);
+  }
+
+  // const handleRow = (row, index) => (
+  //   <>
+  //     <td className="px-4 py-2 text-sm">{index + 1}</td>
+  //     <td className="px-4 py-2 text-sm">{row.name}</td>
+  //     <td className="px-4 py-2 text-sm">{row.dob}</td>
+  //     <td className="px-4 py-2 text-sm">{row.phone}</td>
+  //     <td className="px-4 py-2 text-sm">
+  //       <div className='flex justify-start gap-5'>
+  //         <button onClick={(e) => {
+  //           e.stopPropagation(); // Prevent row click event
+  //           handleEdit(row.phone);
+  //         }} >
+  //           <Edit className="w-5 h-5" />
+  //         </button>
+
+  //         <button onClick={(e) => {
+  //           e.stopPropagation(); // Prevent row click event
+  //           handleDelete(row.phone);
+  //         }}>
+  //           <Trash className="w-5 h-5" />
+  //         </button>
+  //       </div>
+  //     </td>
+  //   </>
+  // )
+  
 
   return (
     <>
@@ -58,26 +87,14 @@ const AdminDashBoard = () => {
               </div>
             </div>
 
-            <TableContent
-              headers={["#", "Name", "Ngày Sinh", "SDT", "Password", "Action"]}
-              data={exampleData}
-              currentPage={1}
-              totalPages={100}
-              onPageChange={(page) => console.log("Go to page", page)}
-              renderRow={(row, index) => (
-                <tr key={row.id} className="text-center border-b">
-                  <td>{index + 1}</td>
-                  <td>{row.name}</td>
-                  <td>{row.dob}</td>
-                  <td>{row.phone}</td>
-                  <td>{row.password}</td>
-                  <td>
-                    <button className="text-red-500 hover:text-red-700">🗑</button>
-                  </td>
-                </tr>
-              )}
-            />
-
+            <div className='px-3 py-3'>
+                <PaginatedTable
+                  headers={['#', 'FullName', 'Birthday', 'Phone Number', 'Actions']}
+                  data = {exampleData}
+                  onEdit={ onEdit }
+                  onDelete={ onDelete }
+                />
+            </div>
 
           </div>
         </div>
