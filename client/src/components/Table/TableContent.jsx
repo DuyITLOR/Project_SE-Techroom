@@ -110,7 +110,7 @@ const TableContent = ({ headers, data, renderRow, currentPage, totalPages, onPag
                                                         disabled={currentPage === totalPages}
                                                     >
                                                         Next
-                                                        <ArrowRight />
+                                                        <ArrowRight/>
                                                     </button>
                                                 </div>
 

@@ -68,7 +68,6 @@ const Login = () => {
 
   return (
     <>
-      {/* <SideBar/> */}
       <Headers />
       <div
         className="min-h-screen bg-cover bg-center bg-no-repeat"

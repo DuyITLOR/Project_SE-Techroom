@@ -5,18 +5,19 @@ import sequelize from "../config/db.js";
 const Account = sequelize.define('Account', {
     username: {
         type: DataTypes.STRING,
-        allowNULL: false,
+        allowNull: false,
         primaryKey: true
     },
     password: {
         type: DataTypes.STRING,
-        allowNULL: true
+        allowNull: true
     },
     role: {
         type: DataTypes.STRING,
-        allowNULL: false
+        allowNull: false
     }
   },  {
+    tableName: 'Accounts', // Tên bảng trong cơ sở dữ liệu
     timestamps: false         // KHÔNG dùng createdAt/updatedAt
 })
 

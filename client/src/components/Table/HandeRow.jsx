@@ -5,7 +5,7 @@ import Trash from "../../assets/trash-2.svg?react"
 
 const HandleRow = (row, index, onEdit, onDelete) => (
     <>
-      <td className="px-4 py-2 text-sm">{index + 1}</td>
+      <td className="px-4 py-2 text-sm">{row.id}</td>
       <td className="px-4 py-2 text-sm">{row.name}</td>
       <td className="px-4 py-2 text-sm">{row.dob}</td>
       <td className="px-4 py-2 text-sm">{row.phone}</td>

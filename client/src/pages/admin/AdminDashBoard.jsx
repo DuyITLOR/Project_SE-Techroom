@@ -7,10 +7,9 @@ import SearchBar from '../../components/SearchBar'
 import AdminIcon from "../../assets/shield.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
 import SummaryCard from '../../components/SummaryCard'
-
-
 import exampleData from '../../assets/ExampleData'
 import PaginatedTable from '../../components/Table/PaginatedTable'
+import Plus from "../../assets/plus.svg?react";
 
 const AdminDashBoard = () => {
 
@@ -24,32 +23,6 @@ const AdminDashBoard = () => {
     console.log("Edit items: ", items);
   }
 
-  // const handleRow = (row, index) => (
-  //   <>
-  //     <td className="px-4 py-2 text-sm">{index + 1}</td>
-  //     <td className="px-4 py-2 text-sm">{row.name}</td>
-  //     <td className="px-4 py-2 text-sm">{row.dob}</td>
-  //     <td className="px-4 py-2 text-sm">{row.phone}</td>
-  //     <td className="px-4 py-2 text-sm">
-  //       <div className='flex justify-start gap-5'>
-  //         <button onClick={(e) => {
-  //           e.stopPropagation(); // Prevent row click event
-  //           handleEdit(row.phone);
-  //         }} >
-  //           <Edit className="w-5 h-5" />
-  //         </button>
-
-  //         <button onClick={(e) => {
-  //           e.stopPropagation(); // Prevent row click event
-  //           handleDelete(row.phone);
-  //         }}>
-  //           <Trash className="w-5 h-5" />
-  //         </button>
-  //       </div>
-  //     </td>
-  //   </>
-  // )
-  
 
   return (
     <>
@@ -85,6 +58,16 @@ const AdminDashBoard = () => {
                   name="Total Accounts"
                 />
               </div>
+            </div>
+
+            <div className = "px-3">
+              <button
+                onClick = {() => console.log("Add new admin")}
+                className = "flex gap-1 bg-blue-500 text-white text-xl px-2 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200"
+              >
+                <Plus/>
+                <p>Add</p>
+                </button>
             </div>
 
             <div className='px-3 py-3'>
