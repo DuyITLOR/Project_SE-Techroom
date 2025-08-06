@@ -62,8 +62,6 @@ const Login = () => {
     } catch (err) {
       alert("Login failed: " + (err.message || "Unknown error"))
     }
-    
-
   };
 
   return (

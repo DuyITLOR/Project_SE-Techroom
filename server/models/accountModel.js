@@ -2,26 +2,56 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-const Account = sequelize.define('Account', {
-    username: {
+const Accounts = sequelize.define('Accounts', {
+    UserID: {
         type: DataTypes.STRING,
-        allowNULL: false,
+        allowNull: false,
         primaryKey: true
     },
-    password: {
+    FullName: {
         type: DataTypes.STRING,
-        allowNULL: true
+        allowNull: true
     },
-    role: {
+    Birthday: {
         type: DataTypes.STRING,
-        allowNULL: false
+        allowNull: true
+    },
+    Password: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    Role: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
   },  {
     timestamps: false         // KHÔNG dùng createdAt/updatedAt
 })
 
-Account.findByUsername = async function (username) {
-    return await this.findOne({ where: { username } });
+Accounts.getInfoAccount = async function (username) {
+    return await this.findOne({ 
+        where: { 
+            UserID: username 
+        } 
+    });
 };
 
-export default Account;
+Accounts.getAllAccount = async function (role) {
+    return await this.findAll({
+        where: {
+            Role: role
+        }
+    })
+}
+
+Accounts.addAccount = async function (userID, fullName, birthday, password, role) {
+    return await this.create({
+        UserID: userID,
+        FullName: fullName, 
+        Birthday: birthday,
+        Password: password,
+        Role: role
+    })
+}
+
+export default Accounts;
