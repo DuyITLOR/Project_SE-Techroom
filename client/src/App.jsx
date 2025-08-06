@@ -9,9 +9,10 @@ const App = () => {
     <div>
       <Routes>
         <Route path ="/" element={<Login />} />
-        <Route path ="/admin/Dashboard"  element = {<ProtectedRoute roleRequired = "admin">
-          <AdminDashBoard />
-        </ProtectedRoute>}/>
+        {/* <Route path ="/admin/Dashboard"  element = {<ProtectedRoute roleRequired = "admin">
+          <AdminDashBoard/>
+        </ProtectedRoute>}/> */}
+        <Route path ="/admin/Dashboard"  element = {<AdminDashBoard/>}/>
         <Route path ="/student/Dashboard" element = {<ProtectedRoute roleRequired ="student">
           <StudentDashboard/>
         </ProtectedRoute>}/>

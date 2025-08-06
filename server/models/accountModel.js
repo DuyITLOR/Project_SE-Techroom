@@ -25,6 +25,7 @@ const Accounts = sequelize.define('Accounts', {
         allowNull: false
     }
   },  {
+    tableName: 'Accounts', // Tên bảng trong cơ sở dữ liệu
     timestamps: false         // KHÔNG dùng createdAt/updatedAt
 })
 

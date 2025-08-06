@@ -7,20 +7,22 @@ import SearchBar from '../../components/SearchBar'
 import AdminIcon from "../../assets/shield.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
 import SummaryCard from '../../components/SummaryCard'
-import TableContent from '../../components/TableContent'
+import exampleData from '../../assets/ExampleData'
+import PaginatedTable from '../../components/Table/PaginatedTable'
+import Plus from "../../assets/plus.svg?react";
 
 const AdminDashBoard = () => {
 
+  const [currentPage, setCurrentPage] = React.useState(1);
 
-  const exampleData = [
-    {
-      id: 1,
-      name: "Lê Nhựt Duy",
-      dob: "15/11/2005",
-      phone: "0914813749",
-      password: "Ind12345",
-    },
-  ];
+  const onDelete = (items) => {
+    console.log("Delete items: ", items);
+  }
+
+  const onEdit = (items) => {
+    console.log("Edit items: ", items);
+  }
+
 
   return (
     <>
@@ -58,26 +60,24 @@ const AdminDashBoard = () => {
               </div>
             </div>
 
-            <TableContent
-              headers={["#", "Name", "Ngày Sinh", "SDT", "Password", "Action"]}
-              data={exampleData}
-              currentPage={1}
-              totalPages={100}
-              onPageChange={(page) => console.log("Go to page", page)}
-              renderRow={(row, index) => (
-                <tr key={row.id} className="text-center border-b">
-                  <td>{index + 1}</td>
-                  <td>{row.name}</td>
-                  <td>{row.dob}</td>
-                  <td>{row.phone}</td>
-                  <td>{row.password}</td>
-                  <td>
-                    <button className="text-red-500 hover:text-red-700">🗑</button>
-                  </td>
-                </tr>
-              )}
-            />
+            <div className = "px-3">
+              <button
+                onClick = {() => console.log("Add new admin")}
+                className = "flex gap-1 bg-blue-500 text-white text-xl px-2 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200"
+              >
+                <Plus/>
+                <p>Add</p>
+                </button>
+            </div>
 
+            <div className='px-3 py-3'>
+                <PaginatedTable
+                  headers={['#', 'FullName', 'Birthday', 'Phone Number', 'Actions']}
+                  data = {exampleData}
+                  onEdit={ onEdit }
+                  onDelete={ onDelete }
+                />
+            </div>
 
           </div>
         </div>
