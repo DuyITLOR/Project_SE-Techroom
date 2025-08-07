@@ -1,4 +1,5 @@
 import React, { act, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
 import StudentIcon from "../assets/user.svg?react";
 import TeacherIcon from "../assets/Teacher_icon.svg?react";
@@ -12,17 +13,54 @@ import MenuIcon from "../assets/menu.svg?react";
 
 const SideBar = ({ activate, setActivate }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const navigate = useNavigate();
 
   const menu = [
-    { text: "Students", icon: StudentIcon, color: "#FF0000" },
-    { text: "Teachers", icon: TeacherIcon, color: "#FF7002" },
-    { text: "Admins", icon: AdminIcon, color: "#DCCA00" },
-    { text: "Courses", icon: CourseIcon, color: "#00FF00" },
-    { text: "Rooms", icon: RoomIcon, color: "#00D6D6" },
-    { text: "Classes", icon: ClassIcon, color: "#0400FF" },
-    { text: "Timetable", icon: TimetableIcon, color: "#C800FF" },
-    { text: "Roadmap", icon: RoadmapIcon, color: "#FF00B2" },
+    {
+      text: "Admins",
+      icon: AdminIcon,
+      color: "#DCCA00",
+      link: "/admin/Dashboard",
+    },
+    {
+      text: "Students",
+      icon: StudentIcon,
+      color: "#FF0000",
+      link: "/admin/Student",
+    },
+    {
+      text: "Teachers",
+      icon: TeacherIcon,
+      color: "#FF7002",
+      link: "/admin/Teacher",
+    },
+    {
+      text: "Courses",
+      icon: CourseIcon,
+      color: "#00FF00",
+      link: "/admin/Course",
+    },
+    { text: "Rooms", icon: RoomIcon, color: "#00D6D6", link: "/admin/Room" },
+    {
+      text: "Classes",
+      icon: ClassIcon,
+      color: "#0400FF",
+      link: "/admin/Class",
+    },
+    {
+      text: "Timetable",
+      icon: TimetableIcon,
+      color: "#C800FF",
+      link: "/admin/Timetable",
+    },
+    {
+      text: "Roadmap",
+      icon: RoadmapIcon,
+      color: "#FF00B2",
+      link: "/admin/Roadmap",
+    },
   ];
+
   return (
     <div
       className={`${
@@ -58,6 +96,7 @@ const SideBar = ({ activate, setActivate }) => {
               isActive={idx === activeIndex}
               onClick={() => {
                 setActiveIndex(idx);
+                navigate(item.link);
               }}
             />
           ))}

@@ -5,25 +5,107 @@ import AdminDashBoard from "./pages/admin/AdminDashBoard.jsx";
 import StudentDashboard from "./pages/student/StudentDashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard.jsx";
+import ManageStudent from "./pages/admin/ManageStudent.jsx";
+import ManageTeacher from "./pages/admin/ManageTeacher.jsx";
+import ManageCourse from "./pages/admin/ManageCourse.jsx";
+import ManageRoom from "./pages/admin/ManageRoom.jsx";
+import ManageClass from "./pages/admin/ManageClass.jsx";
+import ManageTimetable from "./pages/admin/ManageTimetable.jsx";
+import ManageRoadmap from "./pages/admin/ManageRoadmap.jsx";
 const App = () => {
   return (
     <div>
       <Routes>
-        <Route path ="/" element={<Login />} />
-        <Route path ="/admin/Dashboard"  element = {<ProtectedRoute roleRequired={["admin", "superadmin"]}>
-          <AdminDashBoard/>
-        </ProtectedRoute>}/>
+        <Route path="/" element={<Login />} />
+        <Route
+          path="/admin/Dashboard"
+          element={
+            <ProtectedRoute roleRequired={["admin", "superadmin"]}>
+              <AdminDashBoard />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/admin/Student"
+          element={
+            <ProtectedRoute roleRequired={["admin", "superadmin"]}>
+              <ManageStudent />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path ="/student/Dashboard" element = {<ProtectedRoute roleRequired ="student">
-          <StudentDashboard/>
-        </ProtectedRoute>}/>
+        <Route
+          path="/admin/Teacher"
+          element={
+            <ProtectedRoute roleRequired={["admin", "superadmin"]}>
+              <ManageTeacher />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path ="/teacher/Dashboard" element = {<ProtectedRoute roleRequired ="student">
-          <TeacherDashboard/>
-        </ProtectedRoute>}/>
+        <Route
+          path="/admin/Course"
+          element={
+            <ProtectedRoute roleRequired={["admin", "superadmin"]}>
+              <ManageCourse />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/admin/Room"
+          element={
+            <ProtectedRoute roleRequired={["admin", "superadmin"]}>
+              <ManageRoom />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/admin/Class"
+          element={
+            <ProtectedRoute roleRequired={["admin", "superadmin"]}>
+              <ManageClass />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/Timetable"
+          element={
+            <ProtectedRoute roleRequired={["admin", "superadmin"]}>
+              <ManageTimetable />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/Roadmap"
+          element={
+            <ProtectedRoute roleRequired={["admin", "superadmin"]}>
+              <ManageRoadmap />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student/Dashboard"
+          element={
+            <ProtectedRoute roleRequired="student">
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/teacher/Dashboard"
+          element={
+            <ProtectedRoute roleRequired="student">
+              <TeacherDashboard />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );
