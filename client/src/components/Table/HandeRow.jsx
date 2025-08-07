@@ -12,14 +12,14 @@ const HandleRow = (row, index, onEdit, onDelete) => (
         <div className='flex justify-start gap-5'>
           <button onClick={(e) => {
             e.stopPropagation(); // Prevent row click event
-            onEdit(row.phone);
+            onEdit(row.id);
           }} >
             <Edit className="w-5 h-5" />
           </button>
 
           <button onClick={(e) => {
             e.stopPropagation(); // Prevent row click event
-            onDelete(row.phone);
+            onDelete(row.id);
           }}>
             <Trash className="w-5 h-5" />
           </button>

@@ -12,6 +12,7 @@ import ManageRoom from "./pages/admin/ManageRoom.jsx";
 import ManageClass from "./pages/admin/ManageClass.jsx";
 import ManageTimetable from "./pages/admin/ManageTimetable.jsx";
 import ManageRoadmap from "./pages/admin/ManageRoadmap.jsx";
+import ConfirmPopup from "./components/Table/ConfirmPopup.jsx";
 const App = () => {
   return (
     <div>
@@ -25,6 +26,9 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+
+        <Route path="/test" element = {<ConfirmPopup/>}/>
 
         <Route
           path="/admin/Student"

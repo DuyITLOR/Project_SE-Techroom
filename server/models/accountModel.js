@@ -39,7 +39,7 @@ Accounts.getInfoAccount = async function (username) {
 };
 
 Accounts.searchAccount = async function (userID, role) {
-    return await this.findOne({ 
+    return await this.findAll({ 
         where: { 
             userID: {[Op.like]: `%${userID}%`},
             Role: role

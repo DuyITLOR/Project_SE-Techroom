@@ -13,7 +13,7 @@ export const getAccount = async (req, res) => {
 }
 
 export const searchAccount = async (req, res) => {
-    const {userID, role} = req.body;
+    const {userID, role} = req.query;
   if(!userID) {
     return res.status(400).send({
       success: false, 
@@ -29,7 +29,7 @@ export const searchAccount = async (req, res) => {
     })
   }
   return res.status(200).send({
-    User: user.toJSON()
+    User: user
   })
 }
 

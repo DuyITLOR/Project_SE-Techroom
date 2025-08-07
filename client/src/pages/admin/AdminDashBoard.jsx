@@ -11,51 +11,35 @@ import exampleData from "../../assets/ExampleData";
 import PaginatedTable from "../../components/Table/PaginatedTable";
 import Plus from "../../assets/plus.svg?react";
 import axios from "axios";
+import ConfirmPopup from "../../components/Table/ConfirmPopup";
 
 const AdminDashBoard = () => {
   // const [currentPage, setCurrentPage] = usestate(1);
   const [activate, setActivate] = useState(0);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [item, setItem] = useState(null);
 
   const [data, setData] = useState([]);
 
   const onDelete = (items) => {
     console.log("Delete items: ", items);
+    setItem(items);
+    setShowConfirm(true);
   };
 
   const onEdit = (items) => {
     console.log("Edit items: ", items);
   };
 
-  useEffect(() => {
-    const fecthAdminsAccounts = async () => {
-      try {
-        const res = await axios.get("http://localhost:4000/api/admin/account", {
-          params: { role: "admin" },
-        });
-        console.log("Fetched admin accounts: ", res.data);
 
-        const list = res.data.listUsers || [];
-
-        const fromatted = list.map((item, index) => ({
-          id: item.UserID || 'N/A',
-          name: item.FullName || 'N/A',
-          dob: item.Birthday || 'N/A',
-        }))
-        setData(fromatted);
-      } catch (err) {
-        console.log("Error fetching admin accounts: ", err);
-      }
-    };
-    fecthAdminsAccounts();
-  }, [])
-
-  const handleSearch = async (searchTerm) => {
+  const fecthAdminsAccounts = async () => {
     try {
-      const res = await axios.get('http://localhost:4000/api/admin/account/search', {
-        params: { query: searchTerm, role: 'admin' }
+      const res = await axios.get("http://localhost:4000/api/admin/account", {
+        params: { role: "admin" },
       });
-      console.log("Search results: ", res.data);
-      const list = res.data.listUsers || []
+      console.log("Fetched admin accounts: ", res.data);
+
+      const list = res.data.listUsers || [];
 
       const fromatted = list.map((item, index) => ({
         id: item.UserID || 'N/A',
@@ -64,8 +48,53 @@ const AdminDashBoard = () => {
       }))
       setData(fromatted);
     } catch (err) {
+      console.log("Error fetching admin accounts: ", err);
+    }
+  };
+
+  useEffect(() => {
+    fecthAdminsAccounts();
+  }, [])
+
+  const handleSearch = async (searchTerm) => {
+    if (!searchTerm) {
+      fecthAdminsAccounts()
+    }
+    try {
+      const res = await axios.get('http://localhost:4000/api/admin/account/search', {
+        params: { userID: searchTerm, role: 'admin' }
+      });
+      console.log("Search results: ", res.data);
+      const list = res.data.User || []
+
+      const formatted = list.map((item, index) => ({
+        id: item.UserID || 'N/A',
+        name: item.FullName || 'N/A',
+        dob: item.Birthday || 'N/A',
+      }))
+
+      setData(formatted);
+      console.log("Formatted search results: ", formatted);
+    } catch (err) {
       console.error('Error searching admin accounts: ', err);
     }
+  }
+
+  const handleDelete = async () => { 
+      console.log("Deleting items: ", item);
+      if (!item) return
+
+      try {
+        await axios.delete('http://localhost:4000/api/admin/account', {
+          data: {userID: item}
+        })
+
+        // Recall the getdatabase
+        fecthAdminsAccounts()
+        setItem(null);
+      } catch (err) {
+        console.error("Error deleting admin account: ", err);
+      }
   }
 
   return (
@@ -132,6 +161,16 @@ const AdminDashBoard = () => {
           <Footer />
         </div>
       </div>
+
+      <ConfirmPopup
+        visible={showConfirm}
+        onCancel={() => setShowConfirm(false)}
+        onConfirm={() => {
+          console.log("Confirmed deletion");
+          handleDelete()
+          setShowConfirm(false);
+        }}
+      />  
     </>
   );
 };

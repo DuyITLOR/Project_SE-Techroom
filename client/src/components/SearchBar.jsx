@@ -4,10 +4,10 @@ const SearchBar = ({inputText, Icon, onSearch}) => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleSearch = (e) => {
-        if(searchTerm.trim() !== '') {
-            console.log(`Searching for: ${searchTerm}`);
-            onSearch(searchTerm);
-        }
+        // if(searchTerm.trim() !== '') {
+        // }
+        console.log(`Searching for: ${searchTerm}`);
+        onSearch(searchTerm);
     }
 
     const handleKeyDown = (e) => {
