@@ -1,5 +1,6 @@
 
 import { DataTypes } from "sequelize";
+import { Op } from 'sequelize';
 import sequelize from "../config/db.js";
 
 const Accounts = sequelize.define('Accounts', {
@@ -36,6 +37,15 @@ Accounts.getInfoAccount = async function (username) {
         } 
     });
 };
+
+Accounts.searchAccount = async function (userID, role) {
+    return await this.findOne({ 
+        where: { 
+            userID: {[Op.like]: `%${userID}%`},
+            Role: role
+        } 
+    });
+}
 
 Accounts.getAllAccount = async function (role) {
     return await this.findAll({

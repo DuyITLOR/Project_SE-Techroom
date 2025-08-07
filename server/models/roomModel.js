@@ -17,7 +17,7 @@ const Rooms = sequelize.define('Rooms', {
     }
   },  {
     tableName: 'Rooms', // Tên bảng trong cơ sở dữ liệu
-    timestamps: false         // KHÔNG dùng createdAt/updatedAt
+    timestamps: false   // KHÔNG dùng createdAt/updatedAt
 })
 
 

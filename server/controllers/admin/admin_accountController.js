@@ -2,7 +2,7 @@
 import Accounts from '../../models/accountModel.js'
 
 export const getAccount = async (req, res) => {
-    const {role} = req.query
+    const {role} = req.body
     const listUsers = await Accounts.getAllAccount(role)
 
     return res.status(200).send({
@@ -10,6 +10,27 @@ export const getAccount = async (req, res) => {
         message: "Correct username",
         listUsers: listUsers
     })
+}
+
+export const searchAccount = async (req, res) => {
+    const {userID, role} = req.body;
+  if(!userID) {
+    return res.status(400).send({
+      success: false, 
+      message: "UserID cannot be empty!"
+    })
+  }
+
+  const user = await Accounts.searchAccount(userID, role)
+  if(user === null) {
+    return res.send({
+      success: false,
+      message: "Cannot find any user!"
+    })
+  }
+  return res.status(200).send({
+    User: user.toJSON()
+  })
 }
 
 export const addAccount = async (req, res) => {
@@ -79,6 +100,7 @@ export const deleteAccount = async (req, res)=> {
 
 export default {
     getAccount,
+    searchAccount,
     addAccount,
     updateAccount,
     deleteAccount
