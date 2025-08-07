@@ -1,11 +1,12 @@
 import React, {useState}from 'react'
 
-const SearchBar = ({inputText, Icon}) => {
+const SearchBar = ({inputText, Icon, onSearch}) => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleSearch = (e) => {
         if(searchTerm.trim() !== '') {
             console.log(`Searching for: ${searchTerm}`);
+            onSearch(searchTerm);
         }
     }
 

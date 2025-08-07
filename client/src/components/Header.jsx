@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import RoboticLogo from '../assets/Robotic_Logo.svg'
-import account from '../assets/account.svg'
+import account from '../assets/Account.svg'
 import arrow_down_login from '../assets/arrow_down_login.svg'
 import { useNavigate } from 'react-router-dom'
 

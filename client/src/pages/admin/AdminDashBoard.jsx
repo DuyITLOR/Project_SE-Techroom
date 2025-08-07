@@ -37,18 +37,36 @@ const AdminDashBoard = () => {
         const list = res.data.listUsers || [];
 
         const fromatted = list.map((item, index) => ({
-          id: item.UserID || "N/A",
-          name: item.FullName || "N/A",
-          dob: item.Birthday || "N/A",
-          phone: "N/A",
-        }));
+          id: item.UserID || 'N/A',
+          name: item.FullName || 'N/A',
+          dob: item.Birthday || 'N/A',
+        }))
         setData(fromatted);
       } catch (err) {
         console.log("Error fetching admin accounts: ", err);
       }
     };
     fecthAdminsAccounts();
-  }, []);
+  }, [])
+
+  const handleSearch = async (searchTerm) => {
+    try {
+      const res = await axios.get('http://localhost:4000/api/admin/account/search', {
+        params: { query: searchTerm, role: 'admin' }
+      });
+      console.log("Search results: ", res.data);
+      const list = res.data.listUsers || []
+
+      const fromatted = list.map((item, index) => ({
+        id: item.UserID || 'N/A',
+        name: item.FullName || 'N/A',
+        dob: item.Birthday || 'N/A',
+      }))
+      setData(fromatted);
+    } catch (err) {
+      console.error('Error searching admin accounts: ', err);
+    }
+  }
 
   return (
     <>
@@ -80,10 +98,11 @@ const AdminDashBoard = () => {
                 <SearchBar
                   inputText="Enter Administrator Name"
                   Icon={SearchIcon}
+                  onSearch={handleSearch}
                 />
               </div>
               <div className="px-1 py-1 sm:py-2 sm:px-2  pr-2">
-                <SummaryCard number={10} name="Total Accounts" />
+                <SummaryCard number={data.length} name="Total Accounts" />
               </div>
             </div>
 
@@ -96,19 +115,13 @@ const AdminDashBoard = () => {
               </button>
             </div>
 
-            <div className="px-3 py-3">
-              <PaginatedTable
-                headers={[
-                  "#",
-                  "FullName",
-                  "Birthday",
-                  "Phone Number",
-                  "Actions",
-                ]}
-                data={data}
-                onEdit={onEdit}
-                onDelete={onDelete}
-              />
+            <div className='px-3 py-3'>
+                <PaginatedTable
+                  headers={['UserID', 'FullName', 'Birthday', 'Actions']}
+                  data = {data}
+                  onEdit={ onEdit }
+                  onDelete={ onDelete }
+                />
             </div>
           </div>
         </div>
