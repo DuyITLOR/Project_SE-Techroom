@@ -2,7 +2,7 @@
 import Accounts from '../../models/accountModel.js'
 
 export const getAccount = async (req, res) => {
-    const {role} = req.body
+    const {role} = req.query
     const listUsers = await Accounts.getAllAccount(role)
 
     return res.status(200).send({

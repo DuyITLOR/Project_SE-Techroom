@@ -29,7 +29,7 @@ const AdminDashBoard = () => {
   useEffect(() => {
     const fecthAdminsAccounts = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/api/admin/student", {
+        const res = await axios.get("http://localhost:4000/api/admin/account", {
           params: { role: "admin" },
         });
         console.log("Fetched admin accounts: ", res.data);
