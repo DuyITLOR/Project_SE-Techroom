@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { act, useState } from "react";
 import MenuItem from "./MenuItem";
 import StudentIcon from "../assets/user.svg?react";
 import TeacherIcon from "../assets/Teacher_icon.svg?react";
@@ -10,9 +10,8 @@ import TimetableIcon from "../assets/calendar.svg?react";
 import RoadmapIcon from "../assets/map.svg?react";
 import MenuIcon from "../assets/menu.svg?react";
 
-const SideBar = () => {
+const SideBar = ({ activate, setActivate }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [collapsed, setCollapsed] = useState(false);
 
   const menu = [
     { text: "Students", icon: StudentIcon, color: "#FF0000" },
@@ -27,25 +26,28 @@ const SideBar = () => {
   return (
     <div
       className={`${
-        collapsed
-          ? "w-[20px] h-[20px] sm:w-[50px] sm:h-[50px] rounded-full bg-[#E5E7EB] flex items-center justify-center mt-[100px] ml-[17px]"
-          : "w-[100px] sm:w-[223px] h-screen bg-[#E5E7EB] flex flex-col shadow-lg"
+        activate
+          ? "w-[50px] h-[50px] rounded-full bg-[#E5E7EB] flex items-center justify-center mt-[100px] ml-[17px]"
+          : "w-[223px] h-screen bg-[#E5E7EB] flex flex-col shadow-lg"
       } transition-all duration-300 `}
       style={{ boxShadow: "4px 0 25px 0 rgba(0, 0, 0, 0.12)" }}>
       <div
         className={`${
-          collapsed
+          activate
             ? "flex items-center justify-center w-full h-full"
-            : "pt-[169px] px-[17px]"
+            : "pt-[112px] px-[32px]"
         }`}>
         <button
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={() => {
+            setActivate(!activate);
+            console.log({ activate });
+          }}
           className="cursor-pointer">
           <MenuIcon className="w-6 h-6" />
         </button>
       </div>
 
-      {!collapsed && (
+      {!activate && (
         <div className="pt-[16px] px-[11.5px] flex flex-col ">
           {menu.map((item, idx) => (
             <MenuItem
