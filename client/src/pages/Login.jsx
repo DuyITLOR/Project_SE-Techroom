@@ -26,6 +26,7 @@ const Login = () => {
         setStep(2)
         setRole(res.data.role)
         localStorage.setItem('username', res.data.username)
+        localStorage.setItem('role', res.data.role)
       } 
       else {
         alert(res.data.message)
@@ -48,7 +49,10 @@ const Login = () => {
       })
       if(res.data.success) {
         localStorage.setItem('isAuthenticated', 'true')
-        if (role === 'admin') {
+        if (role === 'superadmin') {
+          navigate('/admin/Dashboard')
+        }
+        else if (role === 'admin') {
           navigate('/admin/Dashboard')
         } else if (role === 'student') {
           navigate('/student/Dashboard')
@@ -94,7 +98,7 @@ const Login = () => {
               </>
             )}
 
-            {step === 2 && role === 'admin' && (
+            {step === 2 && (role === 'admin' || role === 'superadmin') && (
               <>
                 <label className=' text-left md-1 '>Password</label>
                 <input type="password" value={password}

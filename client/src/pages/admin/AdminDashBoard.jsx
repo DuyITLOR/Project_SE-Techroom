@@ -1,19 +1,23 @@
-import React, { useState } from "react";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import SideBar from "../../components/SideBar";
-import TitleBanner from "../../components/TitleBanner";
-import SearchBar from "../../components/SearchBar";
+import React, {useEffect, useState} from 'react'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
+import SideBar from '../../components/SideBar'
+import TitleBanner from '../../components/TitleBanner'
+import SearchBar from '../../components/SearchBar'
 import AdminIcon from "../../assets/shield.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
 import SummaryCard from "../../components/SummaryCard";
 import exampleData from "../../assets/ExampleData";
 import PaginatedTable from "../../components/Table/PaginatedTable";
 import Plus from "../../assets/plus.svg?react";
+import axios from 'axios'
 
 const AdminDashBoard = () => {
   // const [currentPage, setCurrentPage] = usestate(1);
   const [activate, setActivate] = useState(0);
+
+  const [data, setData] = useState([])
+
   const onDelete = (items) => {
     console.log("Delete items: ", items);
   };
@@ -21,6 +25,32 @@ const AdminDashBoard = () => {
   const onEdit = (items) => {
     console.log("Edit items: ", items);
   };
+
+  useEffect(() => {
+    const fecthAdminsAccounts = async () => {
+      try {
+        const res = await axios.get('http://localhost:4000/api/admin/student', {params: {role: 'admin'}});
+        console.log("Fetched admin accounts: ", res.data);
+
+        const list = res.data.listUsers || []
+
+        const fromatted = list.map((item, index) => ({
+          id: item.UserID || 'N/A',
+          name: item.FullName || 'N/A',
+          dob: item.Birthday || 'N/A',
+          phone: 'N/A',
+        }))
+        setData(fromatted);
+      } 
+      catch (err)
+      {
+        console.log('Error fetching admin accounts: ', err);
+      }
+    }
+    fecthAdminsAccounts();
+  }, [])
+
+
 
   return (
     <>
@@ -68,19 +98,13 @@ const AdminDashBoard = () => {
               </button>
             </div>
 
-            <div className="px-3 py-3">
-              <PaginatedTable
-                headers={[
-                  "#",
-                  "FullName",
-                  "Birthday",
-                  "Phone Number",
-                  "Actions",
-                ]}
-                data={exampleData}
-                onEdit={onEdit}
-                onDelete={onDelete}
-              />
+            <div className='px-3 py-3'>
+                <PaginatedTable
+                  headers={['#', 'FullName', 'Birthday', 'Phone Number', 'Actions']}
+                  data = {data}
+                  onEdit={ onEdit }
+                  onDelete={ onDelete }
+                />
             </div>
           </div>
         </div>

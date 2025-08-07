@@ -38,6 +38,7 @@ const Header = () => {
         <button
           ref={buttonRef}
           onClick={() => setIsDropdownOpen(!isDropDownOpen)}
+          className='cursor-pointer'
         >
           <img src={arrow_down_login} alt="" className='w-[8px] h-[8px] sm:w-[10px] sm:h-[10px]' />
         </button>
