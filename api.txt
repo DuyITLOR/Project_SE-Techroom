@@ -1,0 +1,36 @@
+I. authRouter
+1. login, api-post: http://localhost:4000/api/auth, params: { username }
+2. authenticate, api-post: http://localhost:4000/api/auth/authenticate, params: { username, password }
+
+II. adminRouter
+1. getAccount, api-get: http://localhost:4000/api/admin/account, params: { role }
+2. addAccount, api-post: http://localhost:4000/api/admin/account, params: { userID, fullName, birthday, password, role }
+3. searchAccount, api-get: http://localhost:4000/api/admin/account/search, params: { userID, role }
+4. updateAccount, api-put: http://localhost:4000/api/admin/account, params: { userID, fullName, birthday, password, role }
+5. deleteAccount, api-delete: http://localhost:4000/api/admin/account, params: { userID }
+
+III. roomRouter
+1. getRoom, api-get: http://localhost:4000/api/admin/room, params: {}
+2. addRoom, api-post: http://localhost:4000/api/admin/room, params: { roomID, roomName, note }
+3. searchRoom, api-get: http://localhost:4000/api/admin/room/search, params: { roomID }
+4. updateRoom, api-put: http://localhost:4000/api/admin/room, params: { roomID, roomName, note }
+5. deleteRoom, api-delete: http://localhost:4000/api/admin/room, params: { userID }
+
+III. courseRouter
+1. getCourse, api-get: http://localhost:4000/api/admin/course, params: {}
+2. addCourse, api-post: http://localhost:4000/api/admin/course, params: { courseID, courseName, courseNumber, syllabus, equipment }
+3. searchCourse, api-get: http://localhost:4000/api/admin/course/search, params: { courseID }
+4. updateCourse, api-put: http://localhost:4000/api/admin/course, params: { courseID, courseName, courseNumber, syllabus, equipment }
+5. deleteCourse, api-delete: http://localhost:4000/api/admin/course, params: { courseID }
+
+IV. classRouter
+1. getClass, api-get: http://localhost:4000/api/admin/class, params: {}
+2. addClass, api-post: http://localhost:4000/api/admin/class, params: { classID, courseID, className, lesPerWeek, classPerWeek, startDate, endDate }
+3. searchClass, api-get: http://localhost:4000/api/admin/class/search, params: { classID, courseID }
+4. updateClass, api-put: http://localhost:4000/api/admin/class, params: { classID, courseID, className, lesPerWeek, classPerWeek, startDate, endDate }
+5. deleteClass, api-delete: http://localhost:4000/api/admin/class, params: { classID, courseID }
+
+V. classParticipationRouter
+1. getAllClassParticipation, api-get: http://localhost:4000/api/admin/classParticipation, params: {}
+2. addClassParticipation, api-post: http://localhost:4000/api/admin/classParticipation, params: { classID, userID, role }
+
