@@ -1,7 +1,7 @@
 
 import Accounts from '../../models/accountModel.js'
 
-export const getStudentAccount = async (req, res) => {
+export const getAccount = async (req, res) => {
     const {role} = req.body
     const listUsers = await Accounts.getAllAccount(role)
 
@@ -12,7 +12,7 @@ export const getStudentAccount = async (req, res) => {
     })
 }
 
-export const addStudentAccount = async (req, res) => {
+export const addAccount = async (req, res) => {
     const { userID, fullName, birthday, password, role } = req.body
     if(!userID) {
         return res.status(400).send({
@@ -45,8 +45,23 @@ export const addStudentAccount = async (req, res) => {
     })
 };
 
+export const updateAccountInfo = async (req, res)=> {
+    const { userID, fullName, birthday, password, role } = req.body
+    const user = Accounts.updateAccount(userID, fullName, birthday, password, role)
+    if(!user) {
+        return res.status(404).send({
+            message: "User not found!"
+        })
+    }
+    res.status(201).json({
+        message: "User updated successfully!",
+        updatedUser: user
+    })
+}
+
 export default {
-    getStudentAccount,
-    addStudentAccount
+    getAccount,
+    addAccount,
+    updateAccountInfo
 }
 

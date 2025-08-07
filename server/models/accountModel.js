@@ -55,4 +55,17 @@ Accounts.addAccount = async function (userID, fullName, birthday, password, role
     })
 }
 
+Accounts.updateAccount = async function (UserID, fullName, birthday, password, role) {
+    const user = await this.findByPk(UserID)
+    if (!user) {
+        return null
+    }
+    user.FullName = fullName
+    user.Birthday = birthday
+    user.Password = password
+    user.Role = role
+    await user.save()
+    return user
+}
+
 export default Accounts;
