@@ -2,7 +2,7 @@
 import Accounts from '../../models/accountModel.js'
 
 export const getAccount = async (req, res) => {
-    const {role} = req.body
+    const {role} = req.query
     const listUsers = await Accounts.getAllAccount(role)
 
     return res.status(200).send({
@@ -45,23 +45,42 @@ export const addAccount = async (req, res) => {
     })
 };
 
-export const updateAccountInfo = async (req, res)=> {
+export const updateAccount = async (req, res)=> {
     const { userID, fullName, birthday, password, role } = req.body
-    const user = Accounts.updateAccount(userID, fullName, birthday, password, role)
+    const user = await Accounts.updateAccount(userID, fullName, birthday, password, role)
     if(!user) {
         return res.status(404).send({
             message: "User not found!"
         })
     }
-    res.status(201).json({
+    return res.status(201).json({
         message: "User updated successfully!",
         updatedUser: user
+    })
+}
+
+export const deleteAccount = async (req, res)=> {
+    const { userID } = req.body
+    const user = await Accounts.deleteAccount(userID)
+    if(user === 0) {
+        return res.status(404).send({
+            message: "User not found!"
+        })
+    }
+    if(user === 1) {
+        return res.send({
+            message: "This account cannot be deleted"
+        })
+    }
+    return res.status(201).json({
+        message: "User deleted successfully!",
     })
 }
 
 export default {
     getAccount,
     addAccount,
-    updateAccountInfo
+    updateAccount,
+    deleteAccount
 }
 

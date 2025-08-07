@@ -45,7 +45,7 @@ Accounts.getAllAccount = async function (role) {
     })
 }
 
-Accounts.addAccount = async function (userID, fullName, birthday, password, role) {
+Accounts.addAccount = async function (userID, fullName, birthday, password, role) {retrer
     return await this.create({
         UserID: userID,
         FullName: fullName, 
@@ -66,6 +66,18 @@ Accounts.updateAccount = async function (UserID, fullName, birthday, password, r
     user.Role = role
     await user.save()
     return user
+}
+
+Accounts.deleteAccount = async function (UserID) {
+    const user = await this.findByPk(UserID)
+    if (!user) {
+        return 0
+    }
+    if (user.Role === "superadmin") {
+        return 1
+    }
+    await user.destroy()
+    return 2
 }
 
 export default Accounts;
