@@ -11,8 +11,8 @@ import TimetableIcon from "../assets/calendar.svg?react";
 import RoadmapIcon from "../assets/map.svg?react";
 import MenuIcon from "../assets/menu.svg?react";
 
-const SideBar = ({ activate, setActivate }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+const SideBar = ({ activate, setActivate, current }) => {
+  const [activeIndex, setActiveIndex] = useState(current);
   const navigate = useNavigate();
 
   const menu = [

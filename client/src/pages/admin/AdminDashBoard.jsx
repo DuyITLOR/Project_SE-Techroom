@@ -20,6 +20,7 @@ const AdminDashBoard = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState([]);
   const addFields = [
     {
       label: "Name",
@@ -34,8 +35,6 @@ const AdminDashBoard = () => {
       placeholder: "Enter your email",
     },
   ];
-
-  const [data, setData] = useState([]);
 
   const onDelete = (items) => {
     console.log("Delete items: ", items);
@@ -122,7 +121,7 @@ const AdminDashBoard = () => {
       </div>
 
       <div className="fixed top-0 z-40 h-screen ">
-        <SideBar activate={activate} setActivate={setActivate} />
+        <SideBar activate={activate} setActivate={setActivate} current={0} />
       </div>
 
       <div className="flex flex-col min-h-screen">
