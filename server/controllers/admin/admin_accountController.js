@@ -62,7 +62,7 @@ export const addAccount = async (req, res) => {
     return res.status(200).send({
         success: true, 
         message: msg,
-        newUser
+        newUser: newUser
     })
 };
 
@@ -93,8 +93,8 @@ export const deleteAccount = async (req, res)=> {
             message: "This account cannot be deleted"
         })
     }
-    return res.status(201).json({
-        message: "User deleted successfully!",
+    return res.status(201).send({
+        message: "User deleted successfully!"
     })
 }
 

@@ -2,8 +2,6 @@ import { DataTypes } from "sequelize";
 import { Op } from 'sequelize';
 import sequelize from "../config/db.js";
 
-
-
 const Rooms = sequelize.define('Rooms', {
     //RoomID: ID of the room, which distinguishes one room from another
     RoomID: {
@@ -29,7 +27,7 @@ const Rooms = sequelize.define('Rooms', {
 Rooms.addRoom = async function (roomID, roomName, note) {
     return await this.create({
         RoomID: roomID,
-        RoomName:roomName,
+        RoomName: roomName,
         Note: note
     })
 }
@@ -41,13 +39,13 @@ Rooms.getAllRooms = async function () {
 Rooms.deleteRoom = async function (RoomID) {
     const room = await this.findByPk(RoomID)
     if (!room) {
-        return 0
+        return false
     }
     await room.destroy()
-    return 2
+    return true
 }
 //updateRoom(): Change one or multiple information attributes of the room.
-Rooms.updateRoom = async function (RoomID,roomName, note) {
+Rooms.updateRoom = async function (RoomID, roomName, note) {
     const room = await this.findByPk(RoomID)
     if (!room) {
         return null
@@ -57,19 +55,12 @@ Rooms.updateRoom = async function (RoomID,roomName, note) {
     await room.save()
     return room
 }
-//getRoomInfo(): Retrieves the full room data from the database based on a roomname, used for viewing or editing.
-Rooms.getRoomInfo = async function (roomname) {
-    return await this.findOne({ 
-        where: { 
-            RoomName: roomname 
-        } 
-    });
-};
+
 //searchRoom(): Search for a room by its name, used for searching rooms in the database.
-Rooms.searchRoom = async function (roomname) { 
+Rooms.searchRoom = async function (roomID) { 
     return await this.findAll({ 
         where: { 
-            RoomName: {[Op.like]: `%${roomname}%`}
+            RoomID: {[Op.like]: `%${roomID}%`}
         } 
     });
 }
