@@ -55,7 +55,7 @@ Accounts.getAllAccount = async function (role) {
     })
 }
 
-Accounts.addAccount = async function (userID, fullName, birthday, password, role) {retrer
+Accounts.addAccount = async function (userID, fullName, birthday, password, role) {
     return await this.create({
         UserID: userID,
         FullName: fullName, 
