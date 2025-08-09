@@ -14,7 +14,7 @@ III. roomRouter
 2. addRoom, api-post: http://localhost:4000/api/admin/room, params: { roomID, roomName, note }
 3. searchRoom, api-get: http://localhost:4000/api/admin/room/search, params: { roomID }
 4. updateRoom, api-put: http://localhost:4000/api/admin/room, params: { roomID, roomName, note }
-5. deleteRoom, api-delete: http://localhost:4000/api/admin/room, params: { userID }
+5. deleteRoom, api-delete: http://localhost:4000/api/admin/room, params: { roomID }
 
 III. courseRouter
 1. getCourse, api-get: http://localhost:4000/api/admin/course, params: {}
