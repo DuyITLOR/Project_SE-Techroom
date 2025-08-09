@@ -5,7 +5,7 @@ import sequelize from "../config/db.js";
 
 const Courses = sequelize.define('Courses', {
     //CourseID: The ID of the course
-    CoursesID: {
+    CourseID: {
         type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true
@@ -18,7 +18,7 @@ const Courses = sequelize.define('Courses', {
     //CourseNumber: The order of the course in the roadmap. Initially, no course is in the roadmap, so the value is null. 
     // After adding to the roadmap (see addToRoadmap()), this becomes an int denoting the order of the course, with 1 as the start.
     CourseNumber: {
-        type: DataTypes.INT,
+        type: DataTypes.INTEGER,
         allowNull: true
     },
     //Syllabus: Link to the course syllabus
@@ -38,7 +38,7 @@ const Courses = sequelize.define('Courses', {
 //addCourse(): Create a new course and then add it into the database
 Courses.addCourse = async function (courseID, courseName, courseNumber, syllabus, equipment) {
     return await this.create({
-        CoursesID: courseID,
+        CourseID: courseID,
         CourseName: courseName, 
         CourseNumber: courseNumber,
         Syllabus: syllabus,
@@ -50,10 +50,10 @@ Courses.addCourse = async function (courseID, courseName, courseNumber, syllabus
 Courses.deleteCourse = async function (CoursesID) {
     const course = await this.findByPk(CoursesID)
     if (!course) {
-        return 0
+        return false
     }
     await course.destroy()
-    return 2
+    return true
 }
 //updateCourse(): Change one course’s information
 Courses.updateCourse = async function (CoursesID, courseName, courseNumber, syllabus, equipment) {
@@ -77,10 +77,10 @@ Courses.searchCourse = async function (courseID) {
     });
 }
 // getAllCourse(): Get all courses in the database
-Courses.getAllCourse = async function () {
-    return await this.findAll({
-    })
+Courses.getAllCourses = async function () {
+    return await this.findAll()
 }
+
 // addToRoadmap(): Set the value CourseNumber to a desired integer denoting the order of the course into the roadmap, 
 // and find any course that has the same roadmap number and move it up by one. For example, with a roadmap having 4 courses, 
 // adding a roadmap with number 3 moves the old number 3 course to number 4, number 4 to number 5, and so on.
