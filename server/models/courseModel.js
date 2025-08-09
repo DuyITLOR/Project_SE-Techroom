@@ -45,14 +45,7 @@ Courses.addCourse = async function (courseID, courseName, courseNumber, syllabus
         Equipment: equipment
     })
 }
-//getCourseInfo(): Returns all the information of a course
-Courses.getCourseInfo = async function (courseID) {
-    return await this.findOne({ 
-        where: { 
-            CoursesID: courseID 
-        } 
-    });
-};
+
 //deleteCourse(): Delete an existing course from the database
 Courses.deleteCourse = async function (CoursesID) {
     const course = await this.findByPk(CoursesID)
