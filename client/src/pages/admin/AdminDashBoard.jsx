@@ -23,18 +23,32 @@ const AdminDashBoard = () => {
   const [data, setData] = useState([]);
   const addFields = [
     {
-      label: "Name",
-      name: "name",
+      label: "Phone Number",
+      name: "userID",
       type: "text",
-      placeholder: "Enter your name",
+      placeholder: "Enter your phone number (UserID)",
     },
     {
-      label: "Email",
-      name: "email",
-      type: "email",
-      placeholder: "Enter your email",
+      label: "Password",
+      name: "password",
+      type: "password",
+      placeholder: "Enter your password",
     },
+    {
+      label: "Full Name",
+      name: "fullName",
+      type: "text",
+      placeholder: "Enter your full name",
+    },
+    {
+      label: "Birthday",
+      name: "birthday",
+      type: "date",
+      placeholder: "Enter your birthday",
+    }
+
   ];
+
 
   const onDelete = (items) => {
     console.log("Delete items: ", items);
@@ -114,6 +128,29 @@ const AdminDashBoard = () => {
     }
   };
 
+
+  const handleAddSubmit = async (formData) => {
+
+    const body = {
+      userID: formData.userID,
+      password: formData.password,
+      fullName: formData.fullName,
+      birthday: formData.birthday,
+      role: "admin",
+    };
+
+    const res = await axios.post("http://localhost:4000/api/admin/account", body);
+
+    if (res?.data?.msg === "UserID already exists") {
+      const err = new Error(res.data.msg);
+      err.response = { data: { message: res.data.msg } };
+      throw err;
+    }
+
+    await fecthAdminsAccounts();
+  };
+
+
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-50">
@@ -126,9 +163,8 @@ const AdminDashBoard = () => {
 
       <div className="flex flex-col min-h-screen">
         <div
-          className={`${
-            activate ? "pl-[80px]" : "pl-[239px]"
-          } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
+          className={`${activate ? "pl-[80px]" : "pl-[239px]"
+            } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>
             <div className="px-3 py-3">
@@ -174,9 +210,8 @@ const AdminDashBoard = () => {
           </div>
         </div>
         <div
-          className={`${
-            activate ? "w-full" : "w-[calc(100%-223px)]"
-          } transition-all duration-200 ml-auto mt-auto`}>
+          className={`${activate ? "w-full" : "w-[calc(100%-223px)]"
+            } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>
       </div>
@@ -191,7 +226,12 @@ const AdminDashBoard = () => {
         }}
       />
 
-      <AddForm fields={addFields} isOpen={isOpen} setIsOpen={setIsOpen} />
+      <AddForm
+        fields={addFields}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        onSubmit={handleAddSubmit}
+      />
     </>
   );
 };

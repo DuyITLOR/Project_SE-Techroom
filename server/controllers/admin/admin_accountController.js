@@ -35,7 +35,7 @@ export const searchAccount = async (req, res) => {
 
 export const addAccount = async (req, res) => {
     const { userID, fullName, birthday, password, role } = req.body
-    if(!userID) {
+    if(!userID || fullName === '' || birthday === '' || password === '' || role === '') {
         return res.status(400).send({
           success: false, 
           message: "UserID cannot be empty!"
