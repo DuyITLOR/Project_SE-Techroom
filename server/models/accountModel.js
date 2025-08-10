@@ -5,24 +5,24 @@ import sequelize from "../config/db.js";
 
 const Accounts = sequelize.define('Accounts', {
     UserID: {
-        type: DataTypes.STRING,
+        type: DataTypes.CHAR(10),
         allowNull: false,
         primaryKey: true
     },
     FullName: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: true
     },
     Birthday: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: true
     },
     Password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: true
     },
     Role: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(10),
         allowNull: false
     }
   },  {
