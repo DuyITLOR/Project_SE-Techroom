@@ -1,6 +1,5 @@
 
 import { DataTypes } from "sequelize";
-import { Op } from 'sequelize';
 import sequelize from "../config/db.js";
 
 const Accounts = sequelize.define('Accounts', {
@@ -38,15 +37,6 @@ Accounts.getInfoAccount = async function (username) {
     });
 };
 
-Accounts.searchAccount = async function (userID, role) {
-    return await this.findAll({ 
-        where: { 
-            userID: {[Op.like]: `%${userID}%`},
-            Role: role
-        } 
-    });
-}
-
 Accounts.getAllAccount = async function (role) {
     return await this.findAll({
         where: {
@@ -63,31 +53,6 @@ Accounts.addAccount = async function (userID, fullName, birthday, password, role
         Password: password,
         Role: role
     })
-}
-
-Accounts.updateAccount = async function (UserID, fullName, birthday, password, role) {
-    const user = await this.findByPk(UserID)
-    if (!user) {
-        return null
-    }
-    user.FullName = fullName
-    user.Birthday = birthday
-    user.Password = password
-    user.Role = role
-    await user.save()
-    return user
-}
-
-Accounts.deleteAccount = async function (UserID) {
-    const user = await this.findByPk(UserID)
-    if (!user) {
-        return 0
-    }
-    if (user.Role === "superadmin") {
-        return 1
-    }
-    await user.destroy()
-    return 2
 }
 
 export default Accounts;
