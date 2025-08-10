@@ -1,0 +1,2 @@
+Front end khi làm roadmap thì lấy course theo thứ tự tăng dần chứ không phải liên kề nhe, vì roadmap không có
+cài tự đồng lấp số trống như biến 1 3 7 thành 1 2 3 vì nếu làm thêm thì phức tạp và chương trình chạy chậm

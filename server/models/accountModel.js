@@ -37,6 +37,15 @@ Accounts.getInfoAccount = async function (username) {
     });
 };
 
+Accounts.searchAccount = async function (userID, role) {
+    return await this.findAll({ 
+        where: { 
+            UserID: {[Op.like]: `%${userID}%`},
+            Role: role
+        } 
+    });
+}
+
 Accounts.getAllAccount = async function (role) {
     return await this.findAll({
         where: {

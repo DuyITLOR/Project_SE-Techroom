@@ -72,7 +72,7 @@ Courses.updateCourse = async function (CoursesID, courseName, courseNumber, syll
 Courses.searchCourse = async function (courseID) {
     return await this.findAll({ 
         where: { 
-            courseID: {[Op.like]: `%${courseID}%`},
+            CourseID: {[Op.like]: `%${courseID}%`},
         } 
     });
 }
