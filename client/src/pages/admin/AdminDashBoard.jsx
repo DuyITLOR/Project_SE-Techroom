@@ -14,13 +14,17 @@ import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
 import AddForm from "../../components/AddForm";
 
+
 const AdminDashBoard = () => {
-  // const [currentPage, setCurrentPage] = usestate(1);
   const [activate, setActivate] = useState(0);
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [editData, setEdtitData] = useState(null)
+
+
   const addFields = [
     {
       label: "Phone Number",
@@ -49,15 +53,31 @@ const AdminDashBoard = () => {
 
   ];
 
-
   const onDelete = (items) => {
     console.log("Delete items: ", items);
     setItem(items);
     setShowConfirm(true);
   };
 
-  const onEdit = (items) => {
-    console.log("Edit items: ", items);
+  const onEdit = async (userID) => {
+   console.log("Edit userID: ", userID)
+   const itemEdit = data.find((item) => item.id === userID)
+   if (!itemEdit) {
+     console.error("Item not found for editing: ", userID)
+     return
+   }
+
+   setEdtitData({
+    userID : itemEdit.id,
+    fullName: itemEdit.name,
+    birthday: itemEdit.dob,
+    password: itemEdit.password,
+    role: "admin"
+   })
+
+   setIsEditOpen(true);
+
+   console.log("Editing item: ", itemEdit);
   };
 
   const fecthAdminsAccounts = async () => {
@@ -73,6 +93,7 @@ const AdminDashBoard = () => {
         id: item.UserID || "N/A",
         name: item.FullName || "N/A",
         dob: item.Birthday || "N/A",
+        password: item.Password || "N/A",
       }));
       setData(fromatted);
     } catch (err) {
@@ -102,6 +123,7 @@ const AdminDashBoard = () => {
         id: item.UserID || "N/A",
         name: item.FullName || "N/A",
         dob: item.Birthday || "N/A",
+        password: item.Password || "N/A",
       }));
 
       setData(formatted);
@@ -128,7 +150,6 @@ const AdminDashBoard = () => {
     }
   };
 
-
   const handleAddSubmit = async (formData) => {
 
     const body = {
@@ -149,6 +170,21 @@ const AdminDashBoard = () => {
 
     await fecthAdminsAccounts();
   };
+
+  const handleUpdateSubmit = async (formData) => {
+    const body = {
+      userID: formData.userID,
+      password: formData.password,
+      fullName: formData.fullName,
+      birthday: formData.birthday,
+      role: "admin",
+    };
+
+    await axios.put("http://localhost:4000/api/admin/account", body);
+    await fecthAdminsAccounts();
+  }
+
+
 
 
   return (
@@ -191,7 +227,7 @@ const AdminDashBoard = () => {
             <div className="px-3">
               <button
                 onClick={() => {
-                  console.log("Add new admin"), setIsOpen(true);
+                  console.log("Add new admin"), setIsAddOpen(true);
                 }}
                 className="flex gap-1 bg-blue-500 text-white text-xl px-2 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200">
                 <Plus />
@@ -201,7 +237,7 @@ const AdminDashBoard = () => {
 
             <div className="px-3 py-3">
               <PaginatedTable
-                headers={["UserID", "FullName", "Birthday", "Actions"]}
+                headers={["UserID", "FullName", "Birthday", "Password", "Actions"]}
                 data={data}
                 onEdit={onEdit}
                 onDelete={onDelete}
@@ -228,9 +264,19 @@ const AdminDashBoard = () => {
 
       <AddForm
         fields={addFields}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
+        isOpen={isAddOpen}
+        setIsOpen={setIsAddOpen}
         onSubmit={handleAddSubmit}
+        buttonLabel="Add"
+      />
+
+      <AddForm
+        fields={addFields}
+        isOpen={isEditOpen}
+        setIsOpen={setIsEditOpen}
+        onSubmit={handleUpdateSubmit}
+        initialData={editData}
+        buttonLabel={"Save"}
       />
     </>
   );

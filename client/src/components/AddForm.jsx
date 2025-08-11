@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
-const AddForm = ({ fields, isOpen, setIsOpen, onSubmit}) => {
-  const [formData, setFormData] = useState(() => 
+const AddForm = ({ fields, isOpen, setIsOpen, onSubmit, initialData = {}, buttonLabel }) => {
+  const [formData, setFormData] = useState(() =>
     Object.fromEntries(fields.map(field => [field.name, ""])));
 
   const [submitted, setSubmitted] = useState(false);
@@ -9,29 +9,37 @@ const AddForm = ({ fields, isOpen, setIsOpen, onSubmit}) => {
 
   useEffect(() => {
     if (isOpen) {
-      setFormData(Object.fromEntries(fields.map(field => [field.name, ""])));
+      const empty = Object.fromEntries(fields.map(field => [field.name, ""]))
+      // Check same the data of initialize will override the empty data
+      setFormData({ ...empty, ...initialData });
       setSubmitted(false);
       setError("");
     }
   }, [isOpen, fields])
 
   const handleChange = (e) => {
-    const {name, value} = e.target
-    setFormData((prev) => ({...prev, [name]: value}))
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleAdd = async () => {
-      setError("")
-      setSubmitted(true)
-      try {
-        await onSubmit?.(formData)
-        setIsOpen(false)
-      } catch (err) {
-        setError(err?.response?.data?.message || "An error occurred while submitting the form.");
-      } finally {
-        setSubmitted(false);
-      }
+    setError("")
+    setSubmitted(true)
+    try {
+      await onSubmit?.(formData)
+      setIsOpen(false)
+    } catch (err) {
+      setError(err?.response?.data?.message || "An error occurred while submitting the form.");
+    } finally {
+      setSubmitted(false);
+    }
   }
+
+  const safeLabel = String(buttonLabel).trim();
+  const runningLabel =
+    safeLabel.toLowerCase().endsWith("e")
+      ? `${safeLabel.slice(0, -1)}ing...`
+      : `${safeLabel}ing...`;
 
   return (
     <>
@@ -84,9 +92,9 @@ const AddForm = ({ fields, isOpen, setIsOpen, onSubmit}) => {
               <button
                 onClick={handleAdd}
                 className="flex gap-1 text-black text-[18px] px-2 py-2 cursor-pointer disabled:opacity-20"
-                disabled = {submitted}
-                >
-                <p>{submitted ? "Adding..." : "ADD"}</p>
+                disabled={submitted}
+              >
+                <p>{submitted ? runningLabel : safeLabel}</p>
               </button>
             </div>
           </div>
