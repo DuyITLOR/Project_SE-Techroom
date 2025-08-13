@@ -47,5 +47,7 @@ const Lesson = sequelize.define('Lesson', {
 		timestamps: false
 })
 
+
+
 export {Lesson, Session};
 

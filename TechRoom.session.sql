@@ -1,1 +1,1 @@
-SELECt * FROM Class
+SHOW CREATE TABLE Class

@@ -1,7 +1,10 @@
 
 import { DataTypes } from "sequelize";
 import { Op } from 'sequelize';
+import fs  from 'fs';
+import path from "path";
 import sequelize from "../config/db.js";
+import { Sequelize } from "sequelize";
 
 const Courses = sequelize.define('Courses', {
     //CourseID: The ID of the course
@@ -47,17 +50,43 @@ Courses.addCourse = async function (courseID, courseName, courseNumber, syllabus
 }
 
 //deleteCourse(): Delete an existing course from the database
-Courses.deleteCourse = async function (CoursesID) {
-    const course = await this.findByPk(CoursesID)
-    if (!course) {
-        return false
+Courses.deleteCourse = async function (CourseID) {
+    try {
+        const course = await this.findByPk(CourseID);
+        if (!course) {
+            return { 
+                success: false, 
+                message: "Course not found!" 
+            };
+        }
+        await course.destroy();
+        return { 
+            success: true,
+            message: "Course deleted successfully!" 
+        };
+    } catch (error) {
+        if (error instanceof Sequelize.ForeignKeyConstraintError) {
+            // Truy vấn tìm các bảng đang tham chiếu tới CourseID
+            const [results] = await this.sequelize.query(`
+                SELECT TABLE_NAME AS referencing_table, COLUMN_NAME AS referencing_column
+                FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+                WHERE REFERENCED_TABLE_NAME = 'Courses'
+                AND REFERENCED_COLUMN_NAME = 'CourseID'
+                AND TABLE_SCHEMA = DATABASE();
+            `);
+
+            const tables = results.map(r => `${r.referencing_table}.${r.referencing_column}`);
+            return {
+                success: false,
+                message: `Cannot delete CourseID = ${CourseID} because it is referenced in: ${tables.join(", ")}`
+            };
+        }
     }
-    await course.destroy()
-    return true
 }
+
 //updateCourse(): Change one course’s information
-Courses.updateCourse = async function (CoursesID, courseName, courseNumber, syllabus, equipment) {
-    const course = await this.findByPk(CoursesID)
+Courses.updateCourse = async function (CourseID, courseName, courseNumber, syllabus, equipment) {
+    const course = await this.findByPk(CourseID)
     if (!course) {
         return null
     }
@@ -81,6 +110,26 @@ Courses.getAllCourses = async function () {
     return await this.findAll({
         order: [['CourseNumber', 'ASC']]
     })
+}
+
+Courses.downloadSyllabus = async function (syllabus) {
+    const filePath = path.join(process.cwd(), 'public', syllabus)
+    console.log(filePath)
+
+    if (fs.existsSync(filePath)) {
+        return { exists: true, filePath };
+    }
+    return { exists: false, message: 'File not found' };
+}
+
+Courses.uploadSyllabus = async function (CourseID, file) {
+    const course = await this.findByPk(CourseID)
+    if (!course) {
+        return null
+    }
+    course.Syllabus = file.filename
+    await course.save()
+    return true
 }
 
 // addToRoadmap(): Set the value CourseNumber to a desired integer denoting the order of the course into the roadmap, 

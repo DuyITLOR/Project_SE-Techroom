@@ -58,9 +58,9 @@ export const addCourse = async (req, res) => {
 export const updateCourse = async (req, res)=> {
     const { courseID, courseName, courseNumber, syllabus, equipment } = req.body
     const course = await Courses.updateCourse(courseID, courseName, courseNumber, syllabus, equipment)
-    if(!course) {
+    if(!course.success) {
         return res.status(404).send({
-            message: "Course not found!"
+            message: course.message
         })
     }
     return res.status(201).json({
@@ -72,13 +72,57 @@ export const updateCourse = async (req, res)=> {
 export const deleteCourse = async (req, res)=> {
     const { courseID } = req.body
     const course = await Courses.deleteCourse(courseID)
-    if(!course) {
+    if(!course.success) {
         return res.status(404).send({
-            message: "Course not found!"
+            message: course.message
         })
     }
     return res.status(201).send({
-        message: "Course deleted successfully!"
+        message: course.message
+    })
+}
+
+export const downloadSyllabus = async (req, res) => {
+    const { syllabus } = req.body
+    const result = await Courses.downloadSyllabus(syllabus)
+
+    if(!result.exists) {
+        return res.send({
+            message: "There is no file available"
+        })
+    }
+    res.download(result.filePath, (err) => {
+        if (err) {
+            return res.send({
+                message: "Cannot download file"
+            })
+        }
+        return res.send({
+            message: "File downloaded successfully!"
+        })
+    });
+}
+
+export const uploadSyllabus = async (req, res) => {
+    if (!req.file) {
+        return res.status(400).send({ 
+            message: 'No file uploaded' 
+        });
+    }
+
+    const { CourseID } = req.body
+    const course = await Courses.uploadSyllabus(CourseID, req.file)
+
+    if(!course) {
+        return res.status(400).send({
+            success: false, 
+            message: "CourseID cannot be empty!"
+        })
+    }
+
+    return res.status(200).json({
+        message: "Syllabus uploaded successfully",
+        fileName: req.file.filename
     })
 }
 
@@ -87,6 +131,8 @@ export default {
     searchCourse,
     addCourse,
     updateCourse,
-    deleteCourse
+    deleteCourse,
+    downloadSyllabus,
+    uploadSyllabus
 }
 
