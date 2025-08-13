@@ -23,7 +23,7 @@ const Session = sequelize.define('Session', {
 
 const Lesson = sequelize.define('Lesson', {
 	ClassID: {
-		type: DataTypes.STRING,
+		type: DataTypes.CHAR(10),
 		allowNull: false,
 		primaryKey: false
 	},
@@ -38,7 +38,7 @@ const Lesson = sequelize.define('Lesson', {
 		primaryKey: true
 	},
 	RoomID: {
-		type: DataTypes.STRING,
+		type: DataTypes.CHAR(10),
 		allowNull: false,
 		primaryKey: true
 	}

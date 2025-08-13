@@ -6,13 +6,13 @@ import sequelize from "../config/db.js";
 const Courses = sequelize.define('Courses', {
     //CourseID: The ID of the course
     CourseID: {
-        type: DataTypes.STRING,
+        type: DataTypes.CHAR(10),
         allowNull: false,
         primaryKey: true
     },
     //CourseName: Name of the course
     CourseName: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: true
     },
     //CourseNumber: The order of the course in the roadmap. Initially, no course is in the roadmap, so the value is null. 
@@ -23,12 +23,12 @@ const Courses = sequelize.define('Courses', {
     },
     //Syllabus: Link to the course syllabus
     Syllabus: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: true
     },
     //Equipment: Name of the equipments
     Equipment: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: true
     }
   },  {
