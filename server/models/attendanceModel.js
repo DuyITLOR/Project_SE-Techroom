@@ -1,11 +1,11 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/db';
+import sequelize from '../config/db.js';
 
 const Attendance = sequelize.define(
   'Attendance',
   {
     StudentID: {
-      type: DataTypes.STRING,
+      type: DataTypes.CHAR(10),
       allowNull: false,
       primaryKey: true,
     },
@@ -20,7 +20,7 @@ const Attendance = sequelize.define(
       primaryKey: true,
     },
     RoomID: {
-      type: DataTypes.STRING,
+      type: DataTypes.CHAR(10),
       allowNull: false,
       primaryKey: true,
     },

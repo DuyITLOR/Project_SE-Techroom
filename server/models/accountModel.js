@@ -38,10 +38,13 @@ Accounts.getInfoAccount = async function (username) {
     });
 };
 
-Accounts.searchAccount = async function (userID, role) {
+Accounts.searchAccount = async function (user, role) {
     return await this.findAll({ 
         where: { 
-            UserID: {[Op.like]: `%${userID}%`},
+            [Op.or]: [
+                {UserID: {[Op.like]: `%${user}%`}},
+                {FullName: {[Op.like]: `%${user}%`}}
+            ],
             Role: role
         } 
     });

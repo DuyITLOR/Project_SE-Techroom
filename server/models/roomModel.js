@@ -5,18 +5,18 @@ import sequelize from "../config/db.js";
 const Rooms = sequelize.define('Rooms', {
     //RoomID: ID of the room, which distinguishes one room from another
     RoomID: {
-        type: DataTypes.STRING,
+        type: DataTypes.CHAR(10),
         allowNull: false,
         primaryKey: true
     },
     //RoomName: Name of the room
     RoomName: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: true
     },
     //Note: Any related note for the room (eg. Lights break, …)
     Note: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: true
     }
   },  {

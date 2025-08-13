@@ -6,13 +6,13 @@ import sequelize from "../config/db.js";
 const Class = sequelize.define('Class', {
     // ClassID: primary key which is used to distinguish classes.
     ClassID: {
-        type: DataTypes.STRING,
+        type: DataTypes.CHAR(10),
         allowNull: false,
         primaryKey: true
     },
     // ClassName: the class’ name.
     ClassName: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: true
     },
     // LessonsPerWeek: how many lessons does the class take place in one week.
@@ -37,7 +37,7 @@ const Class = sequelize.define('Class', {
     },
     // CourseID: foreign key references to Courses, show the study program that the class is teaching.
     CourseID: {
-        type: DataTypes.STRING,
+        type: DataTypes.CHAR(10),
         allowNull: true,
         references: {
             model: 'Courses', // Tên bảng tham chiếu
