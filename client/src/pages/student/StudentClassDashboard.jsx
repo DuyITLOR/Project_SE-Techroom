@@ -5,7 +5,7 @@ import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
 import SearchBar from "../../components/SearchBar";
 import SummaryCard from "../../components/SummaryCard";
-import ItemCard from "../../components/ItemCard";
+import ItemCard from "../../components/ClassCard";
 
 import ClassIcon from "../../assets/users.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
