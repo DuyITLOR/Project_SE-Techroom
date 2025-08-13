@@ -78,7 +78,9 @@ Courses.searchCourse = async function (courseID) {
 }
 // getAllCourse(): Get all courses in the database
 Courses.getAllCourses = async function () {
-    return await this.findAll()
+    return await this.findAll({
+        order: [['CourseNumber', 'ASC']]
+    })
 }
 
 // addToRoadmap(): Set the value CourseNumber to a desired integer denoting the order of the course into the roadmap, 

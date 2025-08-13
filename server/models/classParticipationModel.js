@@ -50,5 +50,3 @@ Participation.getAllClass = async function (userid) {
     })
 }
 
-
-
