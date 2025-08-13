@@ -50,3 +50,5 @@ Participation.getAllClass = async function (userid) {
     })
 }
 
+export { Participation };
+
