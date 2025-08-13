@@ -36,7 +36,7 @@ const App = () => {
           path="/admin/Student"
           element={
             <ProtectedRoute roleRequired={["admin", "superadmin"]}>
-              <ManageStudent />
+              <ManageStudent/>
             </ProtectedRoute>
           }
         />
@@ -45,7 +45,7 @@ const App = () => {
           path="/admin/Teacher"
           element={
             <ProtectedRoute roleRequired={["admin", "superadmin"]}>
-              <ManageTeacher />
+              <ManageTeacher/>
             </ProtectedRoute>
           }
         />

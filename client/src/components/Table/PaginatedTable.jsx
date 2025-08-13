@@ -2,7 +2,7 @@ import React from 'react'
 import TableContent from '../../components/Table/TableContent'
 import HandleRow from './HandeRow';
 
-const PaginatedTable = ({headers, data, onEdit, onDelete}) => {
+const PaginatedTable = ({headers, data, onEdit, onDelete, columns}) => {
     const [currentPage, setCurrentPage] = React.useState(1);
     const itemsPerPage = 10
 
@@ -26,7 +26,7 @@ const PaginatedTable = ({headers, data, onEdit, onDelete}) => {
       currentPage={currentPage}
       totalPages={totalPages}
       onPageChange={onChangePage}
-      renderRow = {(row, index) => HandleRow(row, index, onEdit, onDelete)}
+      renderRow = {(row, index) => HandleRow(row, index, onEdit, onDelete, columns)}
       />
   )
 }

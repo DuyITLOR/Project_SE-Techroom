@@ -24,6 +24,7 @@ const AdminDashBoard = () => {
   const [data, setData] = useState([]);
   const [editData, setEdtitData] = useState(null)
 
+  const Columns = ["id", "name", "dob", "password"];
 
   const addFields = [
     {
@@ -241,6 +242,7 @@ const AdminDashBoard = () => {
                 data={data}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                columns={Columns}
               />
             </div>
           </div>

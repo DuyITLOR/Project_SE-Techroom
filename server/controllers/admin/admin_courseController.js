@@ -71,6 +71,7 @@ export const updateCourse = async (req, res)=> {
 
 export const deleteCourse = async (req, res)=> {
     const { courseID } = req.body
+    console.log("courseID: ", courseID)
     const course = await Courses.deleteCourse(courseID)
     if(!course) {
         return res.status(404).send({

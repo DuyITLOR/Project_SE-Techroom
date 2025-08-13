@@ -47,8 +47,8 @@ Courses.addCourse = async function (courseID, courseName, courseNumber, syllabus
 }
 
 //deleteCourse(): Delete an existing course from the database
-Courses.deleteCourse = async function (CoursesID) {
-    const course = await this.findByPk(CoursesID)
+Courses.deleteCourse = async function (CourseID) {
+    const course = await this.findByPk(CourseID)
     if (!course) {
         return false
     }

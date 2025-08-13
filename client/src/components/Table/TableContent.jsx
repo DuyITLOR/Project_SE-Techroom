@@ -5,7 +5,7 @@ import ArrowLeft from "../../assets/chevron-left.svg?react";
 
 
 
-const TableContent = ({ headers, data, renderRow, currentPage, totalPages, onPageChange }) => {
+const TableContent = ({ headers, data, renderRow, currentPage, totalPages, onPageChange, }) => {
 
     const handlePageChange = (page) => {
         console.log(`Changing to page ${page}`);
