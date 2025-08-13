@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import StudentSideBar from "../../components/StudentSideBar";
+import StudentClassSideBar from "../../components/StudentClassSideBar";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
@@ -9,8 +9,9 @@ import ItemCard from "../../components/ItemCard";
 
 import ClassIcon from "../../assets/users.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
+import DiscussionIcon from "../../assets/message-circle.svg?react";
 
-const StudentDashboard = () => {
+const StudentClassDashboard = () => {
   const handleSearch = async (searchTerm) => {
     if (!searchTerm) {
       fecthAdminsAccounts();
@@ -47,7 +48,7 @@ const StudentDashboard = () => {
         <Header />
       </div>
       <div className="fixed top-0 z-40 h-screen ">
-        <StudentSideBar
+        <StudentClassSideBar
           activate={activate}
           setActivate={setActivate}
           current={0}
@@ -62,25 +63,25 @@ const StudentDashboard = () => {
           <div>
             <div className="py-3 pr-2">
               <TitleBanner
-                title="Classes"
+                title="Discussion Class-1"
                 subTitle="All necessary knowledge for you"
-                Icon={ClassIcon}
+                Icon={DiscussionIcon}
               />
             </div>
             <div className="flex items-stretch py-1 gap-2 pr-2">
               <div className="flex-1">
                 <SearchBar
-                  inputText="Enter Class Name"
+                  inputText="..."
                   Icon={SearchIcon}
                   onSearch={handleSearch}
                 />
               </div>
               <div>
-                <SummaryCard number={data.length} name="Total Classes" />
+                <SummaryCard number={data.length} name="Total Posts" />
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-3 py-3 pr-2 justify-center">
+          <div className="grid grid-cols-1 gap-3 py-3 pr-2 justify-center">
             <ItemCard
               ClassName={"HE"}
               TeacherName={"Yunetrea"}
@@ -114,4 +115,4 @@ const StudentDashboard = () => {
   );
 };
 
-export default StudentDashboard;
+export default StudentClassDashboard;

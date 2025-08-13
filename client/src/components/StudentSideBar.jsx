@@ -1,63 +1,33 @@
 import React, { act, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
-import StudentIcon from "../assets/user.svg?react";
-import TeacherIcon from "../assets/Teacher_icon.svg?react";
-import AdminIcon from "../assets/shield.svg?react";
-import CourseIcon from "../assets/book.svg?react";
-import RoomIcon from "../assets/home.svg?react";
 import ClassIcon from "../assets/users.svg?react";
 import TimetableIcon from "../assets/calendar.svg?react";
 import RoadmapIcon from "../assets/map.svg?react";
 import MenuIcon from "../assets/menu.svg?react";
 
-const SideBar = ({ activate, setActivate, current }) => {
+const StudentSideBar = ({ activate, setActivate, current }) => {
   const [activeIndex, setActiveIndex] = useState(current);
   const navigate = useNavigate();
 
   const menu = [
     {
-      text: "Admins",
-      icon: AdminIcon,
-      color: "#FF0000",
-      link: "/admin/Dashboard",
-    },
-    {
-      text: "Students",
-      icon: StudentIcon,
-      color: "#FF7002",
-      link: "/admin/Student",
-    },
-    {
-      text: "Teachers",
-      icon: TeacherIcon,
-      color: "#DCCA00",
-      link: "/admin/Teacher",
-    },
-    {
-      text: "Courses",
-      icon: CourseIcon,
-      color: "#00FF00",
-      link: "/admin/Course",
-    },
-    { text: "Rooms", icon: RoomIcon, color: "#00D6D6", link: "/admin/Room" },
-    {
       text: "Classes",
       icon: ClassIcon,
-      color: "#0400FF",
-      link: "/admin/Class",
+      color: "#FF0000",
+      link: "/student/Dashboard",
     },
     {
       text: "Timetable",
       icon: TimetableIcon,
-      color: "#C800FF",
-      link: "/admin/Timetable",
+      color: "#FF7002",
+      link: "/student/Timetable",
     },
     {
       text: "Roadmap",
       icon: RoadmapIcon,
-      color: "#FF00B2",
-      link: "/admin/Roadmap",
+      color: "#DCCA00",
+      link: "/student/Roadmap",
     },
   ];
 
@@ -106,4 +76,4 @@ const SideBar = ({ activate, setActivate, current }) => {
   );
 };
 
-export default SideBar;
+export default StudentSideBar;

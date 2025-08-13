@@ -5,12 +5,11 @@ import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
 import SearchBar from "../../components/SearchBar";
 import SummaryCard from "../../components/SummaryCard";
-import ItemCard from "../../components/ItemCard";
 
-import ClassIcon from "../../assets/users.svg?react";
+import TimetableIcon from "../../assets/calendar.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
 
-const StudentDashboard = () => {
+const StudentTimetable = () => {
   const handleSearch = async (searchTerm) => {
     if (!searchTerm) {
       fecthAdminsAccounts();
@@ -50,57 +49,23 @@ const StudentDashboard = () => {
         <StudentSideBar
           activate={activate}
           setActivate={setActivate}
-          current={0}
+          current={1}
         />
       </div>
 
       <div className="flex flex-col min-h-screen">
         <div
           className={`${
-            activate ? "pl-[80px]" : "pl-[245px]"
+            activate ? "pl-[80px]" : "pl-[239px]"
           } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           <div>
-            <div className="py-3 pr-2">
+            <div className="px-3 py-3">
               <TitleBanner
-                title="Classes"
-                subTitle="All necessary knowledge for you"
-                Icon={ClassIcon}
+                title="Timetable"
+                subTitle="Time is gold"
+                Icon={TimetableIcon}
               />
             </div>
-            <div className="flex items-stretch py-1 gap-2 pr-2">
-              <div className="flex-1">
-                <SearchBar
-                  inputText="Enter Class Name"
-                  Icon={SearchIcon}
-                  onSearch={handleSearch}
-                />
-              </div>
-              <div>
-                <SummaryCard number={data.length} name="Total Classes" />
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-3 py-3 pr-2 justify-center">
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
           </div>
         </div>
         <div
@@ -114,4 +79,4 @@ const StudentDashboard = () => {
   );
 };
 
-export default StudentDashboard;
+export default StudentTimetable;

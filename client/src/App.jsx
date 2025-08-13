@@ -13,6 +13,9 @@ import ManageClass from "./pages/admin/ManageClass.jsx";
 import ManageTimetable from "./pages/admin/ManageTimetable.jsx";
 import ManageRoadmap from "./pages/admin/ManageRoadmap.jsx";
 import ConfirmPopup from "./components/Table/ConfirmPopup.jsx";
+import StudentTimetable from "./pages/student/StudentTimetable.jsx";
+import StudentRoadMap from "./pages/student/StudentRoadMap.jsx";
+import StudentClassDashboard from "./pages/student/StudentClassDashboard.jsx";
 const App = () => {
   return (
     <div>
@@ -27,8 +30,7 @@ const App = () => {
           }
         />
 
-
-        <Route path="/test" element = {<ConfirmPopup/>}/>
+        <Route path="/test" element={<ConfirmPopup />} />
 
         <Route
           path="/admin/Student"
@@ -98,6 +100,33 @@ const App = () => {
           element={
             <ProtectedRoute roleRequired="student">
               <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student/Timetable"
+          element={
+            <ProtectedRoute roleRequired="student">
+              <StudentTimetable />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student/Roadmap"
+          element={
+            <ProtectedRoute roleRequired="student">
+              <StudentRoadMap />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student/Class/Discussion"
+          element={
+            <ProtectedRoute roleRequired="student">
+              <StudentClassDashboard />
             </ProtectedRoute>
           }
         />

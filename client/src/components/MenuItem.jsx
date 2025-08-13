@@ -4,7 +4,7 @@ const MenuItem = ({ text, Icon, iconColor, onClick, isActive }) => {
   return (
     <div
       onClick={onClick}
-      className={`w-[200px] h-[50px] flex items-center gap-2.5 px-8 rounded-md cursor-pointer transition-all duration-100
+      className={`w-[200px] h-[50px] flex items-center gap-2.5 pl-8 rounded-md cursor-pointer transition-all duration-100
         ${
           isActive
             ? "bg-[#29A9F2] text-white"
