@@ -8,8 +8,9 @@ const storage = multer.diskStorage({
     cb(null, 'public'); // Lưu file vào thư mục public
   },
   filename: (req, file, cb) => {
-    const uniqueName = Date.now() + path.extname(file.originalname);
-    cb(null, uniqueName); // Ví dụ: 16915834123.pdf
+    const uniqueSuffix = Date.now() + path.extname(file.originalname);
+    const fileName = file.originalname.replace(/\.[^/.]+$/, ""); // bỏ đuôi
+    cb(null, fileName + '-' + uniqueSuffix); // Ví dụ: 16915834123.pdf
   }
 });
 
