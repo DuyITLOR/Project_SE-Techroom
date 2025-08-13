@@ -19,9 +19,9 @@ export const getClass = async (req, res) => {
     }
     let listClasses;
     if (role === 'admin' || role === 'superadmin') {
-        listClasses = await Class.getAllClasses();
+        listClasses = await Class.getAllClass();
     } else {
-        listClasses = await Class.getRelatedClass(userid);
+        listClasses = await Class.getRelatedClasses(userid);
     }
 
     if (!listClasses) {

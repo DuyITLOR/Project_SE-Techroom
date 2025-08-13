@@ -15,21 +15,16 @@ const Participation = sequelize.define('Participation', {
         type: DataTypes.CHAR(10),
         allowNull: false,
         primaryKey: true
-    },
-    Role: {
-        type: DataTypes.STRING(10),
-        allowNull: false
     }
   },  {
     tableName: 'Participation', // Tên bảng trong cơ sở dữ liệu
     timestamps: false         // KHÔNG dùng createdAt/updatedAt
 })
 
-Participation.addClassParticipation = async function (classid, userID, role) {
+Participation.addClassParticipation = async function (classid, userID) {
     return await this.create({
         ClassID: classid,
         UserName: userID,
-        Role: role
     })
 }
 

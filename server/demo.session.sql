@@ -1,2 +1,1 @@
-show tables;
-
+select * from Participation
