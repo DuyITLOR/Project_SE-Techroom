@@ -53,12 +53,6 @@ const SideBar = ({ activate, setActivate, current }) => {
       color: "#C800FF",
       link: "/admin/Timetable",
     },
-    {
-      text: "Roadmap",
-      icon: RoadmapIcon,
-      color: "#FF00B2",
-      link: "/admin/Roadmap",
-    },
   ];
 
   return (
