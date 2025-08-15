@@ -5,7 +5,7 @@ import { Lesson } from './lessonModel.js';
 const Attendance = sequelize.define(
   'Attendance',
   {
-    StudentID: {
+    UserID: {
       type: DataTypes.CHAR(10),
       allowNull: false,
       primaryKey: true

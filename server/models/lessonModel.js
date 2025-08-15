@@ -1,7 +1,8 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Op } from 'sequelize';
 import sequelize from '../config/db.js';
 import Accounts from './accountModel.js';
 import Class from './classModel.js';
+import { Attendance } from './attendanceModel.js';
 
 const Session = sequelize.define(
   'Session',
@@ -57,6 +58,11 @@ const Lesson = sequelize.define(
     },
   },
   {
+    uniqueKeys: {
+      uniqueTimePlace: {
+        fields: ['Date', 'SessionNumber', 'RoomID'],
+      },
+    },
     tableName: 'Lesson',
     timestamps: false,
   }
@@ -69,6 +75,8 @@ Lesson.addLesson = async function (classID, date, sessionNumber, roomID) {
       throw new Error(`Class with ID ${classID} does not exist.`);
     }
 
+    let result = null;
+
     const newLesson = await Lesson.create({
       ClassID: classID,
       Date: date,
@@ -76,9 +84,9 @@ Lesson.addLesson = async function (classID, date, sessionNumber, roomID) {
       RoomID: roomID,
     });
 
-    const studentInClass = await parentClass.getParticipatedUser();
+    const userInClass = await parentClass.getParticipatedUsers();
 
-    await newLesson.setStudentsAttending(studentInClass);
+    await newLesson.setUsersAttending(userInClass);
 
     console.log(`Lesson added successfully with ID: ${newLesson.LessonID}`);
     return newLesson;
@@ -109,6 +117,8 @@ Lesson.updateLesson = async function (lessonID, updatedInfo) {
       throw new Error(`Lesson with ID ${lessonID} does not exist.`);
     }
 
+    let result = null;
+
     if (updatedInfo.lessonData) {
       result = await lesson.update(updatedInfo.lessonData);
       console.log(`Lesson with ID ${lessonID} updated successfully.`);
@@ -118,23 +128,111 @@ Lesson.updateLesson = async function (lessonID, updatedInfo) {
       const students = await Accounts.findAll({
         where: { UserID: updatedInfo.studentIDs },
       });
-      await Lesson.setStudentsAttending(students);
+      await Lesson.setUsersAttending(students);
       console.log(`Students list updated for lesson with ID ${lessonID}.`);
+    }
+
+    if (updatedInfo.teacherIDs) {
+      const teachers = await Accounts.findAll({
+        where: { UserID: updatedInfo.teacherIDs },
+      });
+      await Lesson.setUsersAttending(teachers);
+      console.log(`Teachers list updated for lesson with ID ${lessonID}.`);
     }
 
     return result;
   } catch (error) {
-    console.error(`Error updating lesson ${LessonID}:`, error);
+    console.error(`Error updating lesson ${lessonID}:`, error);
     throw error;
   }
 };
 
-// Lesson.getAllLessonsForWeek() = async function (UserID, weekStartDate) {
-//   try {
-    
-//   } catch (error) {
-    
-//   }
-// }
+Lesson.getAllLessonsForWeek = async function (weekStartDate) {
+  try {
+    const lessons = Lesson.findAll({
+      where: {
+        Date: {
+          [Op.gte]: weekStartDate,
+          [Op.lt]: new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000), // 7 days later
+        },
+      },
+    });
 
+    return lessons;
+  } catch (error) {
+    console.error('Error fetching lessons for the week:', error);
+    throw error;
+  }
+};
+
+Lesson.getRelatedLessonsForWeek = async function (userID, weekStartDate) {
+  try {
+    const lesson = Lesson.findAll({
+      include: [
+        {
+          model: Accounts,
+          as: 'UsersAttending',
+          where: { UserID: userID },
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+      where: {
+        Date: {
+          [Op.gte]: weekStartDate,
+          [Op.lt]: new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000), // 7 days later
+        },
+      },
+    });
+
+    console.log(`Successfully fetched lessons related to user ${userID} for the week.`);
+    return lesson;
+  } catch (error) {
+    console.error('Error fetching related lessons for the week:', error);
+    throw error;
+  }
+};
+
+Lesson.getLessonDetails = async function (LessonID) {
+  try {
+    const lesson = Lesson.findByPk(LessonID, {
+      include: [
+        {
+          model: Accounts,
+          as: 'Student',
+          through: {
+            attributes: [],
+          },
+          where: {
+            Role: 'student',
+          },
+          required: false,
+        },
+        {
+          model: Accounts,
+          as: 'Teacher',
+          through: {
+            attributes: [],
+          },
+          where: {
+            Role: 'teacher',
+          },
+          required: false,
+        },
+      ],
+    });
+
+    if (!lesson) {
+      throw new Error(`Lesson with ID ${LessonID} does not exist.`);
+    }
+
+    console.log(`Successfully fetched details for lesson with ID ${LessonID}.`);
+    return lesson;
+    
+  } catch (error) {
+    console.error(`Error fetching details for lesson with ID ${LessonID}:`, error);
+    throw error;
+  }
+};
 export { Lesson, Session };

@@ -60,13 +60,13 @@ Accounts.belongsToMany(Lesson, {
   through: Attendance,
   foreignKey: 'StudentID',
   otherKey: 'LessonID',
-  as: 'StudentAttendances',
+  as: 'UserAttendances',
 });
 Lesson.belongsToMany(Accounts, {
   through: Attendance,
   foreignKey: 'LessonID',
   otherKey: 'StudentID',
-  as: 'StudentsAttending',
+  as: 'UsersAttending',
   onDelete: 'CASCADE',
 });
 
