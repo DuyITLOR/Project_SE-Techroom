@@ -15,7 +15,7 @@ import ConfirmPopup from "../../components/Table/ConfirmPopup";
 import AddForm from "../../components/AddForm";
 
 
-const ManageTeacher = () => {
+const ManageCourse = () => {
   const [activate, setActivate] = useState(0);
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
@@ -226,7 +226,7 @@ const ManageTeacher = () => {
                 />
               </div>
               <div className="px-1 py-1 sm:py-2 sm:px-2  pr-2">
-                <SummaryCard number={data.length} name="Total Accounts" />
+                <SummaryCard number={data.length} name="Total Courses" />
               </div>
             </div>
 
@@ -289,4 +289,4 @@ const ManageTeacher = () => {
   );
 };
 
-export default ManageTeacher;
+export default ManageCourse;
