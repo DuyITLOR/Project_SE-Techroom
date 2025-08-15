@@ -16,7 +16,7 @@ export const searchAccount = async (req, res) => {
     const {user, role} = req.query;
   if(!user) {
     return res.status(400).send({
-      success: false, 
+      success: false,
       message: "UserID cannot be empty!"
     })
   }
