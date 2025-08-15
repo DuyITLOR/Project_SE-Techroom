@@ -26,13 +26,13 @@ Class.belongsToMany(Accounts, {
   through: Participation,
   foreignKey: 'ClassID',
   otherKey: 'Username',
-  as: 'participatedClass',
+  as: 'participatedUsers',
 });
 Accounts.belongsToMany(Class, {
   through: Participation,
   foreignKey: 'Username',
   otherKey: 'ClassID',
-  as: 'participatedUser',
+  as: 'participatedClasses',
 });
 
 // Session <--> Lesson
@@ -66,7 +66,8 @@ Lesson.belongsToMany(Accounts, {
   through: Attendance,
   foreignKey: 'LessonID',
   otherKey: 'StudentID',
-  as: 'Lesson',
+  as: 'StudentsAttending',
+  onDelete: 'CASCADE',
 });
 
 // Feedback <--> Tag
@@ -130,4 +131,4 @@ Accounts.hasMany(Post, {
 });
 
 // Export tất cả models
-export { sequelize, Class, Participation, Courses, Accounts, Rooms };
+export { sequelize, Accounts, Rooms, Class, Participation, Courses, Lesson, Session, Attendance, Feedback, Tag, Post };
