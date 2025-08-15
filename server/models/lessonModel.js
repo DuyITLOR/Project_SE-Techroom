@@ -22,6 +22,12 @@ const Session = sequelize.define('Session', {
 })
 
 const Lesson = sequelize.define('Lesson', {
+	LessonID: {
+		type: DataTypes.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
 	ClassID: {
 		type: DataTypes.CHAR(10),
 		allowNull: false,

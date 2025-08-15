@@ -11,7 +11,7 @@ const Participation = sequelize.define('Participation', {
         primaryKey: true
     },
     //ID của người dùng
-    UserName: {
+    Username: {
         type: DataTypes.CHAR(10),
         allowNull: false,
         primaryKey: true
