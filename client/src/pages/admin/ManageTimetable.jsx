@@ -10,34 +10,38 @@ import ConfirmPopup from "../../components/Table/ConfirmPopup";
 import AddForm from "../../components/AddForm";
 import TimetableGrid from "../../components/TimeTable/TimetableGrid.jsx";
 
-
 const ManageTimetable = () => {
-  const [activate, setActivate] = useState(0);
+  const [activate, setActivate] = useState(1);
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
-  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [editData, setEdtitData] = useState(null)
+  const [editData, setEdtitData] = useState(null);
 
-  const Columns = ["courseID", "courseName", "courseNumber", "syllabus", "equipment"];
-
+  const Columns = [
+    "courseID",
+    "courseName",
+    "courseNumber",
+    "syllabus",
+    "equipment",
+  ];
 
   const events = [
     {
-      date: "2025-08-11", 
-      slot: 1, 
+      date: "2025-08-11",
+      slot: 1,
       classID: "CL001",
       roomName: "Phòng 11B",
-      lecturer: "Lê Nhựt Duy"
+      lecturer: "Lê Nhựt Duy",
     },
     {
       date: "2025-08-12",
       slot: 3,
       classID: "CL002",
       roomName: "Phòng 11C",
-      lecturer: "Đặng Thương"
-    }
+      lecturer: "Đặng Thương",
+    },
   ];
 
   const addFields = [
@@ -86,12 +90,12 @@ const ManageTimetable = () => {
   };
 
   const onEdit = async (courseID) => {
-    console.log("Edit courseID: ", courseID)
-    const itemEdit = data.find((item) => item.courseID === courseID)
-    console.log("Item to edit: ", itemEdit)
+    console.log("Edit courseID: ", courseID);
+    const itemEdit = data.find((item) => item.courseID === courseID);
+    console.log("Item to edit: ", itemEdit);
     if (!itemEdit) {
-      console.error("Item not found for editing: ", courseID)
-      return
+      console.error("Item not found for editing: ", courseID);
+      return;
     }
 
     setEdtitData({
@@ -100,7 +104,7 @@ const ManageTimetable = () => {
       CourseNumber: itemEdit.courseNumber || "N/A",
       Syllabus: itemEdit.syllabus || "N/A",
       Equipment: itemEdit.equipment || "N/A",
-    })
+    });
 
     setIsEditOpen(true);
     console.log("Editing item: ", editData);
@@ -108,7 +112,7 @@ const ManageTimetable = () => {
 
   const fecthAdminsAccounts = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/admin/course")
+      const res = await axios.get("http://localhost:4000/api/admin/course");
       console.log("Fetched course: ", res.data);
 
       const list = res.data.listUsers || [];
@@ -130,7 +134,6 @@ const ManageTimetable = () => {
     fecthAdminsAccounts();
   }, []);
 
-  
   const handleDelete = async () => {
     console.log("Deleting items: ", item);
     if (!item) return;
@@ -149,7 +152,6 @@ const ManageTimetable = () => {
   };
 
   const handleAddSubmit = async (formData) => {
-
     const body = {
       courseID: formData.CourseID || "N/A",
       courseName: formData.CourseName || "N/A",
@@ -159,7 +161,10 @@ const ManageTimetable = () => {
     };
     console.log("Adding new course with data: ", body);
 
-    const res = await axios.post("http://localhost:4000/api/admin/course", body);
+    const res = await axios.post(
+      "http://localhost:4000/api/admin/course",
+      body
+    );
 
     if (res?.data?.msg === "UserID already exists") {
       const err = new Error(res.data.msg);
@@ -181,8 +186,7 @@ const ManageTimetable = () => {
 
     await axios.put("http://localhost:4000/api/admin/course", body);
     await fecthAdminsAccounts();
-  }
-
+  };
 
   return (
     <>
@@ -196,8 +200,9 @@ const ManageTimetable = () => {
 
       <div className="flex flex-col min-h-screen">
         <div
-          className={`${activate ? "pl-[80px]" : "pl-[239px]"
-            } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
+          className={`${
+            activate ? "pl-[80px]" : "pl-[239px]"
+          } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>
             <div className="px-3 py-3">
@@ -207,7 +212,6 @@ const ManageTimetable = () => {
                 Icon={TimetableIcon}
               />
             </div>
-
 
             <div className="px-3">
               <button
@@ -220,21 +224,20 @@ const ManageTimetable = () => {
               </button>
             </div>
 
-
-              {/* Add time table here */}
-              <div className="px-2 py-3">
-                <TimetableGrid
-                  event ={events}
-                  initialDate={"2025-08-11"}
-                  onDelete={() => console.log("Delete event")}  
-                />
-              </div>
-
+            {/* Add time table here */}
+            <div className="px-2 py-3">
+              <TimetableGrid
+                event={events}
+                initialDate={"2025-08-11"}
+                onDelete={() => console.log("Delete event")}
+              />
+            </div>
           </div>
         </div>
         <div
-          className={`${activate ? "w-full" : "w-[calc(100%-223px)]"
-            } transition-all duration-200 ml-auto mt-auto`}>
+          className={`${
+            activate ? "w-[calc(100%-223px)]" : "w-full"
+          } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>
       </div>

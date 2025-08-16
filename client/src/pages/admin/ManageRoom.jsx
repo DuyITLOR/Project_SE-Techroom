@@ -14,15 +14,14 @@ import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
 import AddForm from "../../components/AddForm";
 
-
 const ManageRoom = () => {
-  const [activate, setActivate] = useState(0);
+  const [activate, setActivate] = useState(1);
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
-  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [editData, setEdtitData] = useState(null)
+  const [editData, setEdtitData] = useState(null);
 
   const Columns = ["roomID", "roomName", "note"];
 
@@ -54,19 +53,19 @@ const ManageRoom = () => {
   };
 
   const onEdit = async (roomID) => {
-    console.log("Edit RoomID: ", roomID)
-    const itemEdit = data.find((item) => item.roomID === roomID)
-    console.log("Item to edit: ", itemEdit)
+    console.log("Edit RoomID: ", roomID);
+    const itemEdit = data.find((item) => item.roomID === roomID);
+    console.log("Item to edit: ", itemEdit);
     if (!itemEdit) {
-      console.error("Item not found for editing: ",roomID)
-      return
+      console.error("Item not found for editing: ", roomID);
+      return;
     }
 
     setEdtitData({
       RoomID: itemEdit.roomID || "N/A",
       RoomName: itemEdit.roomName || "N/A",
-      Note: itemEdit.note|| "N/A",
-    })
+      Note: itemEdit.note || "N/A",
+    });
 
     setIsEditOpen(true);
     console.log("Editing item: ", editData);
@@ -74,7 +73,7 @@ const ManageRoom = () => {
 
   const fecthAdminsAccounts = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/admin/room")
+      const res = await axios.get("http://localhost:4000/api/admin/room");
       console.log("Fetched course: ", res.data);
 
       const list = res.data.listUsers || [];
@@ -82,7 +81,7 @@ const ManageRoom = () => {
       const fromatted = list.map((item, index) => ({
         roomID: item.RoomID || "N/A",
         roomName: item.RoomName || "N/A",
-        note: item.Note || "N/A",  
+        note: item.Note || "N/A",
       }));
       setData(fromatted);
     } catch (err) {
@@ -103,13 +102,13 @@ const ManageRoom = () => {
       const res = await axios.get(
         "http://localhost:4000/api/admin/room/search",
         {
-          params: { roomID: searchTerm}
+          params: { roomID: searchTerm },
         }
       );
       console.log("Search results: ", res.data);
       const list = res.data.Room || [];
 
-      const formatted = list.map((item, index) => ({  
+      const formatted = list.map((item, index) => ({
         roomID: item.RoomID || "N/A",
         roomName: item.RoomName || "N/A",
         note: item.Note || "N/A",
@@ -140,7 +139,6 @@ const ManageRoom = () => {
   };
 
   const handleAddSubmit = async (formData) => {
-
     const body = {
       roomID: formData.RoomID || "N/A",
       roomName: formData.RoomName || "N/A",
@@ -170,8 +168,7 @@ const ManageRoom = () => {
 
     await axios.put("http://localhost:4000/api/admin/room", body);
     await fecthAdminsAccounts();
-  }
-
+  };
 
   return (
     <>
@@ -185,8 +182,9 @@ const ManageRoom = () => {
 
       <div className="flex flex-col min-h-screen">
         <div
-          className={`${activate ? "pl-[80px]" : "pl-[239px]"
-            } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
+          className={`${
+            activate ? "pl-[239px]" : "pl-[80px]"
+          } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>
             <div className="px-3 py-3">
@@ -233,8 +231,9 @@ const ManageRoom = () => {
           </div>
         </div>
         <div
-          className={`${activate ? "w-full" : "w-[calc(100%-223px)]"
-            } transition-all duration-200 ml-auto mt-auto`}>
+          className={`${
+            activate ? "w-[calc(100%-223px)]" : "w-full"
+          } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>
       </div>

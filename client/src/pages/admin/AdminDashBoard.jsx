@@ -14,15 +14,14 @@ import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
 import AddForm from "../../components/AddForm";
 
-
 const AdminDashBoard = () => {
-  const [activate, setActivate] = useState(0);
+  const [activate, setActivate] = useState(1);
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
-  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [editData, setEdtitData] = useState(null)
+  const [editData, setEdtitData] = useState(null);
 
   const Columns = ["id", "name", "dob", "password"];
 
@@ -50,8 +49,7 @@ const AdminDashBoard = () => {
       name: "birthday",
       type: "date",
       placeholder: "Enter your birthday",
-    }
-
+    },
   ];
 
   const onDelete = (items) => {
@@ -61,24 +59,24 @@ const AdminDashBoard = () => {
   };
 
   const onEdit = async (userID) => {
-   console.log("Edit userID: ", userID)
-   const itemEdit = data.find((item) => item.id === userID)
-   if (!itemEdit) {
-     console.error("Item not found for editing: ", userID)
-     return
-   }
+    console.log("Edit userID: ", userID);
+    const itemEdit = data.find((item) => item.id === userID);
+    if (!itemEdit) {
+      console.error("Item not found for editing: ", userID);
+      return;
+    }
 
-   setEdtitData({
-    userID : itemEdit.id,
-    fullName: itemEdit.name,
-    birthday: itemEdit.dob,
-    password: itemEdit.password,
-    role: "admin"
-   })
+    setEdtitData({
+      userID: itemEdit.id,
+      fullName: itemEdit.name,
+      birthday: itemEdit.dob,
+      password: itemEdit.password,
+      role: "admin",
+    });
 
-   setIsEditOpen(true);
+    setIsEditOpen(true);
 
-   console.log("Editing item: ", itemEdit);
+    console.log("Editing item: ", itemEdit);
   };
 
   const fecthAdminsAccounts = async () => {
@@ -152,7 +150,6 @@ const AdminDashBoard = () => {
   };
 
   const handleAddSubmit = async (formData) => {
-
     const body = {
       userID: formData.userID,
       password: formData.password,
@@ -161,7 +158,10 @@ const AdminDashBoard = () => {
       role: "admin",
     };
 
-    const res = await axios.post("http://localhost:4000/api/admin/account", body);
+    const res = await axios.post(
+      "http://localhost:4000/api/admin/account",
+      body
+    );
 
     if (res?.data?.msg === "UserID already exists") {
       const err = new Error(res.data.msg);
@@ -183,10 +183,7 @@ const AdminDashBoard = () => {
 
     await axios.put("http://localhost:4000/api/admin/account", body);
     await fecthAdminsAccounts();
-  }
-
-
-
+  };
 
   return (
     <>
@@ -200,8 +197,9 @@ const AdminDashBoard = () => {
 
       <div className="flex flex-col min-h-screen">
         <div
-          className={`${activate ? "pl-[80px]" : "pl-[239px]"
-            } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
+          className={`${
+            activate ? "pl-[239px]" : "pl-[80px]"
+          } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>
             <div className="px-3 py-3">
@@ -238,7 +236,13 @@ const AdminDashBoard = () => {
 
             <div className="px-3 py-3">
               <PaginatedTable
-                headers={["UserID", "FullName", "Birthday", "Password", "Actions"]}
+                headers={[
+                  "UserID",
+                  "FullName",
+                  "Birthday",
+                  "Password",
+                  "Actions",
+                ]}
                 data={data}
                 onEdit={onEdit}
                 onDelete={onDelete}
@@ -248,8 +252,9 @@ const AdminDashBoard = () => {
           </div>
         </div>
         <div
-          className={`${activate ? "w-full" : "w-[calc(100%-223px)]"
-            } transition-all duration-200 ml-auto mt-auto`}>
+          className={`${
+            activate ? "w-[calc(100%-223px)]" : "w-full"
+          } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>
       </div>

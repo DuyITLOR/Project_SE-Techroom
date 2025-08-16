@@ -17,6 +17,7 @@ import StudentTimetable from "./pages/student/StudentTimetable.jsx";
 import StudentRoadMap from "./pages/student/StudentRoadMap.jsx";
 import StudentClassDashboard from "./pages/student/StudentClassDashboard.jsx";
 import TimetableGrid from "./components/TimeTable/TimetableGrid.jsx";
+import StudentClassFeedBack from "./pages/student/StudentClassFeedBack.jsx";
 const App = () => {
   return (
     <div>
@@ -31,13 +32,13 @@ const App = () => {
           }
         />
 
-        <Route path="/test" element={<TimetableGrid/>} />
+        <Route path="/test" element={<TimetableGrid />} />
 
         <Route
           path="/admin/Student"
           element={
             <ProtectedRoute roleRequired={["admin", "superadmin"]}>
-              <ManageStudent/>
+              <ManageStudent />
             </ProtectedRoute>
           }
         />
@@ -46,7 +47,7 @@ const App = () => {
           path="/admin/Teacher"
           element={
             <ProtectedRoute roleRequired={["admin", "superadmin"]}>
-              <ManageTeacher/>
+              <ManageTeacher />
             </ProtectedRoute>
           }
         />
@@ -73,7 +74,7 @@ const App = () => {
           path="/admin/Class"
           element={
             <ProtectedRoute roleRequired={["admin", "superadmin"]}>
-              <ManageClass/>
+              <ManageClass />
             </ProtectedRoute>
           }
         />
@@ -124,10 +125,19 @@ const App = () => {
         />
 
         <Route
-          path="/student/Class/Discussion"
+          path="/student/Class/:ClassID/Discussion"
           element={
             <ProtectedRoute roleRequired="student">
               <StudentClassDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student/Class/:ClassID/Feedback"
+          element={
+            <ProtectedRoute roleRequired="student">
+              <StudentClassFeedBack />
             </ProtectedRoute>
           }
         />

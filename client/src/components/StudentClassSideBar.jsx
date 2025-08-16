@@ -6,7 +6,8 @@ import DiscussionIcon from "../assets/message-circle.svg?react";
 import FeedbackIcon from "../assets/star.svg?react";
 import MenuIcon from "../assets/menu.svg?react";
 
-const StudentClassSideBar = ({ activate, setActivate, current }) => {
+const StudentClassSideBar = ({ activate, setActivate, current, classID }) => {
+  console.log(activate, classID);
   const [activeIndex, setActiveIndex] = useState(current);
   const navigate = useNavigate();
 
@@ -15,15 +16,17 @@ const StudentClassSideBar = ({ activate, setActivate, current }) => {
       text: "Discussion",
       icon: DiscussionIcon,
       color: "#FF0000",
-      link: "/student/Class/Discussion",
+      link: `/student/Class/${classID}/Discussion`,
     },
     {
       text: "Feedback",
       icon: FeedbackIcon,
       color: "#FF7002",
-      link: "/student/Class/Feedback",
+      link: `/student/Class/${classID}/Feedback`,
     },
   ];
+
+  console.log("ClassID: ", classID);
 
   return (
     <div

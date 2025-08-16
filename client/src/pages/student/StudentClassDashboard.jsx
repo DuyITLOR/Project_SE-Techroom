@@ -1,17 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import StudentClassSideBar from "../../components/StudentClassSideBar";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
 import SearchBar from "../../components/SearchBar";
 import SummaryCard from "../../components/SummaryCard";
-import ItemCard from "../../components/ClassCard";
+import PostCard from "../../components/PostCard";
 
-import ClassIcon from "../../assets/users.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
 import DiscussionIcon from "../../assets/message-circle.svg?react";
 
-const StudentClassDashboard = () => {
+import axios from "axios";
+
+const StudentClassDashboard = ({ ClassID }) => {
+  const [activate, setActivate] = useState(1);
+  const [discussion, setDiscussion] = useState([]);
+  const { classID } = useParams();
+
   const handleSearch = async (searchTerm) => {
     if (!searchTerm) {
       fecthAdminsAccounts();
@@ -39,8 +45,35 @@ const StudentClassDashboard = () => {
     }
   };
 
-  const [activate, setActivate] = useState(0);
-  const [data, setData] = useState([]);
+  const fecthClassInfo = async () => {
+    console.log("Fetching class data...");
+    try {
+      const res = await axios.get("http://localhost:4000/api/core/class", {
+        params: { ClassID: ClassID },
+      });
+      console.log("Fetched class's infomation: ", res.data);
+
+      const list = res.data.listClasses || [];
+
+      console.log("List of classes: ", list);
+      const formatted = list.map((item, index) => ({
+        ClassID: item.ClassID || "N/A",
+        ClassName: item.ClassName || "N/A",
+        LessonsPerWeek: item.LessonsPerWeek || "N/A",
+        ClassNumWeek: item.ClassNumWeek || "N/A",
+        BeginDate: item.BeginDate || "N/A",
+        EndDate: item.EndDate || "N/A",
+        CourseID: item.CourseID || "N/A",
+      }));
+      setData(formatted);
+    } catch (err) {
+      console.log("Error fetching classes: ", err);
+    }
+  };
+
+  useEffect(() => {
+    fecthClassInfo();
+  }, []);
 
   return (
     <>
@@ -52,6 +85,7 @@ const StudentClassDashboard = () => {
           activate={activate}
           setActivate={setActivate}
           current={0}
+          classID={classID}
         />
       </div>
 
@@ -63,7 +97,7 @@ const StudentClassDashboard = () => {
           <div>
             <div className="py-3 pr-2">
               <TitleBanner
-                title="Discussion Class-1"
+                title={`Discussion ${ClassID}`}
                 subTitle="All necessary knowledge for you"
                 Icon={DiscussionIcon}
               />
@@ -77,31 +111,19 @@ const StudentClassDashboard = () => {
                 />
               </div>
               <div>
-                <SummaryCard number={data.length} name="Total Posts" />
+                <SummaryCard number={discussion.length} name="Total Posts" />
               </div>
             </div>
           </div>
           <div className="grid grid-cols-1 gap-3 py-3 pr-2 justify-center">
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
+            {discussion.map((item, index) => (
+              <PostCard
+                key={index}
+                UserName={item.UserName}
+                DateTime={item.DateTime}
+                Content={item.Content}
+              />
+            ))}
           </div>
         </div>
         <div

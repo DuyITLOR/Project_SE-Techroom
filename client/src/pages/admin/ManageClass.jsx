@@ -14,17 +14,26 @@ import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
 import AddForm from "../../components/AddForm";
 
-
 const ManageClass = () => {
-  const [activate, setActivate] = useState(0);
+  const [activate, setActivate] = useState(1);
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
-  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [editData, setEdtitData] = useState(null)
+  const [editData, setEdtitData] = useState(null);
 
-  const Columns = ["classID", "className", "lessonPerWeek", "classNumWeek", "beginDate", "endDate", "courseID", "studentOfClass", "teacherOfClass"];
+  const Columns = [
+    "classID",
+    "className",
+    "lessonPerWeek",
+    "classNumWeek",
+    "beginDate",
+    "endDate",
+    "courseID",
+    "studentOfClass",
+    "teacherOfClass",
+  ];
 
   const addFields = [
     {
@@ -90,12 +99,12 @@ const ManageClass = () => {
   };
 
   const onEdit = async (classID) => {
-    console.log("Edit RoomID: ", classID)
-    const itemEdit = data.find((item) => item.classID === classID)
-    console.log("Item to edit: ", itemEdit)
+    console.log("Edit RoomID: ", classID);
+    const itemEdit = data.find((item) => item.classID === classID);
+    console.log("Item to edit: ", itemEdit);
     if (!itemEdit) {
-      console.error("Item not found for editing: ",classID)
-      return
+      console.error("Item not found for editing: ", classID);
+      return;
     }
 
     setEdtitData({
@@ -108,7 +117,7 @@ const ManageClass = () => {
       CourseID: itemEdit.courseID || "N/A",
       StudentOfClass: itemEdit.studentOfClass || "N/A",
       TeacherOfClass: itemEdit.teacherOfClass || "N/A",
-    })
+    });
 
     setIsEditOpen(true);
     console.log("Editing item: ", editData);
@@ -124,13 +133,43 @@ const ManageClass = () => {
       // const fromatted = list.map((item, index) => ({
       //   roomID: item.RoomID || "N/A",
       //   roomName: item.RoomName || "N/A",
-      //   note: item.Note || "N/A",  
+      //   note: item.Note || "N/A",
       // }));
 
       const fromatted = [
-        {classID: "CL001", className: "Lớp Toán", lessonPerWeek: 3, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C001", studentOfClass: "Lê Nhựt Duy, Cao Xuân Nam", teacherOfClass: "T001"},
-        {classID: "CL002", className: "Lớp Lý", lessonPerWeek: 2, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C002", studentOfClass: "Đăng Hoài Thương, Đức Thịnh", teacherOfClass: "T002"},
-        {classID: "CL003", className: "Lớp Hóa", lessonPerWeek: 2, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C003", studentOfClass: "Nguyễn Thị Mai, Trần Văn A", teacherOfClass: "T003"},
+        {
+          classID: "CL001",
+          className: "Lớp Toán",
+          lessonPerWeek: 3,
+          classNumWeek: 4,
+          beginDate: "2023-09-01",
+          endDate: "2023-12-01",
+          courseID: "C001",
+          studentOfClass: "Lê Nhựt Duy, Cao Xuân Nam",
+          teacherOfClass: "T001",
+        },
+        {
+          classID: "CL002",
+          className: "Lớp Lý",
+          lessonPerWeek: 2,
+          classNumWeek: 4,
+          beginDate: "2023-09-01",
+          endDate: "2023-12-01",
+          courseID: "C002",
+          studentOfClass: "Đăng Hoài Thương, Đức Thịnh",
+          teacherOfClass: "T002",
+        },
+        {
+          classID: "CL003",
+          className: "Lớp Hóa",
+          lessonPerWeek: 2,
+          classNumWeek: 4,
+          beginDate: "2023-09-01",
+          endDate: "2023-12-01",
+          courseID: "C003",
+          studentOfClass: "Nguyễn Thị Mai, Trần Văn A",
+          teacherOfClass: "T003",
+        },
       ];
       console.log("Formatted data: ", fromatted);
       setData(fromatted);
@@ -158,18 +197,48 @@ const ManageClass = () => {
       // console.log("Search results: ", res.data);
       // const list = res.data.Room || [];
 
-      // const formatted = list.map((item, index) => ({  
+      // const formatted = list.map((item, index) => ({
       //   roomID: item.RoomID || "N/A",
       //   roomName: item.RoomName || "N/A",
       //   note: item.Note || "N/A",
       // }));
       // Bỏ phần gọi API, gán dữ liệu mẫu
       const formatted = [
-        {classID: "CL001", className: "Lớp Toán", lessonPerWeek: 3, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C001", studentOfClass: "Lê Nhựt Duy, Cao Xuân Nam", teacherOfClass: "T001"},
-        {classID: "CL002", className: "Lớp Lý", lessonPerWeek: 2, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C002", studentOfClass: "Đăng Hoài Thương, Đức Thịnh", teacherOfClass: "T002"},
-        {classID: "CL003", className: "Lớp Hóa", lessonPerWeek: 2, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C003", studentOfClass: "Nguyễn Thị Mai, Trần Văn A", teacherOfClass: "T003"},
+        {
+          classID: "CL001",
+          className: "Lớp Toán",
+          lessonPerWeek: 3,
+          classNumWeek: 4,
+          beginDate: "2023-09-01",
+          endDate: "2023-12-01",
+          courseID: "C001",
+          studentOfClass: "Lê Nhựt Duy, Cao Xuân Nam",
+          teacherOfClass: "T001",
+        },
+        {
+          classID: "CL002",
+          className: "Lớp Lý",
+          lessonPerWeek: 2,
+          classNumWeek: 4,
+          beginDate: "2023-09-01",
+          endDate: "2023-12-01",
+          courseID: "C002",
+          studentOfClass: "Đăng Hoài Thương, Đức Thịnh",
+          teacherOfClass: "T002",
+        },
+        {
+          classID: "CL003",
+          className: "Lớp Hóa",
+          lessonPerWeek: 2,
+          classNumWeek: 4,
+          beginDate: "2023-09-01",
+          endDate: "2023-12-01",
+          courseID: "C003",
+          studentOfClass: "Nguyễn Thị Mai, Trần Văn A",
+          teacherOfClass: "T003",
+        },
       ];
-  
+
       setData(formatted);
       console.log("Formatted search results: ", formatted);
     } catch (err) {
@@ -195,7 +264,6 @@ const ManageClass = () => {
   };
 
   const handleAddSubmit = async (formData) => {
-
     const body = {
       roomID: formData.RoomID || "N/A",
       roomName: formData.RoomName || "N/A",
@@ -225,8 +293,7 @@ const ManageClass = () => {
 
     await axios.put("http://localhost:4000/api/admin/room", body);
     await fecthAdminsAccounts();
-  }
-
+  };
 
   return (
     <>
@@ -240,8 +307,9 @@ const ManageClass = () => {
 
       <div className="flex flex-col min-h-screen">
         <div
-          className={`${activate ? "pl-[80px]" : "pl-[239px]"
-            } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
+          className={`${
+            activate ? "pl-[239px]" : "pl-[80px]"
+          } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>
             <div className="px-3 py-3">
@@ -278,7 +346,18 @@ const ManageClass = () => {
 
             <div className="px-3 py-3">
               <PaginatedTable
-                headers={["ClassID", "ClassName", "LessonPerWeek", "ClassNumWeek", "BeginDate", "EndDate", "CourseID", "StudentOfClass", "TeacherOfClass","Actions"]}
+                headers={[
+                  "ClassID",
+                  "ClassName",
+                  "LessonPerWeek",
+                  "ClassNumWeek",
+                  "BeginDate",
+                  "EndDate",
+                  "CourseID",
+                  "StudentOfClass",
+                  "TeacherOfClass",
+                  "Actions",
+                ]}
                 data={data}
                 onEdit={onEdit}
                 onDelete={onDelete}
@@ -288,8 +367,9 @@ const ManageClass = () => {
           </div>
         </div>
         <div
-          className={`${activate ? "w-full" : "w-[calc(100%-223px)]"
-            } transition-all duration-200 ml-auto mt-auto`}>
+          className={`${
+            activate ? "w-[calc(100%-223px)]" : "w-full"
+          } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>
       </div>

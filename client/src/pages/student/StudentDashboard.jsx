@@ -1,45 +1,80 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import StudentSideBar from "../../components/StudentSideBar";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
 import SearchBar from "../../components/SearchBar";
 import SummaryCard from "../../components/SummaryCard";
-import ItemCard from "../../components/ClassCard";
+import ClassCard from "../../components/ClassCard";
 
 import ClassIcon from "../../assets/users.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
 
+import axios from "axios";
+
 const StudentDashboard = () => {
+  const navigate = useNavigate();
+  const [activate, setActivate] = useState(1);
+  const [data, setData] = useState([]);
+
   const handleSearch = async (searchTerm) => {
     if (!searchTerm) {
-      fecthAdminsAccounts();
+      fecthClass();
     }
     try {
-      const res = await axios.get(
-        "http://localhost:4000/api/admin/account/search",
-        {
-          params: { userID: searchTerm, role: "admin" },
-        }
-      );
+      const res = await axios.get("http://localhost:4000/api/core/class", {
+        params: { userID: searchTerm, role: "student" },
+      });
       console.log("Search results: ", res.data);
       const list = res.data.User || [];
 
       const formatted = list.map((item, index) => ({
-        id: item.UserID || "N/A",
-        name: item.FullName || "N/A",
-        dob: item.Birthday || "N/A",
+        ClassID: item.ClassID || "N/A",
+        ClassName: item.ClassName || "N/A",
+        LessonsPerWeek: item.LessonsPerWeek || "N/A",
+        ClassNumWeek: item.ClassNumWeek || "N/A",
+        BeginDate: item.BeginDate || "N/A",
+        EndDate: item.EndDate || "N/A",
+        CourseID: item.CourseID || "N/A",
       }));
 
       setData(formatted);
       console.log("Formatted search results: ", formatted);
     } catch (err) {
-      console.error("Error searching admin accounts: ", err);
+      console.error("Error searching classes: ", err);
     }
   };
 
-  const [activate, setActivate] = useState(0);
-  const [data, setData] = useState([]);
+  const fecthClass = async () => {
+    console.log("Fetching class data...");
+    try {
+      const res = await axios.get("http://localhost:4000/api/core/class", {
+        params: { userid: localStorage.getItem("username"), role: "student" },
+      });
+      console.log("Fetched student's class: ", res.data);
+
+      const list = res.data.listClasses || [];
+
+      console.log("List of classes: ", list);
+      const formatted = list.map((item, index) => ({
+        ClassID: item.ClassID || "N/A",
+        ClassName: item.ClassName || "N/A",
+        LessonsPerWeek: item.LessonsPerWeek || "N/A",
+        ClassNumWeek: item.ClassNumWeek || "N/A",
+        BeginDate: item.BeginDate || "N/A",
+        EndDate: item.EndDate || "N/A",
+        CourseID: item.CourseID || "N/A",
+      }));
+      setData(formatted);
+    } catch (err) {
+      console.log("Error fetching classes: ", err);
+    }
+  };
+
+  useEffect(() => {
+    fecthClass();
+  }, []);
 
   return (
     <>
@@ -70,7 +105,7 @@ const StudentDashboard = () => {
             <div className="flex items-stretch py-1 gap-2 pr-2">
               <div className="flex-1">
                 <SearchBar
-                  inputText="Enter Class Name"
+                  inputText="Enter Class ID"
                   Icon={SearchIcon}
                   onSearch={handleSearch}
                 />
@@ -81,26 +116,18 @@ const StudentDashboard = () => {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3 py-3 pr-2 justify-center">
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
-            <ItemCard
-              ClassName={"HE"}
-              TeacherName={"Yunetrea"}
-              LastModify={"1 / 2 / 2024"}
-            />
+            {data.map((item, index) => (
+              <ClassCard
+                key={item.ClassID}
+                ClassID={item.ClassID || "N/A"}
+                ClassName={item.ClassName || "N/A"}
+                TeacherName={item.TeacherName || "None"}
+                onClick={() => {
+                  navigate(`/student/Class/${item.ClassID}/Discussion`);
+                  console.log("Navgating");
+                }}
+              />
+            ))}
           </div>
         </div>
         <div

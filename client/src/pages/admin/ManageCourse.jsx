@@ -14,17 +14,22 @@ import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
 import AddForm from "../../components/AddForm";
 
-
 const ManageCourse = () => {
-  const [activate, setActivate] = useState(0);
+  const [activate, setActivate] = useState(1);
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
-  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [editData, setEdtitData] = useState(null)
+  const [editData, setEdtitData] = useState(null);
 
-  const Columns = ["courseID", "courseName", "courseNumber", "syllabus", "equipment"];
+  const Columns = [
+    "courseID",
+    "courseName",
+    "courseNumber",
+    "syllabus",
+    "equipment",
+  ];
 
   const addFields = [
     {
@@ -56,7 +61,7 @@ const ManageCourse = () => {
       name: "Equipment",
       type: "text",
       placeholder: "Enter your equipment",
-    }
+    },
   ];
 
   const onDelete = (items) => {
@@ -66,12 +71,12 @@ const ManageCourse = () => {
   };
 
   const onEdit = async (courseID) => {
-    console.log("Edit courseID: ", courseID)
-    const itemEdit = data.find((item) => item.courseID === courseID)
-    console.log("Item to edit: ", itemEdit)
+    console.log("Edit courseID: ", courseID);
+    const itemEdit = data.find((item) => item.courseID === courseID);
+    console.log("Item to edit: ", itemEdit);
     if (!itemEdit) {
-      console.error("Item not found for editing: ", courseID)
-      return
+      console.error("Item not found for editing: ", courseID);
+      return;
     }
 
     setEdtitData({
@@ -80,7 +85,7 @@ const ManageCourse = () => {
       CourseNumber: itemEdit.courseNumber || "N/A",
       Syllabus: itemEdit.syllabus || "N/A",
       Equipment: itemEdit.equipment || "N/A",
-    })
+    });
 
     setIsEditOpen(true);
     console.log("Editing item: ", editData);
@@ -88,7 +93,7 @@ const ManageCourse = () => {
 
   const fecthAdminsAccounts = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/admin/course")
+      const res = await axios.get("http://localhost:4000/api/admin/course");
       console.log("Fetched course: ", res.data);
 
       const list = res.data.listUsers || [];
@@ -119,7 +124,7 @@ const ManageCourse = () => {
       const res = await axios.get(
         "http://localhost:4000/api/admin/course/search",
         {
-          params: { courseID: searchTerm}
+          params: { courseID: searchTerm },
         }
       );
       console.log("Search results: ", res.data);
@@ -158,7 +163,6 @@ const ManageCourse = () => {
   };
 
   const handleAddSubmit = async (formData) => {
-
     const body = {
       courseID: formData.CourseID || "N/A",
       courseName: formData.CourseName || "N/A",
@@ -168,7 +172,10 @@ const ManageCourse = () => {
     };
     console.log("Adding new course with data: ", body);
 
-    const res = await axios.post("http://localhost:4000/api/admin/course", body);
+    const res = await axios.post(
+      "http://localhost:4000/api/admin/course",
+      body
+    );
 
     if (res?.data?.msg === "UserID already exists") {
       const err = new Error(res.data.msg);
@@ -190,8 +197,7 @@ const ManageCourse = () => {
 
     await axios.put("http://localhost:4000/api/admin/course", body);
     await fecthAdminsAccounts();
-  }
-
+  };
 
   return (
     <>
@@ -205,8 +211,9 @@ const ManageCourse = () => {
 
       <div className="flex flex-col min-h-screen">
         <div
-          className={`${activate ? "pl-[80px]" : "pl-[239px]"
-            } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
+          className={`${
+            activate ? "pl-[239px]" : "pl-[80px]"
+          } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>
             <div className="px-3 py-3">
@@ -243,7 +250,14 @@ const ManageCourse = () => {
 
             <div className="px-3 py-3">
               <PaginatedTable
-                headers={["CourseID", "CourseName", "CourseNumber", "Syllabus", "Equipment", "Actions"]}
+                headers={[
+                  "CourseID",
+                  "CourseName",
+                  "CourseNumber",
+                  "Syllabus",
+                  "Equipment",
+                  "Actions",
+                ]}
                 data={data}
                 onEdit={onEdit}
                 onDelete={onDelete}
@@ -253,8 +267,9 @@ const ManageCourse = () => {
           </div>
         </div>
         <div
-          className={`${activate ? "w-full" : "w-[calc(100%-223px)]"
-            } transition-all duration-200 ml-auto mt-auto`}>
+          className={`${
+            activate ? "w-[calc(100%-223px)]" : "w-full"
+          } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>
       </div>
