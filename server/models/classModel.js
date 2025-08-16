@@ -114,17 +114,17 @@ Class.deleteClass = async function (ClassID) {
     return true
 }
 //getClassStudentList which student is in ClassParticipate table
-Class.getClassByRole = async function (role) {
+Class.getClassByRole = async function (classID, role) {
     const results = await sequelize.query(
         `
         SELECT a.FullName, a.Role, c.*
         FROM Class c
         JOIN Participation p ON c.ClassID = p.ClassID
         JOIN Accounts a ON p.Username = a.UserID
-        WHERE a.Role = :role
+        WHERE a.Role = :role AND p.ClassID = :classID
         `,
         {
-            replacements: { role },
+            replacements: { role, classID },
             type: QueryTypes.SELECT
         }
     );

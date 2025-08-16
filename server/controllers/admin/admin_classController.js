@@ -3,9 +3,9 @@ import Class from '../../models/classModel.js'
 import Participation from '../../models/classParticipationModel.js'
 
 export const getClassByRole = async (req, res) => {
-    const { role } = req.body
+    const { classID, role } = req.body
     console.log("req.body:", req.body)
-    const classes = await Class.getClassByRole(role)
+    const classes = await Class.getClassByRole(classID, role)
 
     if (!classes.success) {
         return res.status(200).send({
