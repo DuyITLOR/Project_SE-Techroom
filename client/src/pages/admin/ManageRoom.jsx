@@ -4,33 +4,46 @@ import Footer from "../../components/Footer";
 import SideBar from "../../components/SideBar";
 import TitleBanner from "../../components/TitleBanner";
 import SearchBar from "../../components/SearchBar";
+import RoomIcon from "../../assets/home.svg?react";
+import SearchIcon from "../../assets/search.svg?react";
 import SummaryCard from "../../components/SummaryCard";
+import exampleData from "../../assets/ExampleData";
 import PaginatedTable from "../../components/Table/PaginatedTable";
+import Plus from "../../assets/plus.svg?react";
+import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
 import AddForm from "../../components/AddForm";
 
-import ClassIcon from "../../assets/users.svg?react";
-import SearchIcon from "../../assets/search.svg?react";
-import Plus from "../../assets/plus.svg?react";
 
 const ManageRoom = () => {
   const [activate, setActivate] = useState(0);
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [editData, setEdtitData] = useState(null)
+
+  const Columns = ["roomID", "roomName", "note"];
+
   const addFields = [
     {
-      label: "Name",
-      name: "name",
+      label: "RoomID",
+      name: "RoomID",
       type: "text",
-      placeholder: "Enter your name",
+      placeholder: "Enter your room ID",
     },
     {
-      label: "Email",
-      name: "email",
-      type: "email",
-      placeholder: "Enter your email",
+      label: "RoomName",
+      name: "RoomName",
+      type: "text",
+      placeholder: "Enter your room name",
+    },
+    {
+      label: "Note",
+      name: "Note",
+      type: "text",
+      placeholder: "Enter your note for room",
     },
   ];
 
@@ -40,27 +53,40 @@ const ManageRoom = () => {
     setShowConfirm(true);
   };
 
-  const onEdit = (items) => {
-    console.log("Edit items: ", items);
+  const onEdit = async (roomID) => {
+    console.log("Edit RoomID: ", roomID)
+    const itemEdit = data.find((item) => item.roomID === roomID)
+    console.log("Item to edit: ", itemEdit)
+    if (!itemEdit) {
+      console.error("Item not found for editing: ",roomID)
+      return
+    }
+
+    setEdtitData({
+      RoomID: itemEdit.roomID || "N/A",
+      RoomName: itemEdit.roomName || "N/A",
+      Note: itemEdit.note|| "N/A",
+    })
+
+    setIsEditOpen(true);
+    console.log("Editing item: ", editData);
   };
 
   const fecthAdminsAccounts = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/admin/account", {
-        params: { role: "admin" },
-      });
-      console.log("Fetched admin accounts: ", res.data);
+      const res = await axios.get("http://localhost:4000/api/admin/room")
+      console.log("Fetched course: ", res.data);
 
       const list = res.data.listUsers || [];
 
       const fromatted = list.map((item, index) => ({
-        id: item.UserID || "N/A",
-        name: item.FullName || "N/A",
-        dob: item.Birthday || "N/A",
+        roomID: item.RoomID || "N/A",
+        roomName: item.RoomName || "N/A",
+        note: item.Note || "N/A",  
       }));
       setData(fromatted);
     } catch (err) {
-      console.log("Error fetching admin accounts: ", err);
+      console.log("Error fetching information course: ", err);
     }
   };
 
@@ -72,26 +98,27 @@ const ManageRoom = () => {
     if (!searchTerm) {
       fecthAdminsAccounts();
     }
+
     try {
       const res = await axios.get(
-        "http://localhost:4000/api/admin/account/search",
+        "http://localhost:4000/api/admin/room/search",
         {
-          params: { userID: searchTerm, role: "admin" },
+          params: { roomID: searchTerm}
         }
       );
       console.log("Search results: ", res.data);
-      const list = res.data.User || [];
+      const list = res.data.Room || [];
 
-      const formatted = list.map((item, index) => ({
-        id: item.UserID || "N/A",
-        name: item.FullName || "N/A",
-        dob: item.Birthday || "N/A",
+      const formatted = list.map((item, index) => ({  
+        roomID: item.RoomID || "N/A",
+        roomName: item.RoomName || "N/A",
+        note: item.Note || "N/A",
       }));
 
       setData(formatted);
       console.log("Formatted search results: ", formatted);
     } catch (err) {
-      console.error("Error searching admin accounts: ", err);
+      console.error("Error searching teacher accounts: ", err);
     }
   };
 
@@ -100,17 +127,51 @@ const ManageRoom = () => {
     if (!item) return;
 
     try {
-      await axios.delete("http://localhost:4000/api/admin/account", {
-        data: { userID: item },
+      await axios.delete("http://localhost:4000/api/admin/room", {
+        data: { roomID: item },
       });
 
       // Recall the getdatabase
       fecthAdminsAccounts();
       setItem(null);
     } catch (err) {
-      console.error("Error deleting admin account: ", err);
+      console.error("Error deleting teacher account: ", err);
     }
   };
+
+  const handleAddSubmit = async (formData) => {
+
+    const body = {
+      roomID: formData.RoomID || "N/A",
+      roomName: formData.RoomName || "N/A",
+      note: formData.Note || "N/A",
+    };
+    console.log("Adding new room with data: ", body);
+
+    const res = await axios.post("http://localhost:4000/api/admin/room", body);
+
+    if (res?.data?.msg === "UserID already exists") {
+      const err = new Error(res.data.msg);
+      err.response = { data: { message: res.data.msg } };
+      throw err;
+    }
+
+    await fecthAdminsAccounts();
+  };
+
+  const handleUpdateSubmit = async (formData) => {
+    const body = {
+      roomID: formData.RoomID || "N/A",
+      roomName: formData.RoomName || "N/A",
+      note: formData.Note || "N/A",
+    };
+
+    console.log("Updating room with data: ", body);
+
+    await axios.put("http://localhost:4000/api/admin/room", body);
+    await fecthAdminsAccounts();
+  }
+
 
   return (
     <>
@@ -124,16 +185,15 @@ const ManageRoom = () => {
 
       <div className="flex flex-col min-h-screen">
         <div
-          className={`${
-            activate ? "pl-[80px]" : "pl-[239px]"
-          } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
+          className={`${activate ? "pl-[80px]" : "pl-[239px]"
+            } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>
             <div className="px-3 py-3">
               <TitleBanner
                 title="Room Management"
-                subTitle="This is YUNETREA"
-                Icon={ClassIcon}
+                subTitle="Manage all room of the center"
+                Icon={RoomIcon}
               />
             </div>
 
@@ -153,7 +213,7 @@ const ManageRoom = () => {
             <div className="px-3">
               <button
                 onClick={() => {
-                  console.log("Add new room"), setIsOpen(true);
+                  console.log("Add new Room"), setIsAddOpen(true);
                 }}
                 className="flex gap-1 bg-blue-500 text-white text-xl px-2 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200">
                 <Plus />
@@ -163,18 +223,18 @@ const ManageRoom = () => {
 
             <div className="px-3 py-3">
               <PaginatedTable
-                headers={["RoomID", "ClassNam", "Birthday", "Actions"]}
+                headers={["RoomID", "RoomName", "Note", "Actions"]}
                 data={data}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                columns={Columns}
               />
             </div>
           </div>
         </div>
         <div
-          className={`${
-            activate ? "w-full" : "w-[calc(100%-223px)]"
-          } transition-all duration-200 ml-auto mt-auto`}>
+          className={`${activate ? "w-full" : "w-[calc(100%-223px)]"
+            } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>
       </div>
@@ -189,7 +249,22 @@ const ManageRoom = () => {
         }}
       />
 
-      <AddForm fields={addFields} isOpen={isOpen} setIsOpen={setIsOpen} />
+      <AddForm
+        fields={addFields}
+        isOpen={isAddOpen}
+        setIsOpen={setIsAddOpen}
+        onSubmit={handleAddSubmit}
+        buttonLabel="Add"
+      />
+
+      <AddForm
+        fields={addFields}
+        isOpen={isEditOpen}
+        setIsOpen={setIsEditOpen}
+        onSubmit={handleUpdateSubmit}
+        initialData={editData}
+        buttonLabel={"Save"}
+      />
     </>
   );
 };

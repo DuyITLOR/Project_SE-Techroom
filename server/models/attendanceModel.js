@@ -1,28 +1,19 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
+import { Lesson } from './lessonModel.js';
 
 const Attendance = sequelize.define(
   'Attendance',
   {
-    StudentID: {
+    UserID: {
       type: DataTypes.CHAR(10),
       allowNull: false,
-      primaryKey: true,
+      primaryKey: true
     },
-    Date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-      primaryKey: true,
-    },
-    SessionNumber: {
+    LessonID: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-    },
-    RoomID: {
-      type: DataTypes.CHAR(10),
-      allowNull: false,
-      primaryKey: true,
+      primaryKey: true
     },
     isAbsent: {
       type: DataTypes.BOOLEAN,
