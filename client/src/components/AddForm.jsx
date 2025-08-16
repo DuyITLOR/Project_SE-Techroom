@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
+import MemberSelector from "./MemberSelector";
 
-const AddForm = ({ fields, isOpen, setIsOpen, onSubmit, initialData = {}, buttonLabel }) => {
+const AddForm = ({ fields, isOpen, setIsOpen, onSubmit, initialData = {}, buttonLabel,  openAdd = false}) => {
   const [formData, setFormData] = useState(() =>
     Object.fromEntries(fields.map(field => [field.name, ""])));
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+
+  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [selectedTeachers, setSelectedTeachers] = useState([]);
 
   useEffect(() => {
     if (isOpen) {
@@ -14,6 +18,9 @@ const AddForm = ({ fields, isOpen, setIsOpen, onSubmit, initialData = {}, button
       setFormData({ ...empty, ...initialData });
       setSubmitted(false);
       setError("");
+
+      setSelectedStudents([]);
+      setSelectedTeachers([]);
     }
   }, [isOpen, fields])
 
@@ -26,7 +33,7 @@ const AddForm = ({ fields, isOpen, setIsOpen, onSubmit, initialData = {}, button
     setError("")
     setSubmitted(true)
     try {
-      await onSubmit?.(formData)
+      await onSubmit?.({formData, StudentOfClass: selectedStudents, TeacherOfClass: selectedTeachers,})
       setIsOpen(false)
     } catch (err) {
       setError(err?.response?.data?.message || "An error occurred while submitting the form.");
@@ -41,6 +48,8 @@ const AddForm = ({ fields, isOpen, setIsOpen, onSubmit, initialData = {}, button
       ? `${safeLabel.slice(0, -1)}ing...`
       : `${safeLabel}ing...`;
 
+
+    
   return (
     <>
       {isOpen && (
@@ -74,13 +83,27 @@ const AddForm = ({ fields, isOpen, setIsOpen, onSubmit, initialData = {}, button
               ))}
             </form>
 
+            {
+              openAdd && (
+                  <MemberSelector
+                    selectedStudents={selectedStudents}
+                    setSelectedStudents={setSelectedStudents}
+                    selectedTeachers={selectedTeachers}
+                    setSelectedTeachers={setSelectedTeachers}
+                  />
+              )
+            }
+
+
+
+            {/* label for erro */}
             {error && (
               <p className="text-red-600 text-2xl">
                 {error}
               </p>
             )}
 
-
+            {/* button cancel */}
             <div className="flex ml-auto gap-6">
               <button
                 onClick={() => {
@@ -89,6 +112,8 @@ const AddForm = ({ fields, isOpen, setIsOpen, onSubmit, initialData = {}, button
                 className="flex gap-1 text-black text-[18px] px-2 py-2 cursor-pointer">
                 <p>Cancel</p>
               </button>
+
+              {/* button add  */}
               <button
                 onClick={handleAdd}
                 className="flex gap-1 text-black text-[18px] px-2 py-2 cursor-pointer disabled:opacity-20"
@@ -96,6 +121,9 @@ const AddForm = ({ fields, isOpen, setIsOpen, onSubmit, initialData = {}, button
               >
                 <p>{submitted ? runningLabel : safeLabel}</p>
               </button>
+
+
+
             </div>
           </div>
         </div>

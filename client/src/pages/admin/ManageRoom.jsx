@@ -12,7 +12,7 @@ import PaginatedTable from "../../components/Table/PaginatedTable";
 import Plus from "../../assets/plus.svg?react";
 import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
-import AddForm from "../../components/AddForm";
+import AddForm from "../../components/MemberSelector";
 
 const ManageRoom = () => {
   const [activate, setActivate] = useState(1);
