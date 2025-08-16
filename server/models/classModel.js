@@ -1,5 +1,5 @@
 
-import { DataTypes } from "sequelize";
+import { DataTypes, QueryTypes } from "sequelize";
 import { Op } from 'sequelize';
 import sequelize from "../config/db.js";
 
@@ -66,14 +66,28 @@ Class.getAllClass = async function () {
 }
 //getRelatedClasses(): Get all classes related to the username from the data Class Participation table
 Class.getRelatedClasses = async function (userID) {
-    return await this.findAll({
-        include: [{
-            model: sequelize.models.Participation,
-            attributes:[], //Chặn không lấy thuộc tính nào từ Participation
-            where: { Username: userID }
-        }],
-        order: [['EndDate', 'DESC']] // Sắp xếp theo ngày bắt đầu
-    });
+    const results = await sequelize.query(
+        `
+        SELECT c.*
+        FROM Class c
+        JOIN Participation p ON c.ClassID = p.ClassID
+        WHERE p.Username = :userID
+        `,
+        {
+            replacements: { userID },
+            type: QueryTypes.SELECT
+        }
+    );
+    if (!results.length) {
+        return {
+            success: false,
+            message: "No classes found for this user"
+        }
+    }
+    return {
+        success: true,
+        result: results
+    }
 }
 //updateClass(): Change one class’s information
 Class.updateClass = async function (ClassID, className, lessonsPerWeek, classNumWeek,beginDate, endDate, courseID) {
@@ -81,12 +95,12 @@ Class.updateClass = async function (ClassID, className, lessonsPerWeek, classNum
     if (!upclass) {
         return null
     }
-    upclass.ClassName= className
-    upclass.LessonsPerWeek= lessonsPerWeek
+    upclass.ClassName = className
+    upclass.LessonsPerWeek = lessonsPerWeek
     upclass.ClassNumWeek= classNumWeek
-    upclass.BeginDate= beginDate
-    upclass.EndDate= endDate
-    upclass.CourseID= courseID
+    upclass.BeginDate = beginDate
+    upclass.EndDate = endDate
+    upclass.CourseID = courseID
     await upclass.save()
     return upclass
 }
@@ -100,18 +114,30 @@ Class.deleteClass = async function (ClassID) {
     return true
 }
 //getClassStudentList which student is in ClassParticipate table
-Class.getClassStudentList = async function (ClassID) {
-    return await sequelize.models.Participation.findAll({
-        where: { ClassID: ClassID,Role: 'student' }, // Chỉ lấy những người có vai trò là Student
-        attributes: ['Username'] // Chỉ lấy thuộc tính ID của học sinh
-    });
-}
-//getClassTeacherList which teacher is in ClassParticipate table
-Class.getClassTeacherList = async function (ClassID) {
-    return await sequelize.models.Participation.findAll({
-        where: { ClassID: ClassID, Role: 'teacher' }, // Chỉ lấy những người có vai trò là Teacher
-        attributes: ['Username'] // Chỉ lấy thuộc tính ID của giáo viên
-    });
+Class.getClassByRole = async function (role) {
+    const results = await sequelize.query(
+        `
+        SELECT a.FullName, a.Role, c.*
+        FROM Class c
+        JOIN Participation p ON c.ClassID = p.ClassID
+        JOIN Accounts a ON p.Username = a.UserID
+        WHERE a.Role = :role
+        `,
+        {
+            replacements: { role },
+            type: QueryTypes.SELECT
+        }
+    );
+    if (!results.length) {
+        return {
+            success: false,
+            message: "No classes found for this user"
+        }
+    }
+    return {
+        success: true,
+        result: results
+    }
 }
 //viewClassDiscussion(): get all feedback from Feedback table that have the same ClassID and Tag from Tag table that is reference by the feedback
 Class.viewClassDiscussion = async function (ClassID) {

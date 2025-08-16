@@ -89,7 +89,7 @@ export const downloadSyllabus = async (req, res) => {
 
     if(!result.exists) {
         return res.send({
-            message: "There is no file available"
+            message: result.message
         })
     }
     res.download(result.filePath, (err) => {
@@ -98,9 +98,6 @@ export const downloadSyllabus = async (req, res) => {
                 message: "Cannot download file"
             })
         }
-        return res.send({
-            message: "File downloaded successfully!"
-        })
     });
 }
 

@@ -13,5 +13,6 @@ APIRoute.use('/admin', adminRouter)
 APIRoute.use('/admin', roomRouter)
 APIRoute.use('/admin', courseRouter)
 APIRoute.use('/core', classRouter)
+APIRoute.use('/admin', classRouter)
 
 export default APIRoute;

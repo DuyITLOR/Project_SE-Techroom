@@ -21,29 +21,16 @@ const Participation = sequelize.define('Participation', {
     timestamps: false         // KHÔNG dùng createdAt/updatedAt
 })
 
-Participation.addClassParticipation = async function (classid, userID) {
-    return await this.create({
-        ClassID: classid,
-        UserName: userID,
-    })
+Participation.addClassParticipation = async function (classID, userIDs) {
+    return Promise.all(
+        userIDs.map(userID => {
+            return Participation.create({
+                ClassID: classID,
+                UserName: userID
+            })
+        })
+    )
 }
 
-
-Participation.getAllClassParticipation = async function (classid) {
-    return await this.findAll({
-        where: {
-            ClassID: classid
-        }
-    })
-}
-
-Participation.getAllClass = async function (userid) {
-    return await this.findAll({
-        where: {
-            UserName: userid
-        }
-    })
-}
-
-export { Participation };
+export default Participation
 
