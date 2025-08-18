@@ -13,11 +13,11 @@ const Session = sequelize.define(
       primaryKey: true,
     },
     StartTime: {
-      type: DataTypes.TIME,
+      type: DataTypes.CHAR(3),
       allowNull: false,
     },
     EndTime: {
-      type: DataTypes.TIME,
+      type: DataTypes.char(3),
       allowNull: false,
     },
   },

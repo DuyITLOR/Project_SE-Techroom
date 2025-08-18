@@ -79,6 +79,28 @@ export const addUser = async (req, res) => {
     message: "New users added!",
   });
 };
+export const showClassInfomation = async (req, res) => {
+  const { classID } = req.body;
+  if (!classID) {
+    return res.status(400).send({
+      success: false,
+      message: "ClassID cannot be empty!",
+    });
+  }
+
+  const classInfo = await Class.showClassInfo(classID);
+  if (!classInfo) {
+    return res.status(404).send({
+      success: false,
+      message: "Class not found",
+    });
+  }
+
+  return res.status(200).send({
+    success: true,
+    classInfo,
+  });
+};
 
 export default {
   getClass,

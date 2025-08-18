@@ -1,5 +1,5 @@
 import express from "express";
-import { addUser, getClass } from "../controllers/classController.js";
+import { addUser, getClass,showClassInfomation } from "../controllers/classController.js";
 import { getClassByRole, addClass, searchClass, updateClass, deleteClass } from "../controllers/admin/admin_classController.js";
 import { handleByPrefix } from "../middlewares/prefixHandler.js";
 
@@ -31,6 +31,9 @@ classRouter.delete('/class', (req, res, next) => {
     const handler = deleteClass
     handler(req, res, next)
 })
-
+classRouter.get('/class/info', (req, res, next) => {
+    const handler = showClassInfomation
+    handler(req, res, next)
+})
 
 export default classRouter;
