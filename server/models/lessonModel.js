@@ -1,4 +1,4 @@
-import { DataTypes, Op } from 'sequelize';
+import { DataTypes, Op, QueryTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 import Accounts from './accountModel.js';
 import Class from './classModel.js';
@@ -148,6 +148,11 @@ Lesson.updateLesson = async function (lessonID, updatedInfo) {
 };
 
 Lesson.getAllLessonsForWeek = async function (weekStartDate) {
+  const startDate = new Date(weekStartDate);
+  if (isNaN(startDate.getTime())) {
+    throw new Error('Invalid date provided.');
+  }
+
   const lessons = Lesson.findAll({
     where: {
       Date: {
@@ -157,7 +162,7 @@ Lesson.getAllLessonsForWeek = async function (weekStartDate) {
     },
   });
 
-  if(!lessons || lessons.length === 0) {
+  if (!lessons || lessons.length === 0) {
     console.log('No lessons found for the specified week.');
     throw new Error('No lessons found for the specified week.');
   }
@@ -167,24 +172,28 @@ Lesson.getAllLessonsForWeek = async function (weekStartDate) {
 };
 
 Lesson.getRelatedLessonsForWeek = async function (userID, weekStartDate) {
-  const lesson = Lesson.findAll({
-    include: [
-      {
-        model: Accounts,
-        as: 'UsersAttending',
-        where: { UserID: userID },
-        through: {
-          attributes: [],
-        },
-      },
-    ],
-    where: {
-      Date: {
-        [Op.gte]: weekStartDate,
-        [Op.lt]: new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000), // 7 days later
-      },
-    },
-  });
+  const start = new Date(weekStartDate);
+  if (isNaN(start.getTime())) {
+    throw new Error('Invalid date provided.');
+  }
+  
+  const weekEndDate = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days later
+
+  const lesson = await Lesson.query(
+    `
+    select ls.*
+    from Lesson ls
+    join Attendance at on ls.LessonID = at.LessonID
+    where at.StudentID = :userID and ls.Date >= :weekStartDate and ls.Date < :weekEndDate`,
+    {
+      replacements: {
+        userID: userID,
+        weekStartDate: weekStartDate,
+        weekEndDate: weekEndDate.toISOString().slice(0, 10),
+      }
+    }
+  );
+
 
   if (!lesson || lesson.length === 0) {
     throw new Error(`No lessons found for user ${userID} for the week starting on ${weekStartDate}.`);
@@ -195,38 +204,41 @@ Lesson.getRelatedLessonsForWeek = async function (userID, weekStartDate) {
 };
 
 Lesson.getLessonDetails = async function (LessonID) {
-  const lesson = await Lesson.findByPk(LessonID, {
-    include: [
-      {
-        model: Accounts,
-        as: 'Student',
-        through: {
-          attributes: [],
-        },
-        where: {
-          Role: 'student',
-        },
-        required: false,
-      },
-      {
-        model: Accounts,
-        as: 'Teacher',
-        through: {
-          attributes: [],
-        },
-        where: {
-          Role: 'teacher',
-        },
-        required: false,
-      },
-    ],
-  });
+  const lesson = await Lesson.findByPk(LessonID);
 
   if (!lesson) {
     throw new Error(`Lesson with ID ${LessonID} does not exist.`);
   }
 
+  // find students
+  const studentList = await sequelize.query(
+    `
+    select a.UserID, a.FullName 
+    from Accounts a 
+    join Attendance at on a.UserID = at.StudentID 
+    where at.LessonID = :LessonID and a.Role = 'student'`,
+    {
+      replacements: { LessonID },
+      type: QueryTypes.SELECT,
+    }
+  );
+
+  // find teachers
+  const teacherList = await sequelize.query(
+    `
+    select a.UserID, a.FullName
+    from Accounts a 
+    join Attendance at on a.UserID = at.StudentID
+    where at.LessonID = :LessonID and a.Role = 'teacher'`,
+    {
+      replacements: { LessonID },
+      type: QueryTypes.SELECT,
+    }
+  );
+
+  result = { lesson, studentList, teacherList };
   console.log(`Successfully fetched details for lesson with ID ${LessonID}.`);
   return lesson;
 };
+
 export { Lesson, Session };
