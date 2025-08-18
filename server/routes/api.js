@@ -6,6 +6,7 @@ import roomRouter from "./roomRouter.js";
 import courseRouter from "./courseRouter.js";
 import classRouter from "./classRouter.js";
 import discussionRouter from "./discussionRouter.js";
+import timetableRouter from "./timetableRouter.js";
 
 const APIRoute = express.Router();
 
@@ -16,5 +17,8 @@ APIRoute.use('/admin', courseRouter)
 APIRoute.use('/core', classRouter)
 APIRoute.use('/admin', classRouter)
 APIRoute.use('/admin',discussionRouter)
+
+APIRoute.use('/core', timetableRouter)
+APIRoute.use('/admin', timetableRouter);
 
 export default APIRoute;
