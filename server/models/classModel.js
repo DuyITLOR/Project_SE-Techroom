@@ -62,15 +62,36 @@ Class.addClass = async function (classID, className, lessonsPerWeek, classNumWee
 }
 // getAllClass(): Get all classs in the database
 Class.getAllClass = async function () {
-    return await this.findAll()
+    const results = await sequelize.query(
+        `
+        SELECT cl.*, c.FullName, c.Role
+        FROM Class cl
+        JOIN Participation p ON cl.ClassID = p.ClassID
+        JOIN Accounts c ON p.Username = c.UserID
+        `,
+        {
+            type: QueryTypes.SELECT
+        }
+    );
+    if (!results.length) {
+        return {
+            success: false,
+            message: "No classes found for this user"
+        }
+    }
+    return {
+        success: true,
+        result: results
+    }
 }
 //getRelatedClasses(): Get all classes related to the username from the data Class Participation table
 Class.getRelatedClasses = async function (userID) {
     const results = await sequelize.query(
         `
-        SELECT c.*
-        FROM Class c
-        JOIN Participation p ON c.ClassID = p.ClassID
+        SELECT c.FullName, c.Role, cl.*
+        FROM Class cl
+        JOIN Participation p ON cl.ClassID = p.ClassID
+        JOIN Accounts c ON p.Username = c.UserID
         WHERE p.Username = :userID
         `,
         {
@@ -157,11 +178,29 @@ Class.sendClassTimetable = async function (ClassID) {
 }
 //searchClass(): Search for classs by ClassID
 Class.searchClass = async function (classID) {
-    return await this.findAll({ 
-        where: { 
-            ClassID: {[Op.like]: `%${classID}%`},
-        } 
-    });
+    const results = await sequelize.query(
+        `
+        SELECT a.FullName, a.Role, c.*
+        FROM Class c
+        JOIN Participation p ON c.ClassID = p.ClassID
+        JOIN Accounts a ON p.Username = a.UserID
+        WHERE p.ClassID LIKE :classID
+        `,
+        {
+            replacements: { classID },
+            type: QueryTypes.SELECT
+        }
+    );
+    if (!results.length) {
+        return {
+            success: false,
+            message: "No classes found for this user"
+        }
+    }
+    return {
+        success: true,
+        result: results
+    }
 }
 
 export default Class;
