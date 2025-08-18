@@ -55,6 +55,16 @@ Class.hasMany(Lesson, {
   as: 'Lessons',
 });
 
+// Room <--> Lesson
+Lesson.belongsTo(Rooms, {
+  foreignKey: 'RoomID',
+  as: 'Room',
+});
+Rooms.hasMany(Lesson, {
+  foreignKey: 'RoomID',
+  as: 'Lessons',
+});
+
 // Account <--> Attendance <--> Lesson
 Accounts.belongsToMany(Lesson, {
   through: Attendance,
