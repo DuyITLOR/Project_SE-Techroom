@@ -26,10 +26,10 @@ III. courseRouter
 IV. classRouter (Lưu ý: userIDs là 1 mảng, ví dụ ["3124234", "34124", ...])
 1. getClass, api-get: http://localhost:4000/api/core/class, params: { userid, role }
 2. addUser, api-post: http://localhost:4000/api/core/class, params: { classID, userIDs }
-3. getClassByRole, api-get: http://localhost:4000/api/admin/class, params: { role }
-4. addClass, api-post: http://localhost:4000/api/admin/class, params: { classID, className, lesPerWeek, classPerWeek, startDate, endDate ,courseID, userIDs }
+3. getClassByRole, api-get: http://localhost:4000/api/admin/class, params: { classID, role }
+4. addClass, api-post: http://localhost:4000/api/admin/class, params: { classID, className, lesPerWeek, classPerWeek, startDate, endDate ,courseID, studentIDs, teacherIDs }
 5. searchClass, api-get: http://localhost:4000/api/admin/class/search, params: { classID }
-6. updateClass, api-put: http://localhost:4000/api/admin/class, params: { classID, className, lesPerWeek, classPerWeek, startDate, endDate, courseID }
+6. updateClass, api-put: http://localhost:4000/api/admin/class, params: { ClassID, className, lesPerWeek, classPerWeek, startDate, endDate, courseID, studentIDs, teacherIDs }
 7. deleteClass, api-delete: http://localhost:4000/api/admin/class, params: { classID }
 
 
