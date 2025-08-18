@@ -18,6 +18,8 @@ import StudentRoadMap from "./pages/student/StudentRoadMap.jsx";
 import StudentClassDashboard from "./pages/student/StudentClassDashboard.jsx";
 import TimetableGrid from "./components/TimeTable/TimetableGrid.jsx";
 import StudentClassFeedBack from "./pages/student/StudentClassFeedBack.jsx";
+import AddForm from "./components/FormForClass/AddFormForClass.jsx";
+
 const App = () => {
   return (
     <div>
@@ -32,7 +34,7 @@ const App = () => {
           }
         />
 
-        <Route path="/test" element={<TimetableGrid />} />
+        <Route path="/test" element={<AddForm/>} />
 
         <Route
           path="/admin/Student"

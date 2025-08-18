@@ -5,7 +5,7 @@ import Participation from "../models/classParticipationModel.js";
 // This function will call Class.getAllClasses() in Class Model for Administrators to get all listClasses
 // and call Class.getRelatedClass() in Class Model for Students/Teachers to get listClasses that they participate in.
 export const getClass = async (req, res) => {
-    const {userid, role} = req.body;
+    const {userid, role} = req.query;
     if (!userid || !role) {
         return res.status(400).send({
         success: false,

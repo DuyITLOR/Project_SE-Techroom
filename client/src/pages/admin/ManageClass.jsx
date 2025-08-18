@@ -167,21 +167,7 @@ const ManageClass = () => {
     }
 
     try {
-      // const res = await axios.get(
-      //   "http://localhost:4000/api/admin/room/search",
-      //   {
-      //     params: { roomID: searchTerm}
-      //   }
-      // );
-      // console.log("Search results: ", res.data);
-      // const list = res.data.Room || [];
 
-      // const formatted = list.map((item, index) => ({
-      //   roomID: item.RoomID || "N/A",
-      //   roomName: item.RoomName || "N/A",
-      //   note: item.Note || "N/A",
-      // }));
-      // Bỏ phần gọi API, gán dữ liệu mẫu
       const formatted = [
         { classID: "CL001", className: "Lớp Toán", lessonPerWeek: 3, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C001", studentOfClass: "Lê Nhựt Duy, Cao Xuân Nam", teacherOfClass: "T001" },
         { classID: "CL002", className: "Lớp Lý", lessonPerWeek: 2, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C002", studentOfClass: "Đăng Hoài Thương, Đức Thịnh", teacherOfClass: "T002" },
@@ -332,7 +318,6 @@ const ManageClass = () => {
         setIsOpen={setIsAddOpen}
         onSubmit={handleAddSubmit}
         buttonLabel="Add"
-        openAdd={true}
       />
 
       <AddForm
