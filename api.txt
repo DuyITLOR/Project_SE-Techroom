@@ -33,4 +33,8 @@ IV. classRouter (Lưu ý: userIDs là 1 mảng, ví dụ ["3124234", "34124", ..
 7. deleteClass, api-delete: http://localhost:4000/api/admin/class, params: { classID }
 8. showClassInfomation, api-get: http://localhost:4000/api/admin/class/info, params: { classID }
 
-
+V. discussionRouter
+1. getDiscussion, api-get: http://localhost:4000/api/admin/discussion, params:{ classID }
+2. createPost, api-post: http://localhost:4000/api/admin/discussion, params: { classID,userID ,content, link } 
+3. deletePost, api-delete: http://localhost:4000/api/admin/discussion, params: { postID }
+4. updatePost, api-put: http://localhost:4000/api/admin/discussion, params: { postID, content, link }
