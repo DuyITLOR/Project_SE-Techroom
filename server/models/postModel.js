@@ -42,4 +42,51 @@ const Post = sequelize.define(
   }
 );
 
-export { Post };
+// addPost(): Create a new post and add it to the database
+Post.addPost = async function (classID, userID, content, link) {
+  const post = await this.create({
+    ClassID: classID,
+    UserID: userID,
+    Content: content,
+    Link: link,
+    PostDate: new Date(),
+  });
+  return post;
+};
+
+// deletePost(): Delete an existing post from the database
+Post.deletePost = async function (postID) {
+  const post = await this.findByPk(postID);
+  if (!post) {
+    return 0
+  }
+  await post.destroy();
+  return 1
+};
+
+//getAllPost(): get all post from classID
+Post.getAllPost = async function (classID) {
+  return await this.findAll({
+    where: {
+      ClassID: classID,
+    },
+    order: [['PostDate', 'DESC']],
+  });
+};
+
+//editPost(): Edit an existing post in the database
+Post.editPost = async function (postID, content, link) {
+  const post = await this.findByPk(postID);
+  if (!post) {
+    return null
+  }
+  content="Đã chỉnh sửa bài viết: "+content;
+  post.Content = content;
+  post.Link = link;
+  post.PostDate = new Date();
+  await post.save();
+  return post
+} 
+
+
+export default Post ;

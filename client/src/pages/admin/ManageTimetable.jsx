@@ -7,7 +7,7 @@ import TimetableIcon from "../../assets/calendar.svg?react";
 import Plus from "../../assets/plus.svg?react";
 import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
-import AddForm from "../../components/AddForm";
+import AddForm from "../../components/MemberSelector";
 import TimetableGrid from "../../components/TimeTable/TimetableGrid.jsx";
 
 const ManageTimetable = () => {
@@ -252,13 +252,22 @@ const ManageTimetable = () => {
         }}
       />
 
-      <AddForm
+      {/* <AddForm
         fields={addFields}
         isOpen={isAddOpen}
         setIsOpen={setIsAddOpen}
         onSubmit={handleAddSubmit}
         buttonLabel="Add"
-      />
+      /> */}
+
+<AddForm
+  fields={addFields}
+  isOpen={isAddOpen}
+  setIsOpen={setIsAddOpen}
+  onSubmit={handleAddSubmit}
+  buttonLabel="Add"
+  openMembers={true}   // 👈 bật nút Add Students & Teachers
+/>
 
       <AddForm
         fields={addFields}

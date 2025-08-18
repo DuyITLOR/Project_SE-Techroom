@@ -26,7 +26,7 @@ Participation.addClassParticipation = async function (classID, userIDs) {
         userIDs.map(userID => {
             return Participation.create({
                 ClassID: classID,
-                UserName: userID
+                Username: userID
             })
         })
     )

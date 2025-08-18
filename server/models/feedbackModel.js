@@ -5,18 +5,18 @@ const Tag = sequelize.define(
   'Tag',
   {
     TagID: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.CHAR(5),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
     },
     Name: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.CHAR(50),
       allowNull: false,
       primaryKey: false,
     },
     TagModel: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.CHAR(50),
       allowNull: false,
       primaryKey: false,
     },

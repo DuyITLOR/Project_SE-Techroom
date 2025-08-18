@@ -202,5 +202,12 @@ Class.searchClass = async function (classID) {
         result: results
     }
 }
+Class.showClassInfo = async function (classID) {
+    const upclass = await this.findByPk(classID)
+    if (!upclass) {
+        return null
+    }
+    return upclass
+}
 
 export default Class;

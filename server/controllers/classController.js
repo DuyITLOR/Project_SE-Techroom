@@ -5,6 +5,7 @@ import Participation from "../models/classParticipationModel.js";
 // This function will call Class.getAllClasses() in Class Model for Administrators to get all listClasses
 // and call Class.getRelatedClass() in Class Model for Students/Teachers to get listClasses that they participate in.
 export const getClass = async (req, res) => {
+<<<<<<< HEAD
   const { userid, role } = req.body;
   if (!userid || !role) {
     return res.status(400).send({
@@ -12,23 +13,32 @@ export const getClass = async (req, res) => {
       message: "Username and role cannot be empty!",
     });
   }
+=======
+    const {userid, role} = req.query;
+    if (!userid || !role) {
+        return res.status(400).send({
+        success: false,
+        message: "Username and role cannot be empty!"
+        });
+    }
+>>>>>>> 6626cd7127a8bf7cebb72969332bf059faa7509e
 
-  let listClasses;
-  if (role === "admin" || role === "superadmin") {
-    listClasses = await Class.getAllClass();
-    return res.status(200).send({
-      success: true,
-      listClasses: listClasses,
-    });
-  }
-
-  listClasses = await Class.getRelatedClasses(userid);
-  if (!listClasses.success) {
-    return res.status(404).send({
-      success: listClasses.success,
-      message: listClasses.message,
-    });
-  }
+    let listClasses;
+    if (role === 'admin' || role === 'superadmin') {
+        listClasses = await Class.getAllClass();
+        return res.status(200).send({
+            success: true,
+            listClasses: listClasses
+        })
+    }
+    
+    listClasses = await Class.getRelatedClasses(userid);
+    if (!listClasses.success) {
+        return res.status(404).send({
+            success: listClasses.success,
+            message: listClasses.message
+        });
+    }
 
   return res.status(200).send({
     success: listClasses.success,
@@ -77,6 +87,28 @@ export const addUser = async (req, res) => {
   return res.status(200).send({
     success: true,
     message: "New users added!",
+  });
+};
+export const showClassInfomation = async (req, res) => {
+  const { classID } = req.body;
+  if (!classID) {
+    return res.status(400).send({
+      success: false,
+      message: "ClassID cannot be empty!",
+    });
+  }
+
+  const classInfo = await Class.showClassInfo(classID);
+  if (!classInfo) {
+    return res.status(404).send({
+      success: false,
+      message: "Class not found",
+    });
+  }
+
+  return res.status(200).send({
+    success: true,
+    classInfo,
   });
 };
 

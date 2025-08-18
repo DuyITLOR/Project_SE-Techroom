@@ -78,18 +78,18 @@ const ManageClass = () => {
       type: "text",
       placeholder: "Enter your course ID",
     },
-    {
-      label: "StudentOfClass",
-      name: "StudentOfClass",
-      type: "text",
-      placeholder: "Enter your student of class",
-    },
-    {
-      label: "TeacherOfClass",
-      name: "TeacherOfClass",
-      type: "text",
-      placeholder: "Enter your teacher of class",
-    },
+    // {
+    //   label: "StudentOfClass",
+    //   name: "StudentOfClass",
+    //   type: "text",
+    //   placeholder: "Enter your student of class",
+    // },
+    // {
+    //   label: "TeacherOfClass",
+    //   name: "TeacherOfClass",
+    //   type: "text",
+    //   placeholder: "Enter your teacher of class",
+    // },
   ];
 
   const onDelete = (items) => {
@@ -103,8 +103,8 @@ const ManageClass = () => {
     const itemEdit = data.find((item) => item.classID === classID);
     console.log("Item to edit: ", itemEdit);
     if (!itemEdit) {
-      console.error("Item not found for editing: ", classID);
-      return;
+      console.error("Item not found for editing: ", classID)
+      return
     }
 
     setEdtitData({
@@ -123,54 +123,33 @@ const ManageClass = () => {
     console.log("Editing item: ", editData);
   };
 
+
+
   const fecthAdminsAccounts = async () => {
     try {
-      // const res = await axios.get("http://localhost:4000/api/admin/room")
-      // console.log("Fetched course: ", res.data);
+      const res = await axios.get("http://localhost:4000/api/core/class",
+        { params: { userid: localStorage.getItem("username"), role: "superadmin" } }
+      )
+      console.log("Fetched course: ", res.data);
 
-      // const list = res.data.listUsers || [];
+      const list = res.data.listClasses || [];
 
-      // const fromatted = list.map((item, index) => ({
-      //   roomID: item.RoomID || "N/A",
-      //   roomName: item.RoomName || "N/A",
-      //   note: item.Note || "N/A",
-      // }));
+      const fromatted = list.map((item, index) => ({
 
-      const fromatted = [
-        {
-          classID: "CL001",
-          className: "Lớp Toán",
-          lessonPerWeek: 3,
-          classNumWeek: 4,
-          beginDate: "2023-09-01",
-          endDate: "2023-12-01",
-          courseID: "C001",
-          studentOfClass: "Lê Nhựt Duy, Cao Xuân Nam",
-          teacherOfClass: "T001",
-        },
-        {
-          classID: "CL002",
-          className: "Lớp Lý",
-          lessonPerWeek: 2,
-          classNumWeek: 4,
-          beginDate: "2023-09-01",
-          endDate: "2023-12-01",
-          courseID: "C002",
-          studentOfClass: "Đăng Hoài Thương, Đức Thịnh",
-          teacherOfClass: "T002",
-        },
-        {
-          classID: "CL003",
-          className: "Lớp Hóa",
-          lessonPerWeek: 2,
-          classNumWeek: 4,
-          beginDate: "2023-09-01",
-          endDate: "2023-12-01",
-          courseID: "C003",
-          studentOfClass: "Nguyễn Thị Mai, Trần Văn A",
-          teacherOfClass: "T003",
-        },
-      ];
+        // const studentList = await axios.get("http://localhost:4000/api/admin/class",
+        //   {
+        //     params: { classID: item.classID, className:item.className, lessonsPerWeek:item.lessonsPerWeek, classNumWeek:item.classNumWeek, beginDate: item.beginDate, endDate: item.endDate, courseID:item.CourseID, userIDs: localStorage.getItem("username") }
+        //   }
+        // )
+        classID: item.ClassID || "N/A",
+        className: item.ClassName || "N/A",
+        lessonPerWeek: item.LessonsPerWeek || "N/A",
+        classNumWeek: item.ClassNumWeek || "N/A",
+        beginDate: item.BeginDate || "N/A",
+        endDate: item.EndDate || "N/A",
+        courseID: item.CourseID || "N/A",
+      }));
+
       console.log("Formatted data: ", fromatted);
       setData(fromatted);
     } catch (err) {
@@ -188,55 +167,11 @@ const ManageClass = () => {
     }
 
     try {
-      // const res = await axios.get(
-      //   "http://localhost:4000/api/admin/room/search",
-      //   {
-      //     params: { roomID: searchTerm}
-      //   }
-      // );
-      // console.log("Search results: ", res.data);
-      // const list = res.data.Room || [];
 
-      // const formatted = list.map((item, index) => ({
-      //   roomID: item.RoomID || "N/A",
-      //   roomName: item.RoomName || "N/A",
-      //   note: item.Note || "N/A",
-      // }));
-      // Bỏ phần gọi API, gán dữ liệu mẫu
       const formatted = [
-        {
-          classID: "CL001",
-          className: "Lớp Toán",
-          lessonPerWeek: 3,
-          classNumWeek: 4,
-          beginDate: "2023-09-01",
-          endDate: "2023-12-01",
-          courseID: "C001",
-          studentOfClass: "Lê Nhựt Duy, Cao Xuân Nam",
-          teacherOfClass: "T001",
-        },
-        {
-          classID: "CL002",
-          className: "Lớp Lý",
-          lessonPerWeek: 2,
-          classNumWeek: 4,
-          beginDate: "2023-09-01",
-          endDate: "2023-12-01",
-          courseID: "C002",
-          studentOfClass: "Đăng Hoài Thương, Đức Thịnh",
-          teacherOfClass: "T002",
-        },
-        {
-          classID: "CL003",
-          className: "Lớp Hóa",
-          lessonPerWeek: 2,
-          classNumWeek: 4,
-          beginDate: "2023-09-01",
-          endDate: "2023-12-01",
-          courseID: "C003",
-          studentOfClass: "Nguyễn Thị Mai, Trần Văn A",
-          teacherOfClass: "T003",
-        },
+        { classID: "CL001", className: "Lớp Toán", lessonPerWeek: 3, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C001", studentOfClass: "Lê Nhựt Duy, Cao Xuân Nam", teacherOfClass: "T001" },
+        { classID: "CL002", className: "Lớp Lý", lessonPerWeek: 2, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C002", studentOfClass: "Đăng Hoài Thương, Đức Thịnh", teacherOfClass: "T002" },
+        { classID: "CL003", className: "Lớp Hóa", lessonPerWeek: 2, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C003", studentOfClass: "Nguyễn Thị Mai, Trần Văn A", teacherOfClass: "T003" },
       ];
 
       setData(formatted);
@@ -267,7 +202,11 @@ const ManageClass = () => {
     const body = {
       roomID: formData.RoomID || "N/A",
       roomName: formData.RoomName || "N/A",
-      note: formData.Note || "N/A",
+      lessonPerWeek: formData.LessonPerWeek || "N/A",
+      classNumWeek: formData.ClassNumWeek || "N/A",
+      beginDate: formData.BeginDate || "N/A",
+      endDate: formData.EndDate || "N/A",
+      courseID: formData.CourseID || "N/A",
     };
     console.log("Adding new room with data: ", body);
 
@@ -336,7 +275,7 @@ const ManageClass = () => {
             <div className="px-3">
               <button
                 onClick={() => {
-                  console.log("Add new class"), setIsAddOpen(true);
+                  console.log("Add new class"), setIsAddOpen(true)
                 }}
                 className="flex gap-1 bg-blue-500 text-white text-xl px-2 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200">
                 <Plus />
@@ -346,18 +285,7 @@ const ManageClass = () => {
 
             <div className="px-3 py-3">
               <PaginatedTable
-                headers={[
-                  "ClassID",
-                  "ClassName",
-                  "LessonPerWeek",
-                  "ClassNumWeek",
-                  "BeginDate",
-                  "EndDate",
-                  "CourseID",
-                  "StudentOfClass",
-                  "TeacherOfClass",
-                  "Actions",
-                ]}
+                headers={["ClassID", "ClassName", "LessonPerWeek", "ClassNumWeek", "BeginDate", "EndDate", "CourseID", "StudentOfClass", "TeacherOfClass", "Actions"]}
                 data={data}
                 onEdit={onEdit}
                 onDelete={onDelete}

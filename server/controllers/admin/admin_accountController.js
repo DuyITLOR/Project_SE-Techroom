@@ -14,23 +14,23 @@ export const getAccount = async (req, res) => {
 
 export const searchAccount = async (req, res) => {
     const {user, role} = req.query;
-  if(!user) {
-    return res.status(400).send({
-      success: false,
-      message: "UserID cannot be empty!"
-    })
-  }
+    if(!user) {
+        return res.status(400).send({
+        success: false,
+        message: "UserID cannot be empty!"
+        })
+    }
 
-  const User = await Accounts.searchAccount(user, role)
-  if(User === null) {
-    return res.send({
-      success: false,
-      message: "Cannot find any user!"
+    const User = await Accounts.searchAccount(user, role)
+    if(User === null) {
+        return res.send({
+        success: false,
+        message: "Cannot find any user!"
+        })
+    }
+    return res.status(200).send({
+        User: User
     })
-  }
-  return res.status(200).send({
-    User: User
-  })
 }
 
 export const addAccount = async (req, res) => {
