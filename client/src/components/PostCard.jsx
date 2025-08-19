@@ -1,9 +1,45 @@
-import React from "react";
-import Trash from "../assets/trash-2.svg?react";
+import React, { useEffect, useState } from "react";
 
-const PostCard = ({ UserName, DateTime, Content }) => {
+import axios from "axios";
+
+const PostCard = ({ UserID, DateTime, Content, File }) => {
+  const [UserName, setUserName] = useState("Anonymous");
+
+  useEffect(() => {
+    fetchUserName();
+  }, []);
+
+  const fetchUserName = async () => {
+    console.log("Fetching user name for ID: ", UserID);
+    try {
+      let res = await axios.get(
+        "http://localhost:4000/api/admin/account/search",
+        {
+          params: { user: UserID, role: "student" },
+        }
+      );
+      if (res.data) {
+        console.log("Student found: ", res.data.User[0].FullName);
+        setUserName(res.data.User[0].FullName);
+      } else {
+        console.log("Student not found, trying teacher role...");
+        res = await axios.get(
+          "http://localhost:4000/api/admin/account/search",
+          {
+            params: { user: UserID, role: "teacher" },
+          }
+        );
+        if (res.data) {
+          console.log("Teacher found: ", res.data.User[0].FullName);
+          setUserName(res.data.User[0].FullName);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user name: ", error);
+    }
+  };
   return (
-    <div className="w-full max-h-[161px] overflow-y-hidden break-words bg-white px-5 py-4 rounded-[10px] shadow-md">
+    <div className="w-full max-h-[161px] overflow-y-hidden break-words bg-white px-5 py-4 rounded-[10px] shadow-md hover:shadow-lg transition-shadow duration-200">
       <div className="flex flex-col gap-3">
         <div className="flex gap-2">
           <div
@@ -14,18 +50,21 @@ const PostCard = ({ UserName, DateTime, Content }) => {
           </div>
           <div className="flex flex-col gap-0.5 font-family text-[14px]">
             <p>{UserName}</p>
-            <p>{DateTime}</p>
+            <p>{new Date(DateTime).toLocaleString()}</p>
           </div>
-          <button
-            className="ml-auto cursor-pointer"
-            onClick={(e) => {
-              console.log("Delete post clicked");
-              e.stopPropagation(); // Prevent row click event
-            }}>
-            <Trash className="w-[20px] h-[20px]" />
-          </button>
         </div>
         <div className="text-[14px] font-family">{Content}</div>
+        {File !== "N/A" && (
+          <div className="flex items-center gap-2">
+            <a
+              href={File}
+              target="null"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline">
+              @{File}
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );

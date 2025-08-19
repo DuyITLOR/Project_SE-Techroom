@@ -92,7 +92,7 @@ const StudentDashboard = () => {
       <div className="flex flex-col min-h-screen">
         <div
           className={`${
-            activate ? "pl-[80px]" : "pl-[245px]"
+            activate ? "pl-[245px]" : "pl-[80px]"
           } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           <div>
             <div className="py-3 pr-2">
@@ -132,7 +132,7 @@ const StudentDashboard = () => {
         </div>
         <div
           className={`${
-            activate ? "w-full" : "w-[calc(100%-223px)]"
+            activate ? "w-[calc(100%-223px)]" : "w-full"
           } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>

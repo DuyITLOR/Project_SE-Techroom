@@ -201,7 +201,7 @@ const ManageTimetable = () => {
       <div className="flex flex-col min-h-screen">
         <div
           className={`${
-            activate ? "pl-[80px]" : "pl-[239px]"
+            activate ? "pl-[239px]" : "pl-[80px]"
           } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>

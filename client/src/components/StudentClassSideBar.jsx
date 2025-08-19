@@ -7,7 +7,6 @@ import FeedbackIcon from "../assets/star.svg?react";
 import MenuIcon from "../assets/menu.svg?react";
 
 const StudentClassSideBar = ({ activate, setActivate, current, classID }) => {
-  console.log(activate, classID);
   const [activeIndex, setActiveIndex] = useState(current);
   const navigate = useNavigate();
 
@@ -26,21 +25,19 @@ const StudentClassSideBar = ({ activate, setActivate, current, classID }) => {
     },
   ];
 
-  console.log("ClassID: ", classID);
-
   return (
     <div
       className={`${
         activate
-          ? "w-[50px] h-[50px] rounded-full bg-[#E5E7EB] flex items-center justify-center mt-[100px] ml-[17px]"
-          : "w-[223px] h-screen bg-[#E5E7EB] flex flex-col shadow-lg"
+          ? "w-[223px] h-screen bg-[#E5E7EB] flex flex-col shadow-lg"
+          : "w-[50px] h-[50px] rounded-full bg-[#E5E7EB] flex items-center justify-center mt-[100px] ml-[17px]"
       } transition-all duration-300 `}
       style={{ boxShadow: "4px 0 25px 0 rgba(0, 0, 0, 0.12)" }}>
       <div
         className={`${
           activate
-            ? "flex items-center justify-center w-full h-full"
-            : "pt-[112px] px-[32px]"
+            ? "pt-[112px] px-[32px]"
+            : "flex items-center justify-center w-full h-full"
         }`}>
         <button
           onClick={() => {
@@ -52,7 +49,7 @@ const StudentClassSideBar = ({ activate, setActivate, current, classID }) => {
         </button>
       </div>
 
-      {!activate && (
+      {activate && (
         <div className="pt-[16px] px-[11.5px] flex flex-col">
           {menu.map((item, idx) => (
             <MenuItem

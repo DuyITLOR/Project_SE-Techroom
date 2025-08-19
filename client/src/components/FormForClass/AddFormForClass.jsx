@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SelectStudent from './SelectStudent'
 import SelectTeacher from './SelectTeacher'
 import SelectCourse from './SelectCourse'
 
 
 
-const AddFormForClass = () => {
+const AddFormForClass = ({ isOpen, setIsOpen, onSubmit, initialData = {}, buttonLabel }) => {
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     classID: "",
@@ -18,6 +20,26 @@ const AddFormForClass = () => {
     selectedTeachers: [],
     selectedStudents: [],
   })
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        classID: "",
+        className: "",
+        lessonPerWeek: "",
+        classNumWeek: "",
+        beginDate: "",
+        endDate: "",
+        courseID: "",
+        selectedTeachers: [],
+        selectedStudents: [],
+        ...initialData, // Assuming initialData is defined somewhere
+      })
+    }
+
+    setSubmitted(false)
+    setError("")
+  }, [isOpen])
 
   const handleInputChange = (e) => {
     e.preventDefault
@@ -32,22 +54,42 @@ const AddFormForClass = () => {
 
 
   const handleStudentSelection = (selectedStudents) => {
-    setFormData(prev => ({ ...prev, selectedStudents}));
+    setFormData(prev => ({ ...prev, selectedStudents }));
     console.log("Updated formData for student:", selectedStudents);
   }
 
   const handleTeacherSelection = (selectedTeachers) => {
-    setFormData(prev => ({ ...prev, selectedTeachers}));
+    setFormData(prev => ({ ...prev, selectedTeachers }));
     console.log("Updated formData for teacher:", selectedTeachers);
   }
 
   const handleCourseSelection = (courseID) => {
-    setFormData(prev => ({ ...prev, courseID}));
+    setFormData(prev => ({ ...prev, courseID }));
     console.log("Updated formData for course:", formData.courseID);
   }
 
+  const handleAdd = async () => {
+    setError("");
+    setSubmitted(true);
+    try {
+      await onSubmit?.(formData);
+      setIsOpen(false);
+    } catch (err) {
+      setError(err?.response?.data?.message || "Có lỗi xảy ra khi gửi form.");
+    } finally {
+      setSubmitted(false);
+    }
+  }
+
+  const safeLabel = String(buttonLabel).trim();
+  const runningLabel =
+    safeLabel.toLowerCase().endsWith("e")
+      ? `${safeLabel.slice(0, -1)}ing...`
+      : `${safeLabel}ing...`;
+
   return (
-    <div className='fixed inset-0 flex justify-center items-center backdrop-blur-sm '>
+    isOpen && (
+      <div className='fixed inset-0 flex justify-center items-center backdrop-blur-sm '>
       <div className='flex flex-col bg-[#E5E7EB] w-1/4 h-fit px-4 py-4 border-2 rounded-[8px] gap-2 max-h-[800px] overflow-y-auto'>
         <form onSubmit={handleSubmit} className='flex flex-col gap-4 justify-center '>
           <div>
@@ -153,12 +195,34 @@ const AddFormForClass = () => {
                 onSelectChange={handleTeacherSelection}
               />
             </div>
+
+
+            <div className="flex justify-end ml-auto gap-6">
+              <button
+                onClick={() => {
+                  console.log("Cancel"), setIsOpen(false);
+                }}
+                className="flex gap-1 text-black text-[18px] px-2 py-2 cursor-pointer">
+                <p>Cancel</p>
+              </button>
+              <button
+                onClick={handleAdd}
+                className="flex gap-1 text-black text-[18px] px-2 py-2 cursor-pointer disabled:opacity-20"
+                disabled={submitted}
+              >
+                <p>{submitted ? runningLabel : safeLabel}</p>
+              </button>
+            </div>
+
+
+
           </div>
 
         </form>
       </div>
 
     </div>
+    )
   )
 }
 

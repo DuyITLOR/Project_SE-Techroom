@@ -79,6 +79,38 @@ Class.getAllClass = async function () {
             message: "No classes found for this user"
         }
     }
+
+    const groupedClasses = {};
+
+    results.forEach(item => {
+    if (!groupedClasses[item.ClassID]) {
+        groupedClasses[item.ClassID] = {
+            ClassID: item.ClassID,
+            ClassName: item.ClassName,
+            LessonsPerWeek: item.LessonsPerWeek,
+            ClassNumWeek: item.ClassNumWeek,
+            BeginDate: item.BeginDate,
+            EndDate: item.EndDate,
+            CourseID: item.CourseID,
+            students: [],
+            teachers: []
+        };
+    }
+
+    if (item.Role === "student") {
+        groupedClasses[item.ClassID].students.push({
+            FullName: item.FullName
+        });
+    } else if (item.Role === "teacher") {
+        groupedClasses[item.ClassID].teachers.push({
+            FullName: item.FullName
+        });
+    }
+    });
+
+    const formatted = Object.values(groupedClasses);
+    console.log(formatted);
+
     return {
         success: true,
         result: results
@@ -105,9 +137,40 @@ Class.getRelatedClasses = async function (userID) {
             message: "No classes found for this user"
         }
     }
+
+    const groupedClasses = {};
+
+    results.forEach(item => {
+    if (!groupedClasses[item.ClassID]) {
+        groupedClasses[item.ClassID] = {
+            ClassID: item.ClassID,
+            ClassName: item.ClassName,
+            LessonsPerWeek: item.LessonsPerWeek,
+            ClassNumWeek: item.ClassNumWeek,
+            BeginDate: item.BeginDate,
+            EndDate: item.EndDate,
+            CourseID: item.CourseID,
+            students: [],
+            teachers: []
+        };
+    }
+
+    if (item.Role === "student") {
+        groupedClasses[item.ClassID].students.push({
+            FullName: item.FullName,
+        });
+    } else if (item.Role === "teacher") {
+        groupedClasses[item.ClassID].teachers.push({
+            FullName: item.FullName,
+        });
+    }
+    });
+
+    const formatted = Object.values(groupedClasses);
+    console.log(formatted);
     return {
         success: true,
-        result: results
+        result: formatted
     }
 }
 //updateClass(): Change one class’s information
