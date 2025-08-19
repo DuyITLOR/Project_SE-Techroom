@@ -35,63 +35,6 @@ const ManageClass = () => {
     "teacherOfClass",
   ];
 
-  const addFields = [
-    {
-      label: "ClassID",
-      name: "ClassID",
-      type: "text",
-      placeholder: "Enter your class ID",
-    },
-    {
-      label: "ClassName",
-      name: "ClassName",
-      type: "text",
-      placeholder: "Enter your class name",
-    },
-    {
-      label: "LessonPerWeek",
-      name: "LessonPerWeek",
-      type: "number",
-      placeholder: "Enter your lesson per week",
-    },
-    {
-      label: "ClassNumWeek",
-      name: "ClassNumWeek",
-      type: "number",
-      placeholder: "Enter your class per week",
-    },
-    {
-      label: "BeginDate",
-      name: "BeginDate",
-      type: "date",
-      placeholder: "Enter your begin date",
-    },
-    {
-      label: "EndDate",
-      name: "EndDate",
-      type: "date",
-      placeholder: "Enter your end date",
-    },
-    {
-      label: "CourseID",
-      name: "CourseID",
-      type: "text",
-      placeholder: "Enter your course ID",
-    },
-    // {
-    //   label: "StudentOfClass",
-    //   name: "StudentOfClass",
-    //   type: "text",
-    //   placeholder: "Enter your student of class",
-    // },
-    // {
-    //   label: "TeacherOfClass",
-    //   name: "TeacherOfClass",
-    //   type: "text",
-    //   placeholder: "Enter your teacher of class",
-    // },
-  ];
-
   const onDelete = (items) => {
     console.log("Delete items: ", items);
     setItem(items);
@@ -99,29 +42,33 @@ const ManageClass = () => {
   };
 
   const onEdit = async (classID) => {
-    console.log("Edit RoomID: ", classID);
-    const itemEdit = data.find((item) => item.classID === classID);
-    console.log("Item to edit: ", itemEdit);
-    if (!itemEdit) {
-      console.error("Item not found for editing: ", classID)
-      return
+    try {
+      const res = await axios.get(
+        "http://localhost:4000/api/admin/class/search",
+        {
+          params: { classID: classID },
+        }
+      )
+      const list = res.data?.Class || [];
+      setIsEditOpen({
+        classID: list[0].ClassID || "N/A",
+        className: list[0].ClassName || "N/A",
+        lessonPerWeek: list[0].LessonsPerWeek || "N/A",
+        classNumWeek: list[0].ClassNumWeek || "N/A",
+        beginDate: list[0].BeginDate || "N/A",
+        endDate: list[0].EndDate || "N/A",
+        courseID: list[0].CourseID || "N/A",
+        studentOfClass: list[0].students || [],
+        teacherOfClass: list[0].teachers || [],
+      })
+
+      console.log("Edit class data: ", editData);
+
+      setIsEditOpen(true)
+    } catch (err) {
+      console.error("Error editing class: ", err);
     }
-
-    setEdtitData({
-      ClassID: itemEdit.classID || "N/A",
-      ClassName: itemEdit.className || "N/A",
-      LessonPerWeek: itemEdit.className || "N/A",
-      ClassNumWeek: itemEdit.classNumWeek || "N/A",
-      BeginDate: itemEdit.beginDate || "N/A",
-      EndDate: itemEdit.endDate || "N/A",
-      CourseID: itemEdit.courseID || "N/A",
-      StudentOfClass: itemEdit.studentOfClass || "N/A",
-      TeacherOfClass: itemEdit.teacherOfClass || "N/A",
-    });
-
-    setIsEditOpen(true);
-    console.log("Editing item: ", editData);
-  };
+  }
 
 
 
@@ -132,18 +79,18 @@ const ManageClass = () => {
       )
       const list = res.data?.listClasses || [];
 
-      const formatted  = list.map((item, index) => ({
-          classID: item.ClassID || "N/A",
-          className: item.ClassName || "N/A",
-          lessonPerWeek: item.LessonsPerWeek || "N/A",
-          classNumWeek: item.ClassNumWeek || "N/A",
-          beginDate: item.BeginDate || "N/A",
-          endDate: item.EndDate || "N/A",
-          courseID: item.CourseID || "N/A",
-          studentOfClass: (item.students || []).map(s => s.FullName).join(", ") || "N/A",
-          teacherOfClass: (item.teachers || []).map(t => t.FullName).join(", ") || "N/A",
-        }))
-    
+      const formatted = list.map((item, index) => ({
+        classID: item.ClassID || "N/A",
+        className: item.ClassName || "N/A",
+        lessonPerWeek: item.LessonsPerWeek || "N/A",
+        classNumWeek: item.ClassNumWeek || "N/A",
+        beginDate: item.BeginDate || "N/A",
+        endDate: item.EndDate || "N/A",
+        courseID: item.CourseID || "N/A",
+        studentOfClass: (item.students || []).map(s => s.FullName).join(", ") || "N/A",
+        teacherOfClass: (item.teachers || []).map(t => t.FullName).join(", ") || "N/A",
+      }))
+
       console.log("Formatted data: ", formatted);
       setData(formatted);
     } catch (err) {
@@ -157,16 +104,29 @@ const ManageClass = () => {
 
   const handleSearch = async (searchTerm) => {
     if (!searchTerm) {
-      fecthAdminsAccounts();
+      fecthClass();
     }
-
     try {
+      const res = await axios.get(
+        "http://localhost:4000/api/admin/class/search",
+        {
+          params: { classID: searchTerm },
+        }
+      );
+      console.log("Search results: ", res.data);
+      const list = res.data?.Class || [];
 
-      const formatted = [
-        { classID: "CL001", className: "Lớp Toán", lessonPerWeek: 3, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C001", studentOfClass: "Lê Nhựt Duy, Cao Xuân Nam", teacherOfClass: "T001" },
-        { classID: "CL002", className: "Lớp Lý", lessonPerWeek: 2, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C002", studentOfClass: "Đăng Hoài Thương, Đức Thịnh", teacherOfClass: "T002" },
-        { classID: "CL003", className: "Lớp Hóa", lessonPerWeek: 2, classNumWeek: 4, beginDate: "2023-09-01", endDate: "2023-12-01", courseID: "C003", studentOfClass: "Nguyễn Thị Mai, Trần Văn A", teacherOfClass: "T003" },
-      ];
+      const formatted = list.map((item, index) => ({
+        classID: item.ClassID || "N/A",
+        className: item.ClassName || "N/A",
+        lessonPerWeek: item.LessonsPerWeek || "N/A",
+        classNumWeek: item.ClassNumWeek || "N/A",
+        beginDate: item.BeginDate || "N/A",
+        endDate: item.EndDate || "N/A",
+        courseID: item.CourseID || "N/A",
+        studentOfClass: (item.students || []).map(s => s.FullName).join(", ") || "N/A",
+        teacherOfClass: (item.teachers || []).map(t => t.FullName).join(", ") || "N/A",
+      }))
 
       setData(formatted);
       console.log("Formatted search results: ", formatted);
@@ -180,7 +140,7 @@ const ManageClass = () => {
     if (!item) return;
 
     try {
-      await axios.delete("http://localhost:4000/api/admin/class", {data: {classID: item},});
+      await axios.delete("http://localhost:4000/api/admin/class", { data: { classID: item }, });
       console.log("Deleted class with ID: ", item);
       fecthClass();
       setItem(null);
@@ -190,40 +150,40 @@ const ManageClass = () => {
   }
 
   const handleAddSubmit = async (formData) => {
-      console.log("Adding new class with data: ", formData);
-      try {
-        const body = {
-          classID: formData.classID || "N/A",
-          className: formData.className || "N/A",
-          lessonsPerWeek: formData.lessonPerWeek || "N/A",
-          classNumWeek: formData.classNumWeek || "N/A",
-          beginDate: formData.beginDate || "N/A",
-          endDate: formData.endDate || "N/A",
-          courseID: formData.courseID || "N/A",
-          studentIDs: [...new Set(formData.selectedStudents || [])] || "N/A",
-          teacherIDs: [...new Set(formData.selectedTeachers || [])] || "N/A",
-        };
-    
-        console.log("Adding new class with data: ", body);  
-        const res = await axios.post(
-          "http://localhost:4000/api/admin/class",
-          body
-        );
+    console.log("Adding new class with data: ", formData);
+    try {
+      const body = {
+        classID: formData.classID || "N/A",
+        className: formData.className || "N/A",
+        lessonsPerWeek: formData.lessonPerWeek || "N/A",
+        classNumWeek: formData.classNumWeek || "N/A",
+        beginDate: formData.beginDate || "N/A",
+        endDate: formData.endDate || "N/A",
+        courseID: formData.courseID || "N/A",
+        studentIDs: [...new Set(formData.selectedStudents || [])] || "N/A",
+        teacherIDs: [...new Set(formData.selectedTeachers || [])] || "N/A",
+      };
 
-        if (res?.data?.msg === "Class already exists") {
-          console.error("Class already exists: ", res.data.msg);
-          const err = new Error(res.data.msg);
-          err.response = { data: { message: res.data.msg } };
-          throw err;
-        }
-    
-        console.log("Response from adding class: ", res.data);
-    
-        await fecthClass();
-      } catch (err) {
-        throw err 
-          console.error("Error adding new class: ", res.data.message, err);
+      console.log("Adding new class with data: ", body);
+      const res = await axios.post(
+        "http://localhost:4000/api/admin/class",
+        body
+      );
+
+      if (res?.data?.msg === "Class already exists") {
+        console.error("Class already exists: ", res.data.msg);
+        const err = new Error(res.data.msg);
+        err.response = { data: { message: res.data.msg } };
+        throw err;
       }
+
+      console.log("Response from adding class: ", res.data);
+
+      await fecthClass();
+    } catch (err) {
+      throw err
+      console.error("Error adding new class: ", res.data.message, err);
+    }
   }
 
   const handleUpdateSubmit = async (formData) => {
@@ -251,9 +211,8 @@ const ManageClass = () => {
 
       <div className="flex flex-col min-h-screen">
         <div
-          className={`${
-            activate ? "pl-[239px]" : "pl-[80px]"
-          } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
+          className={`${activate ? "pl-[239px]" : "pl-[80px]"
+            } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>
             <div className="px-3 py-3">
@@ -300,9 +259,8 @@ const ManageClass = () => {
           </div>
         </div>
         <div
-          className={`${
-            activate ? "w-[calc(100%-223px)]" : "w-full"
-          } transition-all duration-200 ml-auto mt-auto`}>
+          className={`${activate ? "w-[calc(100%-223px)]" : "w-full"
+            } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>
       </div>
@@ -318,7 +276,6 @@ const ManageClass = () => {
       />
 
       <AddFormForClass
-        fields={addFields}
         isOpen={isAddOpen}
         setIsOpen={setIsAddOpen}
         onSubmit={handleAddSubmit}
@@ -326,7 +283,6 @@ const ManageClass = () => {
       />
 
       <AddFormForClass
-        fields={addFields}
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
         onSubmit={handleUpdateSubmit}

@@ -7,7 +7,6 @@ import TitleBanner from "../../components/TitleBanner";
 import PostBar from "../../components/PostBar";
 import SummaryCard from "../../components/SummaryCard";
 import PostCard from "../../components/PostCard";
-
 import DiscussionIcon from "../../assets/message-circle.svg?react";
 
 import axios from "axios";
