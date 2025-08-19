@@ -12,7 +12,7 @@ import PaginatedTable from "../../components/Table/PaginatedTable";
 import Plus from "../../assets/plus.svg?react";
 import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
-import AddForm from "../../components/AddForm";
+import AddFormForClass from "../../components/FormForClass/AddFormForClass";
 
 const ManageClass = () => {
   const [activate, setActivate] = useState(1);
@@ -136,11 +136,6 @@ const ManageClass = () => {
 
       const fromatted = list.map((item, index) => ({
 
-        // const studentList = await axios.get("http://localhost:4000/api/admin/class",
-        //   {
-        //     params: { classID: item.classID, className:item.className, lessonsPerWeek:item.lessonsPerWeek, classNumWeek:item.classNumWeek, beginDate: item.beginDate, endDate: item.endDate, courseID:item.CourseID, userIDs: localStorage.getItem("username") }
-        //   }
-        // )
         classID: item.ClassID || "N/A",
         className: item.ClassName || "N/A",
         lessonPerWeek: item.LessonsPerWeek || "N/A",
@@ -199,26 +194,26 @@ const ManageClass = () => {
   };
 
   const handleAddSubmit = async (formData) => {
-    const body = {
-      roomID: formData.RoomID || "N/A",
-      roomName: formData.RoomName || "N/A",
-      lessonPerWeek: formData.LessonPerWeek || "N/A",
-      classNumWeek: formData.ClassNumWeek || "N/A",
-      beginDate: formData.BeginDate || "N/A",
-      endDate: formData.EndDate || "N/A",
-      courseID: formData.CourseID || "N/A",
-    };
-    console.log("Adding new room with data: ", body);
+    // const body = {
+    //   roomID: formData.RoomID || "N/A",
+    //   roomName: formData.RoomName || "N/A",
+    //   lessonPerWeek: formData.LessonPerWeek || "N/A",
+    //   classNumWeek: formData.ClassNumWeek || "N/A",
+    //   beginDate: formData.BeginDate || "N/A",
+    //   endDate: formData.EndDate || "N/A",
+    //   courseID: formData.CourseID || "N/A",
+    // };
+    console.log("Adding new room with data: ", formData);
 
-    const res = await axios.post("http://localhost:4000/api/admin/room", body);
+    // const res = await axios.post("http://localhost:4000/api/admin/room", body);
 
-    if (res?.data?.msg === "UserID already exists") {
-      const err = new Error(res.data.msg);
-      err.response = { data: { message: res.data.msg } };
-      throw err;
-    }
+    // if (res?.data?.msg === "UserID already exists") {
+    //   const err = new Error(res.data.msg);
+    //   err.response = { data: { message: res.data.msg } };
+    //   throw err;
+    // }
 
-    await fecthAdminsAccounts();
+    // await fecthAdminsAccounts();
   };
 
   const handleUpdateSubmit = async (formData) => {
@@ -312,7 +307,7 @@ const ManageClass = () => {
         }}
       />
 
-      <AddForm
+      <AddFormForClass
         fields={addFields}
         isOpen={isAddOpen}
         setIsOpen={setIsAddOpen}
@@ -320,7 +315,7 @@ const ManageClass = () => {
         buttonLabel="Add"
       />
 
-      <AddForm
+      <AddFormForClass
         fields={addFields}
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}

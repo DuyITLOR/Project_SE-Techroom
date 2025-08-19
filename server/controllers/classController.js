@@ -5,7 +5,6 @@ import Participation from "../models/classParticipationModel.js";
 // This function will call Class.getAllClasses() in Class Model for Administrators to get all listClasses
 // and call Class.getRelatedClass() in Class Model for Students/Teachers to get listClasses that they participate in.
 export const getClass = async (req, res) => {
-<<<<<<< HEAD
   const { userid, role } = req.body;
   if (!userid || !role) {
     return res.status(400).send({
@@ -13,15 +12,6 @@ export const getClass = async (req, res) => {
       message: "Username and role cannot be empty!",
     });
   }
-=======
-    const {userid, role} = req.query;
-    if (!userid || !role) {
-        return res.status(400).send({
-        success: false,
-        message: "Username and role cannot be empty!"
-        });
-    }
->>>>>>> 6626cd7127a8bf7cebb72969332bf059faa7509e
 
     let listClasses;
     if (role === 'admin' || role === 'superadmin') {
@@ -46,6 +36,7 @@ export const getClass = async (req, res) => {
     listClasses: listClasses.result,
   });
 };
+
 
 export const addUser = async (req, res) => {
   const { classID, userIDs } = req.body;
