@@ -130,25 +130,53 @@ const ManageClass = () => {
       const res = await axios.get("http://localhost:4000/api/core/class",
         { params: { userid: localStorage.getItem("username"), role: "superadmin" } }
       )
-      console.log("Fetched course: ", res.data);
 
-      const list = res.data.listClasses || [];
 
-      const fromatted = list.map((item, index) => ({
+      const list = res.data.listClasses;
+      console.log("Fetched : ", list);
 
-        classID: item.ClassID || "N/A",
-        className: item.ClassName || "N/A",
-        lessonPerWeek: item.LessonsPerWeek || "N/A",
-        classNumWeek: item.ClassNumWeek || "N/A",
-        beginDate: item.BeginDate || "N/A",
-        endDate: item.EndDate || "N/A",
-        courseID: item.CourseID || "N/A",
-      }));
+      if(!Array.isArray(list)) {
+        console.log("hok phai la mang")
+      }
 
+      const group = list.reduce((info, item) => {
+        const id = item.ClassID
+        console.log("ID: ", id);
+        if (!info[id])
+        {
+          info[id] = {
+            classID: item.ClassID || "N/A",
+            className: item.ClassName || "N/A",
+            lessonPerWeek: item.LessonsPerWeek || "N/A",
+            classNumWeek: item.ClassNumWeek || "N/A",
+            beginDate: item.BeginDate || "N/A",
+            endDate: item.EndDate || "N/A",
+            courseID: item.CourseID || "N/A",
+            studentOfClass: [],
+            teacherOfClass: []
+          };
+        }
+
+        if (item.Role === "teacher")
+        {
+          info[id].teacherOfClass.push(item.FullName || "N/A");
+        }
+
+        else if (item.Role === "student")
+        {
+          info[id].studentOfClass.push(item.FullName || "N/A");
+        }
+
+        return info
+        
+      }, {})
+
+
+      const fromatted = Object.values(group)
       console.log("Formatted data: ", fromatted);
       setData(fromatted);
     } catch (err) {
-      console.log("Error fetching information course: ", err);
+      console.log("Error fetching information class: ", err);
     }
   };
 
