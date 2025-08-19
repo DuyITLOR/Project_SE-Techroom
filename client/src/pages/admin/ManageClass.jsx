@@ -125,63 +125,34 @@ const ManageClass = () => {
 
 
 
-  const fecthAdminsAccounts = async () => {
+  const fecthClass = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/core/class",
         { params: { userid: localStorage.getItem("username"), role: "superadmin" } }
       )
+      const list = res.data?.listClasses || [];
 
-
-      const list = res.data.listClasses;
-      console.log("Fetched : ", list);
-
-      if(!Array.isArray(list)) {
-        console.log("hok phai la mang")
-      }
-
-      const group = list.reduce((info, item) => {
-        const id = item.ClassID
-        console.log("ID: ", id);
-        if (!info[id])
-        {
-          info[id] = {
-            classID: item.ClassID || "N/A",
-            className: item.ClassName || "N/A",
-            lessonPerWeek: item.LessonsPerWeek || "N/A",
-            classNumWeek: item.ClassNumWeek || "N/A",
-            beginDate: item.BeginDate || "N/A",
-            endDate: item.EndDate || "N/A",
-            courseID: item.CourseID || "N/A",
-            studentOfClass: [],
-            teacherOfClass: []
-          };
-        }
-
-        if (item.Role === "teacher")
-        {
-          info[id].teacherOfClass.push(item.FullName || "N/A");
-        }
-
-        else if (item.Role === "student")
-        {
-          info[id].studentOfClass.push(item.FullName || "N/A");
-        }
-
-        return info
-        
-      }, {})
-
-
-      const fromatted = Object.values(group)
-      console.log("Formatted data: ", fromatted);
-      setData(fromatted);
+      const formatted  = list.map((item, index) => ({
+          classID: item.ClassID || "N/A",
+          className: item.ClassName || "N/A",
+          lessonPerWeek: item.LessonsPerWeek || "N/A",
+          classNumWeek: item.ClassNumWeek || "N/A",
+          beginDate: item.BeginDate || "N/A",
+          endDate: item.EndDate || "N/A",
+          courseID: item.CourseID || "N/A",
+          studentOfClass: (item.students || []).map(s => s.FullName).join(", ") || "N/A",
+          teacherOfClass: (item.teachers || []).map(t => t.FullName).join(", ") || "N/A",
+        }))
+    
+      console.log("Formatted data: ", formatted);
+      setData(formatted);
     } catch (err) {
       console.log("Error fetching information class: ", err);
     }
   };
 
   useEffect(() => {
-    fecthAdminsAccounts();
+    fecthClass();
   }, []);
 
   const handleSearch = async (searchTerm) => {
@@ -209,40 +180,51 @@ const ManageClass = () => {
     if (!item) return;
 
     try {
-      // await axios.delete("http://localhost:4000/api/admin/room", {
-      //   data: { roomID: item },
-      // });
-
-      // Recall the getdatabase
-      fecthAdminsAccounts();
+      await axios.delete("http://localhost:4000/api/admin/class", {data: {classID: item},});
+      console.log("Deleted class with ID: ", item);
+      fecthClass();
       setItem(null);
     } catch (err) {
       console.error("Error deleting teacher account: ", err);
     }
-  };
+  }
 
   const handleAddSubmit = async (formData) => {
-    // const body = {
-    //   roomID: formData.RoomID || "N/A",
-    //   roomName: formData.RoomName || "N/A",
-    //   lessonPerWeek: formData.LessonPerWeek || "N/A",
-    //   classNumWeek: formData.ClassNumWeek || "N/A",
-    //   beginDate: formData.BeginDate || "N/A",
-    //   endDate: formData.EndDate || "N/A",
-    //   courseID: formData.CourseID || "N/A",
-    // };
-    console.log("Adding new room with data: ", formData);
+      console.log("Adding new class with data: ", formData);
+      try {
+        const body = {
+          classID: formData.classID || "N/A",
+          className: formData.className || "N/A",
+          lessonsPerWeek: formData.lessonPerWeek || "N/A",
+          classNumWeek: formData.classNumWeek || "N/A",
+          beginDate: formData.beginDate || "N/A",
+          endDate: formData.endDate || "N/A",
+          courseID: formData.courseID || "N/A",
+          studentIDs: [...new Set(formData.selectedStudents || [])] || "N/A",
+          teacherIDs: [...new Set(formData.selectedTeachers || [])] || "N/A",
+        };
+    
+        console.log("Adding new class with data: ", body);  
+        const res = await axios.post(
+          "http://localhost:4000/api/admin/class",
+          body
+        );
 
-    // const res = await axios.post("http://localhost:4000/api/admin/room", body);
-
-    // if (res?.data?.msg === "UserID already exists") {
-    //   const err = new Error(res.data.msg);
-    //   err.response = { data: { message: res.data.msg } };
-    //   throw err;
-    // }
-
-    // await fecthAdminsAccounts();
-  };
+        if (res?.data?.msg === "Class already exists") {
+          console.error("Class already exists: ", res.data.msg);
+          const err = new Error(res.data.msg);
+          err.response = { data: { message: res.data.msg } };
+          throw err;
+        }
+    
+        console.log("Response from adding class: ", res.data);
+    
+        await fecthClass();
+      } catch (err) {
+        throw err 
+          console.error("Error adding new class: ", res.data.message, err);
+      }
+  }
 
   const handleUpdateSubmit = async (formData) => {
     const body = {

@@ -75,7 +75,7 @@ const AddFormForClass = ({ isOpen, setIsOpen, onSubmit, initialData = {}, button
       await onSubmit?.(formData);
       setIsOpen(false);
     } catch (err) {
-      setError(err?.response?.data?.message || "Có lỗi xảy ra khi gửi form.");
+      setError(err?.response?.data?.message || "Error when adding class. Please try again.");
     } finally {
       setSubmitted(false);
     }
@@ -89,8 +89,8 @@ const AddFormForClass = ({ isOpen, setIsOpen, onSubmit, initialData = {}, button
 
   return (
     isOpen && (
-      <div className='fixed inset-0 flex justify-center items-center backdrop-blur-sm '>
-      <div className='flex flex-col bg-[#E5E7EB] w-1/4 h-fit px-4 py-4 border-2 rounded-[8px] gap-2 max-h-[800px] overflow-y-auto'>
+      <div className='fixed inset-0 flex justify-center items-center backdrop-blur-sm pt-25'>
+      <div className='flex flex-col bg-[#E5E7EB] w-1/4 h-fit px-4 py-4 border-2 rounded-[8px] gap-2 max-h-[600px] overflow-y-auto'>
         <form onSubmit={handleSubmit} className='flex flex-col gap-4 justify-center '>
           <div>
             <div className='pt-2'>
@@ -121,7 +121,7 @@ const AddFormForClass = ({ isOpen, setIsOpen, onSubmit, initialData = {}, button
 
             <div className='pt-2'>
               <div className='mb-1 font-medium'>LessonPerWeek</div>
-              <input type="text"
+              <input type="Number"
                 id="lessonPerWeek"
                 label="lessonPerWeek"
                 placeholder='Enter the lesson per week'
@@ -133,7 +133,7 @@ const AddFormForClass = ({ isOpen, setIsOpen, onSubmit, initialData = {}, button
 
             <div className='pt-2'>
               <div className='mb-1 font-medium'>ClassNumWeek</div>
-              <input type="text"
+              <input type="Number"
                 id="classNumWeek"
                 label="classNumWeek"
                 placeholder='Enter the class per week'
@@ -195,6 +195,12 @@ const AddFormForClass = ({ isOpen, setIsOpen, onSubmit, initialData = {}, button
                 onSelectChange={handleTeacherSelection}
               />
             </div>
+
+            {error && (
+              <p className="text-red-600 text-2xl">
+                {error}
+              </p>
+            )}
 
 
             <div className="flex justify-end ml-auto gap-6">

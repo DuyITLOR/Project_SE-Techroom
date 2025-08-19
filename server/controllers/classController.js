@@ -18,7 +18,7 @@ export const getClass = async (req, res) => {
     listClasses = await Class.getAllClass();
     return res.status(200).send({
       success: true,
-      listClasses: listClasses,
+      listClasses: listClasses.result,
     });
   }
 
