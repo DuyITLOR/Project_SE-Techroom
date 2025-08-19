@@ -5,7 +5,7 @@ I. authRouter
 II. adminRouter
 1. getAccount, api-get: http://localhost:4000/api/admin/account, params: { role }
 2. addAccount, api-post: http://localhost:4000/api/admin/account, params: { userID, fullName, birthday, password, role }
-3. searchAccount, api-get: http://localhost:4000/api/admin/account/search, params: { userID, role }
+3. searchAccount, api-get: http://localhost:4000/api/admin/account/search, params: { user, role }
 4. updateAccount, api-put: http://localhost:4000/api/admin/account, params: { userID, fullName, birthday, password, role }
 5. deleteAccount, api-delete: http://localhost:4000/api/admin/account, params: { userID }
 
