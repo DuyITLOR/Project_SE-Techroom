@@ -1,7 +1,7 @@
 
 import { DataTypes, QueryTypes } from "sequelize";
-import { Op } from 'sequelize';
 import sequelize from "../config/db.js";
+import { Sequelize } from "sequelize";
 
 const Class = sequelize.define('Class', {
     // ClassID: primary key which is used to distinguish classes.
@@ -109,7 +109,6 @@ Class.getAllClass = async function () {
     });
 
     const formatted = Object.values(groupedClasses);
-    console.log(formatted);
 
     return {
         success: true,
@@ -167,7 +166,7 @@ Class.getRelatedClasses = async function (userID) {
     });
 
     const formatted = Object.values(groupedClasses);
-    console.log(formatted);
+
     return {
         success: true,
         result: formatted
@@ -190,12 +189,34 @@ Class.updateClass = async function (ClassID, className, lessonsPerWeek, classNum
 }
 //deleteClass(): Delete an existing class from the database
 Class.deleteClass = async function (ClassID) {
-    const declass = await this.findByPk(ClassID)
-    if (!declass) {
-        return false
+    try {
+        const declass = await this.findByPk(ClassID)
+        if (!declass) {
+            return false
+        }
+        await declass.destroy()
+        return { 
+            success: true,
+            message: "Course deleted successfully!" 
+        };
+    } catch (error) {
+        if (error instanceof Sequelize.ForeignKeyConstraintError) {
+            // Truy vấn tìm các bảng đang tham chiếu tới CourseID
+            const [results] = await this.sequelize.query(`
+                SELECT TABLE_NAME AS referencing_table, COLUMN_NAME AS referencing_column
+                FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+                WHERE REFERENCED_TABLE_NAME = 'Class'
+                AND REFERENCED_COLUMN_NAME = 'ClassID'
+                AND TABLE_SCHEMA = DATABASE();
+            `);
+
+            const tables = results.map(r => `${r.referencing_table}.${r.referencing_column}`);
+            return {
+                success: false,
+                message: `Cannot delete ClassID = ${ClassID} because it is referenced in: ${tables.join(", ")}`
+            };
+        }
     }
-    await declass.destroy()
-    return true
 }
 //getClassStudentList which student is in ClassParticipate table
 Class.getClassByRole = async function (classID, role) {
@@ -254,17 +275,50 @@ Class.searchClass = async function (classID) {
             type: QueryTypes.SELECT
         }
     );
+
     if (!results.length) {
         return {
             success: false,
             message: "No classes found for this user"
         }
     }
+
+    const groupedClasses = {};
+
+    results.forEach(item => {
+    if (!groupedClasses[item.ClassID]) {
+        groupedClasses[item.ClassID] = {
+            ClassID: item.ClassID,
+            ClassName: item.ClassName,
+            LessonsPerWeek: item.LessonsPerWeek,
+            ClassNumWeek: item.ClassNumWeek,
+            BeginDate: item.BeginDate,
+            EndDate: item.EndDate,
+            CourseID: item.CourseID,
+            students: [],
+            teachers: []
+        };
+    }
+
+    if (item.Role === "student") {
+        groupedClasses[item.ClassID].students.push({
+            FullName: item.FullName
+        });
+    } else if (item.Role === "teacher") {
+        groupedClasses[item.ClassID].teachers.push({
+            FullName: item.FullName
+        });
+    }
+    });
+
+    const formatted = Object.values(groupedClasses);
+
     return {
         success: true,
-        result: results
+        result: formatted
     }
 }
+
 Class.showClassInfo = async function (classID) {
     const upclass = await this.findByPk(classID)
     if (!upclass) {

@@ -75,16 +75,16 @@ export const searchClass = async (req, res) => {
     const { classID } = req.query
     if(!classID) {
         return res.status(400).send({
-        success: false, 
-        message: "ClassID cannot be empty!"
+            success: false, 
+            message: "ClassID cannot be empty!"
         })
     }
 
     const classes = await Class.searchClass(classID)
     if(!classes.success) {
         return res.send({
-        success: false,
-        message: "Cannot find any class!"
+            success: false,
+            message: "Cannot find any class!"
         })
     }
     return res.status(200).send({
@@ -122,14 +122,14 @@ export const deleteClass = async (req, res)=> {
     const { classID } = req.body
     console.log("classID: ", classID)
     const deletedClass = await Class.deleteClass(classID)
-    if(!deletedClass) {
+    if(!deletedClass.success) {
         return res.status(404).send({
-            message: "Class not found"
+            message: deletedClass.message
         })
     }
 
     return res.status(201).send({
-        message: "Class is deleted"
+        message: deletedClass.message
     })
 }
 
