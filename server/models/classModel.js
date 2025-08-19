@@ -271,7 +271,7 @@ Class.searchClass = async function (classID) {
         WHERE p.ClassID LIKE :classID
         `,
         {
-            replacements: { classID },
+            replacements: { classID: `%${classID}%` },
             type: QueryTypes.SELECT
         }
     );
