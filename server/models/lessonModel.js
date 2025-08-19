@@ -2,7 +2,7 @@ import { DataTypes, Op, QueryTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 import Accounts from './accountModel.js';
 import Class from './classModel.js';
-import { Attendance } from './attendanceModel.js';
+
 
 const Session = sequelize.define(
   'Session',
@@ -156,8 +156,8 @@ Lesson.getAllLessonsForWeek = async function (weekStartDate) {
   const lessons = Lesson.findAll({
     where: {
       Date: {
-        [Op.gte]: weekStartDate,
-        [Op.lt]: new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000), // 7 days later
+        [Op.gte]: startDate,
+        [Op.lt]: new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000), // 7 days later
       },
     },
   });
@@ -179,35 +179,35 @@ Lesson.getRelatedLessonsForWeek = async function (userID, weekStartDate) {
   
   const weekEndDate = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days later
 
-  const lesson = await Lesson.query(
+  const lessons = await sequelize.query(
     `
     select ls.*
     from Lesson ls
     join Attendance at on ls.LessonID = at.LessonID
-    where at.StudentID = :userID and ls.Date >= :weekStartDate and ls.Date < :weekEndDate`,
+    where at.UserID = :userID and ls.Date >= :weekStartDate and ls.Date < :weekEndDate`,
     {
       replacements: {
         userID: userID,
         weekStartDate: weekStartDate,
         weekEndDate: weekEndDate.toISOString().slice(0, 10),
-      }
+      },
+      type: QueryTypes.SELECT,
     }
   );
 
-
-  if (!lesson || lesson.length === 0) {
+  if (!lessons || lessons.length === 0) {
     throw new Error(`No lessons found for user ${userID} for the week starting on ${weekStartDate}.`);
   }
 
   console.log(`Successfully fetched lessons related to user ${userID} for the week.`);
-  return lesson;
+  return lessons;
 };
 
-Lesson.getLessonDetails = async function (LessonID) {
-  const lesson = await Lesson.findByPk(LessonID);
+Lesson.getLessonDetails = async function (lessonID) {
+  const lesson = await Lesson.findByPk(lessonID);
 
   if (!lesson) {
-    throw new Error(`Lesson with ID ${LessonID} does not exist.`);
+    throw new Error(`Lesson with ID ${lessonID} does not exist.`);
   }
 
   // find students
@@ -215,10 +215,10 @@ Lesson.getLessonDetails = async function (LessonID) {
     `
     select a.UserID, a.FullName 
     from Accounts a 
-    join Attendance at on a.UserID = at.StudentID 
-    where at.LessonID = :LessonID and a.Role = 'student'`,
+    join Attendance at on a.UserID = at.UserID 
+    where at.LessonID = :lessonID and a.Role = 'student'`,
     {
-      replacements: { LessonID },
+      replacements: { lessonID },
       type: QueryTypes.SELECT,
     }
   );
@@ -228,17 +228,19 @@ Lesson.getLessonDetails = async function (LessonID) {
     `
     select a.UserID, a.FullName
     from Accounts a 
-    join Attendance at on a.UserID = at.StudentID
-    where at.LessonID = :LessonID and a.Role = 'teacher'`,
+    join Attendance at on a.UserID = at.UserID
+    where at.LessonID = :lessonID and a.Role = 'teacher'`,
     {
-      replacements: { LessonID },
+      replacements: { lessonID },
       type: QueryTypes.SELECT,
     }
   );
+  let lessonObj = lesson.toJSON();
 
-  result = { lesson, studentList, teacherList };
-  console.log(`Successfully fetched details for lesson with ID ${LessonID}.`);
-  return lesson;
+  lessonObj.studentList = studentList;
+  lessonObj.teacherList = teacherList;
+  console.log(`Successfully fetched details for lesson with ID ${lessonID}.`);
+  return lessonObj;
 };
 
 export { Lesson, Session };

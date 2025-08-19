@@ -12,7 +12,7 @@ timetableRouter.get('/timetable', (req, res, next) => {
   handler(req, res, next);
 });
 
-timetableRouter.get('/timetable/:lessonID', (req, res, next) => {
+timetableRouter.get('/timetable/lessonInfo', (req, res, next) => {
   const handler = getLessonByID;
   handler(req, res, next);
 });
