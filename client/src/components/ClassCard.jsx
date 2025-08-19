@@ -1,12 +1,11 @@
 import React from "react";
 
 import ClassIcon from "../assets/users.svg?react";
-import ClockIcon from "../assets/clock.svg?react";
 
 const ItemCard = ({ ClassID, ClassName, TeacherName, onClick }) => {
   return (
     <div
-      className="w-full h-[154px] bg-white/82 rounded-[10px] shadow-md shadow-black/25 px-[12px] py-[17px] cursor-pointer"
+      className="w-full h-[154px] bg-white/82 rounded-[10px] shadow-md shadow-black/25 px-[12px] py-[17px] cursor-pointer hover:shadow-lg transition-shadow duration-200"
       onClick={onClick}>
       <div className="flex flex-col gap-3 min-h-full">
         <div className="flex gap-4">
