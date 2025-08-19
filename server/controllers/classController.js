@@ -13,22 +13,22 @@ export const getClass = async (req, res) => {
     });
   }
 
-    let listClasses;
-    if (role === 'admin' || role === 'superadmin') {
-        listClasses = await Class.getAllClass();
-        return res.status(200).send({
-            success: true,
-            listClasses: listClasses
-        })
-    }
-    
-    listClasses = await Class.getRelatedClasses(userid);
-    if (!listClasses.success) {
-        return res.status(404).send({
-            success: listClasses.success,
-            message: listClasses.message
-        });
-    }
+  let listClasses;
+  if (role === "admin" || role === "superadmin") {
+    listClasses = await Class.getAllClass();
+    return res.status(200).send({
+      success: true,
+      listClasses: listClasses,
+    });
+  }
+
+  listClasses = await Class.getRelatedClasses(userid);
+  if (!listClasses.success) {
+    return res.status(404).send({
+      success: listClasses.success,
+      message: listClasses.message,
+    });
+  }
 
   return res.status(200).send({
     success: listClasses.success,
@@ -36,7 +36,6 @@ export const getClass = async (req, res) => {
     listClasses: listClasses.result,
   });
 };
-
 
 export const addUser = async (req, res) => {
   const { classID, userIDs } = req.body;
@@ -81,7 +80,7 @@ export const addUser = async (req, res) => {
   });
 };
 export const showClassInfomation = async (req, res) => {
-  const { classID } = req.body;
+  const { classID } = req.query;
   if (!classID) {
     return res.status(400).send({
       success: false,
