@@ -64,7 +64,7 @@ Class.addClass = async function (classID, className, lessonsPerWeek, classNumWee
 Class.getAllClass = async function () {
     const results = await sequelize.query(
         `
-        SELECT cl.*, c.FullName, c.Role
+        SELECT c.FullName, c.Role, cl.*
         FROM Class cl
         JOIN Participation p ON cl.ClassID = p.ClassID
         JOIN Accounts c ON p.Username = c.UserID
@@ -113,7 +113,7 @@ Class.getAllClass = async function () {
 
     return {
         success: true,
-        result: results
+        result: formatted
     }
 }
 //getRelatedClasses(): Get all classes related to the username from the data Class Participation table
