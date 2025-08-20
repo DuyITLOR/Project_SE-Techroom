@@ -102,26 +102,29 @@ const Login = () => {
               </>
             )}
 
-            {step === 2 && (role === "admin" || role === "superadmin") && (
-              <>
-                <label className=" text-left md-1 ">Password</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2 mb-6 mt-2 rounded border border-white text-white focus:outline-none"
-                  placeholder="Enter password"
-                />
+            {step === 2 &&
+              (role === "admin" ||
+                role === "superadmin" ||
+                role === "teacher") && (
+                <>
+                  <label className=" text-left md-1 ">Password</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-3 py-2 mb-6 mt-2 rounded border border-white text-white focus:outline-none"
+                    placeholder="Enter password"
+                  />
 
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    className="px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded items-center ">
-                    Login
-                  </button>
-                </div>
-              </>
-            )}
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      className="px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded items-center ">
+                      Login
+                    </button>
+                  </div>
+                </>
+              )}
 
             {step === 2 && role === "student" && (
               <>

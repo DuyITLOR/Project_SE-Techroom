@@ -34,7 +34,7 @@ const App = () => {
           }
         />
 
-        <Route path="/test" element={<AddForm/>} />
+        <Route path="/test" element={<AddForm />} />
 
         <Route
           path="/admin/Student"
@@ -147,7 +147,7 @@ const App = () => {
         <Route
           path="/teacher/Dashboard"
           element={
-            <ProtectedRoute roleRequired="student">
+            <ProtectedRoute roleRequired="teacher">
               <TeacherDashboard />
             </ProtectedRoute>
           }

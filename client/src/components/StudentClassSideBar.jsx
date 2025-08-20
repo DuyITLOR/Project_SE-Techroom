@@ -4,6 +4,7 @@ import MenuItem from "./MenuItem";
 
 import DiscussionIcon from "../assets/message-circle.svg?react";
 import FeedbackIcon from "../assets/star.svg?react";
+import GoBackIcon from "../assets/chevron-left.svg?react";
 import MenuIcon from "../assets/menu.svg?react";
 
 const StudentClassSideBar = ({ activate, setActivate, current, classID }) => {
@@ -22,6 +23,12 @@ const StudentClassSideBar = ({ activate, setActivate, current, classID }) => {
       icon: FeedbackIcon,
       color: "#FF7002",
       link: `/student/Class/${classID}/Feedback`,
+    },
+    {
+      text: "Go Back",
+      icon: GoBackIcon,
+      color: "#DCCA00",
+      link: `/student/Dashboard`,
     },
   ];
 
