@@ -264,7 +264,7 @@ Class.sendClassTimetable = async function (ClassID) {
 Class.searchClass = async function (classID) {
     const results = await sequelize.query(
         `
-        SELECT a.FullName, a.Role, c.*
+        SELECT a.UserID, a.FullName, a.Role, c.*
         FROM Class c
         JOIN Participation p ON c.ClassID = p.ClassID
         JOIN Accounts a ON p.Username = a.UserID
@@ -302,10 +302,12 @@ Class.searchClass = async function (classID) {
 
     if (item.Role === "student") {
         groupedClasses[item.ClassID].students.push({
+            UserID: item.UserID,
             FullName: item.FullName
         });
     } else if (item.Role === "teacher") {
         groupedClasses[item.ClassID].teachers.push({
+            UserID: item.UserID,
             FullName: item.FullName
         });
     }
