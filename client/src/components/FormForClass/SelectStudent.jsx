@@ -27,13 +27,15 @@ const SelectStudent = ({ selectedStudent, onSelectChange }) => {
                         name: items.FullName || "N/A",
                     }
                 ))
+                console.log("Formatted of Selected Student: ", formatted);
                 setStudents(formatted);
             } catch (error) {
                 console.error("Error fetching students:", error);
             }
         };
+        console.log("Fetching students...");
         fetchStudents()
-    }, [])
+    }, [selectedStudent])
 
 
     return (
@@ -43,6 +45,8 @@ const SelectStudent = ({ selectedStudent, onSelectChange }) => {
                     {
                         selectedStudent.map((id) => {
                             const student = students.find((s) => s.id === id)
+                            console.log("Student found: ", id);
+
                             return (
                                 <span
                                     key={id}

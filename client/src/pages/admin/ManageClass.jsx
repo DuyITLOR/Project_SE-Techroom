@@ -21,7 +21,7 @@ const ManageClass = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [editData, setEdtitData] = useState(null);
+  const [editData, setEditData] = useState(null);
 
   const Columns = [
     "classID",
@@ -50,7 +50,8 @@ const ManageClass = () => {
         }
       )
       const list = res.data?.Class || [];
-      setIsEditOpen({
+      console.log("Edit class data before from table: ", list);
+      setEditData({
         classID: list[0].ClassID || "N/A",
         className: list[0].ClassName || "N/A",
         lessonPerWeek: list[0].LessonsPerWeek || "N/A",
@@ -61,8 +62,8 @@ const ManageClass = () => {
         studentOfClass: list[0].students || [],
         teacherOfClass: list[0].teachers || [],
       })
-
-      console.log("Edit class data: ", editData);
+      console.log("Edit class data after from table: ", editData);
+      // console.log("Edit class data aftere: ", editData.studentOfClass);
 
       setIsEditOpen(true)
     } catch (err) {
@@ -279,6 +280,7 @@ const ManageClass = () => {
         isOpen={isAddOpen}
         setIsOpen={setIsAddOpen}
         onSubmit={handleAddSubmit}
+        initialData = {null}
         buttonLabel="Add"
       />
 
