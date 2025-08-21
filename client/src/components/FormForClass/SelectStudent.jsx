@@ -11,7 +11,7 @@ const SelectStudent = ({ selectedStudent, onSelectChange }) => {
         const newStudent = selectedStudent.includes(studentId)
             ? selectedStudent.filter(id => id !== studentId) :
             [...selectedStudent, studentId];
-        onSelectChange(newStudent);
+        onSelectChange?.(newStudent);
     }
 
     useEffect(() => {
@@ -21,38 +21,36 @@ const SelectStudent = ({ selectedStudent, onSelectChange }) => {
                     params: { role: "student" }
                 });
                 const list = res.data.listUsers || [];
+                // console.log("Fetched students: ", list);
                 const formatted = list.map((items) => (
                     {
-                        id: items.UserID || "N/A",
-                        name: items.FullName || "N/A",
+                        UserID: items.UserID || "N/A",
+                        FullName: items.FullName || "N/A",
                     }
                 ))
-                console.log("Formatted of Selected Student: ", formatted);
+                // console.log("Formatted : ", formatted); 
                 setStudents(formatted);
             } catch (error) {
                 console.error("Error fetching students:", error);
             }
         };
-        console.log("Fetching students...");
         fetchStudents()
     }, [selectedStudent])
 
-
+    
     return (
         <div>
             <div className='space-y-2'>
                 <div className='flex flex-wrap gap-2' >
                     {
                         selectedStudent.map((id) => {
-                            const student = students.find((s) => s.id === id)
-                            console.log("Student found: ", id);
-
+                            const student = students.find((s) => s.UserID === id)
                             return (
                                 <span
-                                    key={id}
+                                    key={id}x
                                     className="bg-blue-100"
                                 >
-                                    {student.name}
+                                    {student?.FullName}
                                 </span>
                             )
                         })
@@ -75,21 +73,21 @@ const SelectStudent = ({ selectedStudent, onSelectChange }) => {
                             {
                                 students.map((student) => (
                                     <div
-                                        key={student.id}
-                                        onClick={() => toggleStudent(student.id)}
-                                        className={`p-3 border-b last:border-0 cursor-pointer ${selectedStudent.includes(student.id)
+                                        key={student.UserID }
+                                        onClick={() => toggleStudent(student.UserID)}
+                                        className={`p-3 border-b last:border-0 cursor-pointer ${selectedStudent.includes(student.UserID)
                                             ? "bg-blue-50 border-l-4 border-blue-500"
                                             : "hover:bg-gray-50"
                                             }`}
                                     >
                                         <div className='flex justify-between items-center'>
                                             <div>
-                                                <div className='font-medium'>{student.name}</div>
-                                                <div className='text-sm text-gray-500'>{student.id}</div>
+                                                <div className='font-medium'>{student.FullName}</div>
+                                                <div className='text-sm text-gray-500'>{student.UserID}</div>
                                             </div>
 
                                             <div>
-                                                {selectedStudent.includes(student.id) && (
+                                                { (selectedStudent.includes(student.UserID)) && (
                                                     <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
                                                         <div className="w-2 h-2 bg-white border-2 rounded-full"></div>
                                                     </div>

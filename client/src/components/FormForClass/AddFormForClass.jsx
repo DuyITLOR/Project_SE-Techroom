@@ -22,11 +22,9 @@ const AddFormForClass = ({ isOpen, setIsOpen, onSubmit, initialData = {}, button
   })
 
   useEffect(() => {
-    console.log("Form data initial:", initialData);
+    // console.log("Form data initial:", initialData);
   
     if (isOpen) {
-      const hasInitial = initialData && Object.keys(initialData).length > 0;
-  
       const data = {
         classID: initialData?.classID || "",
         className: initialData?.className || "",
@@ -35,13 +33,10 @@ const AddFormForClass = ({ isOpen, setIsOpen, onSubmit, initialData = {}, button
         beginDate: initialData?.beginDate || "",
         endDate: initialData?.endDate || "",
         courseID: initialData?.courseID || "",
-  
-        // selectedStudents: hasInitial ? ['0329482710',] : [],
-        // selectedTeachers: hasInitial ? ['0242345',] : [],
-        selectedStudents: [],
-        selectedTeachers: [],
+        selectedStudents:initialData?.studentOfClass || [],
+        selectedTeachers:initialData?.teacherOfClass || [],
       };
-  
+      console.log("Setting form data:", data);
       setFormData(data);
     }
   
@@ -49,7 +44,6 @@ const AddFormForClass = ({ isOpen, setIsOpen, onSubmit, initialData = {}, button
     setError("");
   }, [isOpen, initialData]);
   
-
 
 
 

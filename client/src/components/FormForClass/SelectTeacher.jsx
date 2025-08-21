@@ -7,6 +7,7 @@ const SelectTeacher = ({ selectedTeacher, onSelectChange }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [teachers ,setTeachers] = useState([]);
 
+
     const toggleTeacher = (teacherId) => {
         const newTeacher = selectedTeacher.includes(teacherId)
             ? selectedTeacher.filter(id => id !== teacherId) :
@@ -23,8 +24,8 @@ const SelectTeacher = ({ selectedTeacher, onSelectChange }) => {
                 const list = res.data.listUsers || [];
                 const formatted = list.map((items) => (
                     {
-                        id: items.UserID || "N/A",
-                        name: items.FullName || "N/A",
+                        UserID: items.UserID || "N/A",
+                        FullName: items.FullName || "N/A",
                     }
                 ))
                 setTeachers(formatted);
@@ -33,7 +34,7 @@ const SelectTeacher = ({ selectedTeacher, onSelectChange }) => {
             }
         };
         fetchTeachers()
-    }, [])
+    }, [selectedTeacher])
 
 
     return (
@@ -42,13 +43,13 @@ const SelectTeacher = ({ selectedTeacher, onSelectChange }) => {
                 <div className='flex flex-wrap gap-2' >
                     {
                         selectedTeacher.map((id) => {
-                            const teacher = teachers.find((s) => s.id === id)
+                            const teacher = teachers.find((s) => s.UserID === id)
                             return (
                                 <span
                                     key={id}
                                     className="bg-blue-100"
                                 >
-                                    {teacher.name}
+                                    {teacher?.FullName}
                                 </span>
                             )
                         })
@@ -63,7 +64,6 @@ const SelectTeacher = ({ selectedTeacher, onSelectChange }) => {
                     {selectedTeacher.length > 0 ? `Đã chọn ${selectedTeacher.length} giáo viên` : "Chọn giáo viên"}
                 </button>
 
-
                 {
                     isOpen &&
                     (
@@ -71,23 +71,23 @@ const SelectTeacher = ({ selectedTeacher, onSelectChange }) => {
                             {
                                 teachers.map((teacher) => (
                                     <div
-                                        key={teacher.id}
-                                        onClick={() => toggleTeacher(teacher.id)}
-                                        className={`p-3 border-b last:border-0 cursor-pointer ${selectedTeacher.includes(teacher.id)
+                                        key={teacher.UserID}
+                                        onClick={() => toggleTeacher(teacher.UserID)}
+                                        className={`p-3 border-b last:border-0 cursor-pointer ${selectedTeacher.includes(teacher.UserID)
                                             ? "bg-blue-50 border-l-4 border-blue-500"
                                             : "hover:bg-gray-50"
                                             }`}
                                     >
                                         <div className='flex justify-between items-center'>
                                             <div>
-                                                <div className='font-medium'>{teacher.name}</div>
-                                                <div className='text-sm text-gray-500'>{teacher.id}</div>
+                                                <div className='font-medium'>{teacher.FullName}</div>
+                                                <div className='text-sm text-gray-500'>{teacher.FullName}</div>
                                             </div>
 
                                             <div>
-                                                {selectedTeacher.includes(teacher.id) && (
+                                                {selectedTeacher.includes(teacher.FullName) && (
                                                     <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                                                        <div className="w-2 h-2 bg-white border-2 rounded-full"></div>
+                                                        <div className="w-2 h-2 bg-white border-2 rounde    d-full"></div>
                                                     </div>
                                                 )}
                                             </div>

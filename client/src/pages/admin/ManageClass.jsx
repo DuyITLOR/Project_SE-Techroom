@@ -50,7 +50,6 @@ const ManageClass = () => {
         }
       )
       const list = res.data?.Class || [];
-      console.log("Edit class data before from table: ", list);
       setEditData({
         classID: list[0].ClassID || "N/A",
         className: list[0].ClassName || "N/A",
@@ -59,13 +58,12 @@ const ManageClass = () => {
         beginDate: list[0].BeginDate || "N/A",
         endDate: list[0].EndDate || "N/A",
         courseID: list[0].CourseID || "N/A",
-        studentOfClass: list[0].students || [],
-        teacherOfClass: list[0].teachers || [],
+        studentOfClass: list[0].students.map(s => s.UserID) || [],
+        teacherOfClass: list[0].teachers.map(t => t.UserID) || [],
       })
-      console.log("Edit class data after from table: ", editData);
-      // console.log("Edit class data aftere: ", editData.studentOfClass);
-
       setIsEditOpen(true)
+
+
     } catch (err) {
       console.error("Error editing class: ", err);
     }
@@ -92,7 +90,7 @@ const ManageClass = () => {
         teacherOfClass: (item.teachers || []).map(t => t.FullName).join(", ") || "N/A",
       }))
 
-      console.log("Formatted data: ", formatted);
+      // console.log("Formatted data: ", formatted);
       setData(formatted);
     } catch (err) {
       console.log("Error fetching information class: ", err);
@@ -189,15 +187,21 @@ const ManageClass = () => {
 
   const handleUpdateSubmit = async (formData) => {
     const body = {
-      roomID: formData.RoomID || "N/A",
-      roomName: formData.RoomName || "N/A",
-      note: formData.Note || "N/A",
+      ClassID: formData.classID || "N/A",
+      className: formData.className || "N/A",
+      lessonsPerWeek: formData.lessonPerWeek || "N/A",
+      classNumWeek: formData.classNumWeek || "N/A",
+      beginDate: formData.beginDate || "N/A",
+      endDate: formData.endDate || "N/A",
+      courseID: formData.courseID || "N/A",
+      studentIDs: [...new Set(formData.selectedStudents || [])] || "N/A",
+      teacherIDs: [...new Set(formData.selectedTeachers || [])] || "N/A",
     };
 
-    console.log("Updating room with data: ", body);
+    console.log("Updating data: ", body);
 
-    await axios.put("http://localhost:4000/api/admin/room", body);
-    await fecthAdminsAccounts();
+    await axios.put("http://localhost:4000/api/admin/class", body);
+    await fecthClass();
   };
 
   return (
