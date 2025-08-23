@@ -1,5 +1,4 @@
-import db from "./index.js";
-
+import db from './index.js';
 
 const { Lesson, Session, Rooms, Class, Accounts } = db;
 
@@ -9,14 +8,14 @@ Lesson.addLesson = async function (classID, date, sessionNumber, roomID) {
     if (!parentClass) {
       throw new Error(`Class with ID ${classID} does not exist.`);
     }
-    
+
     const parentRoom = await Rooms.findByPk(roomID);
-    if(!parentRoom) {
+    if (!parentRoom) {
       throw new Error(`Room with ID ${roomID} does not exist.`);
     }
 
     const parentSession = await Session.findByPk(sessionNumber);
-    if(!parentSession) {
+    if (!parentSession) {
       throw new Error(`Session with number ${sessionNumber} does not exist.`);
     }
 
@@ -56,38 +55,39 @@ Lesson.deleteLesson = async function (lessonID) {
 };
 
 Lesson.updateLesson = async function (lessonID, updatedInfo) {
+  const transaction = await db.sequelize.transaction();
   try {
-    const lesson = await Lesson.findByPk(lessonID);
+    console.log(`Updating lesson with ID: ${lessonID}`);
+    console.log(`Updated Info:`, updatedInfo);
+    const lesson = await Lesson.findByPk(lessonID, { transaction });
     if (!lesson) {
       throw new Error(`Lesson with ID ${lessonID} does not exist.`);
     }
 
-    let result = null;
-
+    // update a lesson's main data.
     if (updatedInfo.lessonData) {
-      result = await lesson.update(updatedInfo.lessonData);
+      await lesson.update(updatedInfo.lessonData, { transaction });
       console.log(`Lesson with ID ${lessonID} updated successfully.`);
     }
 
-    if (updatedInfo.studentIDs) {
-      const students = await Accounts.findAll({
-        where: { UserID: updatedInfo.studentIDs },
+    if (updatedInfo.studentIDs || updatedInfo.teacherIDs) {
+      const allUserIDs = [...(updatedInfo.studentIDs || []), ...(updatedInfo.teacherIDs || [])];
+      const users = await Accounts.findAll({
+        where: { UserID: allUserIDs },
+        transaction,
       });
-      await Lesson.setUsersAttending(students);
-      console.log(`Students list updated for lesson with ID ${lessonID}.`);
+      await lesson.setUsersAttending(users, { transaction });
+      console.log(`Student and and teacher list updated for lesson with ID ${lessonID}.`);
     }
 
-    if (updatedInfo.teacherIDs) {
-      const teachers = await Accounts.findAll({
-        where: { UserID: updatedInfo.teacherIDs },
-      });
-      await Lesson.setUsersAttending(teachers);
-      console.log(`Teachers list updated for lesson with ID ${lessonID}.`);
-    }
+    await transaction.commit();
 
-    return result;
+    const updatedLesson = await Lesson.getLessonDetails(lessonID);
+    console.log(`Lesson with ID ${lessonID} updated successfully.`);
+    return updatedLesson;
   } catch (error) {
     console.error(`Error updating lesson ${lessonID}:`, error);
+    await transaction.rollback();
     throw error;
   }
 };

@@ -1,6 +1,12 @@
 import express from 'express';
 import { handleByPrefix } from '../middlewares/prefixHandler.js';
-import { getAllLessonsForTimetable, getLessonByID, addLesson, deleteLesson } from '../controllers/admin/admin_TimetableController.js';
+import {
+  getAllLessonsForTimetable,
+  getLessonByID,
+  addLesson,
+  deleteLesson,
+  updateLesson,
+} from '../controllers/admin/admin_TimetableController.js';
 import { getRelatedLessonsForTimetable } from '../controllers/timetableController.js';
 
 const timetableRouter = express.Router();
@@ -16,10 +22,9 @@ timetableRouter.get('/timetable/lessonInfo', (req, res, next) => {
   if (!req.isAdmin) {
     return res.status(403).send({
       success: false,
-      message: "You do not have permission to view lesson details."
+      message: 'You do not have permission to view lesson details.',
     });
-  }
-  else {
+  } else {
     const handler = getLessonByID;
     handler(req, res, next);
   }
@@ -29,24 +34,34 @@ timetableRouter.post('/timetable/add-lesson', (req, res, next) => {
   if (!req.isAdmin) {
     return res.status(403).send({
       success: false,
-      message: "You do not have permission to add lessons."
+      message: 'You do not have permission to add lessons.',
     });
-  }
-  else {
+  } else {
     const handler = addLesson;
     handler(req, res, next);
-  } 
+  }
 });
 
 timetableRouter.delete('/timetable/delete-lesson', (req, res, next) => {
   if (!req.isAdmin) {
     return res.status(403).send({
       success: false,
-      message: "You do not have permission to delete lessons."
+      message: 'You do not have permission to delete lessons.',
     });
-  }
-  else {
+  } else {
     const handler = deleteLesson;
+    handler(req, res, next);
+  }
+});
+
+timetableRouter.put('/timetable/update-lesson', (req, res, next) => {
+  if (!req.isAdmin) {
+    return res.status(403).send({
+      success: false,
+      message: 'You do not have permission to update lessons.',
+    });
+  } else {
+    const handler = updateLesson;
     handler(req, res, next);
   }
 });
