@@ -1,5 +1,7 @@
 import sequelize from '../config/db.js';
 import { DataTypes } from 'sequelize';
+import fs from "fs";
+import path from "path";
 
 const Post = sequelize.define(
   'Post',
@@ -59,6 +61,26 @@ Post.deletePost = async function (postID) {
   const post = await this.findByPk(postID);
   if (!post) {
     return 0
+  }
+  // post.Link có thể null hoặc 1 chuỗi "path1,path2,..."
+  if (post.Link) {
+    // Tách chuỗi theo dấu phẩy, trim từng phần, loại bỏ phần rỗng
+    const fileLinks = String(post.Link)
+      .split(",")
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+
+    for (const rawLink of fileLinks) {
+      try {
+        const filePath = path.join(process.cwd(), rawLink);
+
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      } catch (err) {
+        // có thể ghi log ra file nếu muốn
+      }
+    }
   }
   await post.destroy();
   return 1

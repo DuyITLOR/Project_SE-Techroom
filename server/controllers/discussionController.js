@@ -5,7 +5,7 @@ export const getDiscussion = async (req, res) => {
   if (!classID) {
     return res.status(400).send({
       success: false,
-      message: "Class ID cannot be empty!",
+      message: "Class ID cannot be empty Quoc!",
     });
   }
   try {
@@ -30,7 +30,7 @@ export const getDiscussion = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
-  const { classID, userID, content, link } = req.body;
+  const { classID, userID, content } = req.body;
   if (!userID || !content) {
     return res.status(400).send({
       success: false,
@@ -38,6 +38,7 @@ export const createPost = async (req, res) => {
     });
   }
   try {
+    const link= req.files ? req.files.map(file => file.path).join(',') : null;
     const newPost = await Post.addPost(classID, userID, content, link);
     return res.status(201).send({
       success: true,

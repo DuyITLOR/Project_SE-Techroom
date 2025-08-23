@@ -1,2 +1,1 @@
-
-select * from Participation
+select * from Class
