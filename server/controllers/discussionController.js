@@ -1,4 +1,6 @@
 import Post from "../models/postModel.js";
+import fs from "fs";
+import path from "path";
 
 export const getDiscussion = async (req, res) => {
   const { classID } = req.query;
@@ -111,10 +113,29 @@ export const updatePost = async (req, res) => {
     });
   }
 };
+export const downloadFile = (req, res) => {
+  try {
+    const { filename } = req.body; // lấy tên file từ body
 
+    // Đường dẫn tuyệt đối đến file trong thư mục public
+    const filePath = path.join(process.cwd(), "public", filename);
+
+    // Kiểm tra file có tồn tại không
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "File không tồn tại" });
+    }
+
+    // Gửi file về cho client (tải về)
+    return res.download(filePath, filename); 
+    // nếu muốn hiển thị trực tiếp thì dùng: res.sendFile(filePath);
+  } catch (err) {
+    return res.status(500).json({ message: "Lỗi khi tải file", error: err.message });
+  }
+};
 export default {
   getDiscussion,
   createPost,
   deletePost,
   updatePost,
+  downloadFile,
 };
