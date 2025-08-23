@@ -6,7 +6,7 @@ import TitleBanner from "../../components/TitleBanner";
 import Plus from "../../assets/plus.svg?react";
 import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
-import AddForm from "../../components/MemberSelector";
+import AddForm from "../../components/AddForm";
 import TimetableGrid from "../../components/TimeTable/TimetableGrid.jsx";
 
 import StudentIcon from "../../assets/user.svg?react";
@@ -22,9 +22,12 @@ const ManageTimetable = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [editData, setEdtitData] = useState(false);
+  const [weekDate, setWeekDate] = useState(new Date());
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [data, setData] = useState([]);
-  const [editData, setEdtitData] = useState(null);
+  const [events, setEvents] = useState([]);
+
+
   const menu = [
     {
       text: "Admins",
@@ -62,30 +65,6 @@ const ManageTimetable = () => {
       icon: TimetableIcon,
       color: "#C800FF",
       link: "/admin/Timetable",
-    },
-  ];
-  const Columns = [
-    "courseID",
-    "courseName",
-    "courseNumber",
-    "syllabus",
-    "equipment",
-  ];
-
-  const events = [
-    {
-      date: "2025-08-11",
-      slot: 1,
-      classID: "CL001",
-      roomName: "Phòng 11B",
-      lecturer: "Lê Nhựt Duy",
-    },
-    {
-      date: "2025-08-12",
-      slot: 3,
-      classID: "CL002",
-      roomName: "Phòng 11C",
-      lecturer: "Đặng Thương",
     },
   ];
 
@@ -128,11 +107,7 @@ const ManageTimetable = () => {
     },
   ];
 
-  const onDelete = (items) => {
-    console.log("Delete items: ", items);
-    setItem(items);
-    setShowConfirm(true);
-  };
+
 
   const onEdit = async (courseID) => {
     console.log("Edit courseID: ", courseID);
@@ -144,40 +119,51 @@ const ManageTimetable = () => {
     }
 
     setEdtitData({
-      CourseID: itemEdit.courseID || "N/A",
-      CourseName: itemEdit.courseName || "N/A",
-      CourseNumber: itemEdit.courseNumber || "N/A",
-      Syllabus: itemEdit.syllabus || "N/A",
-      Equipment: itemEdit.equipment || "N/A",
     });
 
     setIsEditOpen(true);
     console.log("Editing item: ", editData);
   };
 
-  const fecthAdminsAccounts = async () => {
+  const formatDate = (date) => {
+    if (!date) return date;
+
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  const fecthLessonTimeTable = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/admin/course");
-      console.log("Fetched course: ", res.data);
+      const res = await axios.get("http://localhost:4000/api/admin/timetable", {
+        params: { weekStartDate: formatDate(weekDate) }
+      })
+      console.log("weekDate: ", formatDate(weekDate));
+      console.log("Fetched raw lesson timetable: ", res.data);
+      if (res.data?.listLessons) {
+        const formatted = res.data.listLessons.map(lesson => ({
+          lessonID: lesson.LessonID,
+          date: lesson.Date,
+          slot: lesson.SessionNumber,
+          classID: lesson.ClassID,
+          roomID: lesson.RoomID,
+        }));
+        console.log("Formatted lesson timetable: ", formatted);
+        setEvents(formatted);
+      }
 
-      const list = res.data.listUsers || [];
 
-      const fromatted = list.map((item, index) => ({
-        courseID: item.CourseID || "N/A",
-        courseName: item.CourseName || "N/A",
-        courseNumber: item.CourseNumber || "N/A",
-        syllabus: item.Syllabus || "N/A",
-        equipment: item.Equipment || "N/A",
-      }));
-      setData(fromatted);
-    } catch (err) {
-      console.log("Error fetching information course: ", err);
+      console.log("Formatted lesson timetable: ", events);
     }
-  };
+    catch (err) {
+      console.error("Error fetching lesson timetable: ", err);
+    }
+  }
 
   useEffect(() => {
-    fecthAdminsAccounts();
-  }, []);
+    fecthLessonTimeTable();
+  }, [weekDate]);
 
   const handleDelete = async () => {
     console.log("Deleting items: ", item);
@@ -250,9 +236,8 @@ const ManageTimetable = () => {
 
       <div className="flex flex-col min-h-screen">
         <div
-          className={`${
-            activate ? "pl-[239px]" : "pl-[80px]"
-          } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
+          className={`${activate ? "pl-[239px]" : "pl-[80px]"
+            } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>
             <div className="px-3 py-3">
@@ -266,7 +251,7 @@ const ManageTimetable = () => {
             <div className="px-3">
               <button
                 onClick={() => {
-                  console.log("Add new Course"), setIsAddOpen(true);
+                  setIsAddOpen(false);
                 }}
                 className="flex gap-1 bg-blue-500 text-white text-xl px-2 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200">
                 <Plus />
@@ -279,15 +264,15 @@ const ManageTimetable = () => {
               <TimetableGrid
                 event={events}
                 initialDate={"2025-08-11"}
-                onDelete={() => console.log("Delete event")}
+                selectedDate={weekDate}
+                setDate={setWeekDate}
               />
             </div>
           </div>
         </div>
         <div
-          className={`${
-            activate ? "w-[calc(100%-223px)]" : "w-full"
-          } transition-all duration-200 ml-auto mt-auto`}>
+          className={`${activate ? "w-[calc(100%-223px)]" : "w-full"
+            } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>
       </div>
@@ -316,7 +301,7 @@ const ManageTimetable = () => {
         setIsOpen={setIsAddOpen}
         onSubmit={handleAddSubmit}
         buttonLabel="Add"
-        openMembers={true} // 👈 bật nút Add Students & Teachers
+        openMembers={true}
       />
 
       <AddForm

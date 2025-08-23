@@ -15,13 +15,7 @@ export const TIME_SLOTS = {
 
 export const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const TimetableGrid = ({ event = [], initialDate, onDateChange }) => {
-
-    const init = initialDate ? new Date(initialDate) : new Date()
-    const [selectedDate, setSelectedDate] = useState(
-        new Date(init.getFullYear(), init.getMonth(), init.getDate())
-    );
-
+const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, on }) => {
     const toISO = (d) => {
         const y = d.getFullYear();
         const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -63,26 +57,23 @@ const TimetableGrid = ({ event = [], initialDate, onDateChange }) => {
     }, [weekStart]);
 
     const findEvent = (day, slot) => {
-        return event.find(e => e.date === day && e.slot === slot);
+        return event.filter(e => e.date === day && e.slot === slot);
     }
 
     const handleNextWeek = () => {
-        console.log("Next week clicked");
+        setDate(addDays(weekStart, 7));
     }
 
     const handlePreviousWeek = () => {
-        console.log("Previous week clicked");
+        setDate(addDays(weekStart, -7));
     }
 
-    const byDateAndSlot = (iso, slot) =>
-        event.find(e => e.date === iso && e.slot === slot);
 
     const handlePickDate = (e) => {
         const val = e.target.value; // "YYYY-MM-DD"
         const [y, m, d] = val.split('-').map(Number);
         const nd = new Date(y, m - 1, d);
-        setSelectedDate(nd);
-        onDateChange?.(val);
+        setDate(nd);
     }
 
     return (
@@ -131,8 +122,8 @@ const TimetableGrid = ({ event = [], initialDate, onDateChange }) => {
                 {slotKeys.map((slot) => {
                     const { start, end } = TIME_SLOTS[slot];
                     return (
-                        <div>
-                            <div key={slot} className='grid grid-cols-8 border-b min-h-[100px]'>
+                        <div key={slot}>
+                            <div className='grid grid-cols-8 border-b h-[150px]'>
                                 <div className='px-3 py-4 text-sm text-gray-500 whitespace-nowra'>
                                     {start} - {end}
                                 </div>
@@ -141,19 +132,40 @@ const TimetableGrid = ({ event = [], initialDate, onDateChange }) => {
                                     weekDays.map((day) => {
                                         const iso = toISO(day)
                                         const event = findEvent(iso, slot)
+                                        const dynamicFront = event.le
                                         return (
-                                            <div key={`${iso}-${slot}`} className="relative border-l">
+                                            <div key={`${iso}-${slot}`} className="border-l  flex flex-col h-full p-1 gap-1">
                                                 {
-                                                    event && (
-                                                        <div className="absolute inset-2 rounded-lg bg-red-200/80 p-2">
-                                                            <div className="text-[13px] font-semibold">{event.classID}</div>
-                                                            <div className="text-[12px]">{start} - {end}</div>
-                                                            <div className="text-[12px] text-gray-700">
-                                                                {event.roomName ? `Room: ${event.roomName}` : null}
-                                                                {event.lecturer ? (event.roomName ? " • " : "") + event.lecturer : null}
+                                                    event.map((ev, index) => {
+                                                        const ListColor = [
+                                                            "bg-green-200/80",
+                                                            "bg-red-200/80",
+                                                            "bg-blue-200/80",
+                                                            "bg-yellow-200/80",
+                                                            "bg-purple-200/80",
+                                                        ]
+
+                                                        const color = ListColor[index % ListColor.length]
+                                                        let FrontSize = "text-[16px]"
+
+                                                        if (event.length === 2)
+                                                            FrontSize = "text-[10px]"
+                                                        else if (event.length >= 3)
+                                                            FrontSize = "text-[8px]"
+                                                            
+                                                        return (
+                                                            <div
+                                                                key={ev.lessonID}
+                                                                className={`rounded-lg ${color} p-2 flex-1 overflow-hidden ${FrontSize}`}>
+                                                                <div className="font-semibold truncate whitespace-nowrap">{ev.classID}</div>
+                                                                <div className="text-gray-700 flex flex-col truncate whitespace-nowrap">
+                                                                    <p>{ev.lessonID ? `Lesson: ${ev.lessonID}` : null}</p>
+                                                                    <p>{ev.roomID ? `Room: ${ev.roomID}` : null}</p>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )
+                                                        )
+
+                                                    })
                                                 }
                                             </div>
                                         )
