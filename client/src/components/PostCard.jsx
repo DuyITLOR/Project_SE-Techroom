@@ -5,6 +5,36 @@ import axios from "axios";
 const PostCard = ({ UserID, DateTime, Content, File }) => {
   const [UserName, setUserName] = useState("Anonymous");
 
+  const downloadFile = async () => {
+    const fileName = File.substring(7).trim();
+    console.log("Downloading file:", fileName);
+    try {
+      const res = await axios.get(
+        "http://localhost:4000/api/admin/discussion/download",
+        {
+          params: { filename: fileName }, // 👈 send file name
+          responseType: "blob", // 👈 receive binary
+        }
+      );
+
+      // create a blob URL
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+
+      // create temporary link for download
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName); // filename from DB
+      document.body.appendChild(link);
+      link.click();
+
+      // cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.log("Error downloading file: ", err);
+    }
+  };
+
   useEffect(() => {
     fetchUserName();
   }, []);
@@ -57,9 +87,11 @@ const PostCard = ({ UserID, DateTime, Content, File }) => {
         {File !== "N/A" && (
           <div className="flex items-center gap-2">
             <a
-              href={File}
-              target="null"
-              rel="noopener noreferrer"
+              href="#"
+              onClick={async (e) => {
+                e.preventDefault(); // prevent normal navigation
+                await downloadFile();
+              }}
               className="text-blue-500 hover:underline">
               @{File}
             </a>

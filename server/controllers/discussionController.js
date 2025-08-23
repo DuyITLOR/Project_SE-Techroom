@@ -115,7 +115,7 @@ export const updatePost = async (req, res) => {
 };
 export const downloadFile = (req, res) => {
   try {
-    const { filename } = req.body; // lấy tên file từ body
+    const { filename } = req.query; // lấy tên file từ body
 
     // Đường dẫn tuyệt đối đến file trong thư mục public
     const filePath = path.join(process.cwd(), "public", filename);
