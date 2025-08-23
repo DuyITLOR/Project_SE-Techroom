@@ -7,6 +7,6 @@ const discussionRouter = express.Router();
 discussionRouter.get('/discussion', getDiscussion);
 discussionRouter.post('/discussion',upload.array("link", 10), createPost);
 discussionRouter.delete('/discussion', deletePost);
-discussionRouter.put('/discussion', updatePost);
+discussionRouter.put('/discussion',upload.array("link", 10), updatePost);
 
 export default discussionRouter

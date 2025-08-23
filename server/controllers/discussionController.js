@@ -83,7 +83,8 @@ export const deletePost = async (req, res) => {
 };
 
 export const updatePost = async (req, res) => {
-  const { postID, content, link } = req.body;
+  const { postID, content } = req.body;
+  const link= req.files ? req.files.map(file => file.path).join(',') : null;
   if (!postID || !content) {
     return res.status(400).send({
       success: false,

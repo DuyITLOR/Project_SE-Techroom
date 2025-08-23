@@ -102,6 +102,25 @@ Post.editPost = async function (postID, content, link) {
   if (!post) {
     return null
   }
+  if (post.Link) {
+    // Tách chuỗi theo dấu phẩy, trim từng phần, loại bỏ phần rỗng
+    const fileLinks = String(post.Link)
+      .split(",")
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+
+    for (const rawLink of fileLinks) {
+      try {
+        const filePath = path.join(process.cwd(), rawLink);
+
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      } catch (err) {
+        // có thể ghi log ra file nếu muốn
+      }
+    }
+  }
   content="Đã chỉnh sửa bài viết: "+content;
   post.Content = content;
   post.Link = link;
