@@ -11,7 +11,6 @@ import ManageCourse from "./pages/admin/ManageCourse.jsx";
 import ManageRoom from "./pages/admin/ManageRoom.jsx";
 import ManageClass from "./pages/admin/ManageClass.jsx";
 import ManageTimetable from "./pages/admin/ManageTimetable.jsx";
-import ManageRoadmap from "./pages/admin/ManageRoadmap.jsx";
 import ConfirmPopup from "./components/Table/ConfirmPopup.jsx";
 import StudentTimetable from "./pages/student/StudentTimetable.jsx";
 import StudentRoadMap from "./pages/student/StudentRoadMap.jsx";
@@ -86,15 +85,6 @@ const App = () => {
           element={
             <ProtectedRoute roleRequired={["admin", "superadmin"]}>
               <ManageTimetable />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/admin/Roadmap"
-          element={
-            <ProtectedRoute roleRequired={["admin", "superadmin"]}>
-              <ManageRoadmap />
             </ProtectedRoute>
           }
         />

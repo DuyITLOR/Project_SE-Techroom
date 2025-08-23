@@ -3,12 +3,19 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import SideBar from "../../components/SideBar";
 import TitleBanner from "../../components/TitleBanner";
-import TimetableIcon from "../../assets/calendar.svg?react";
 import Plus from "../../assets/plus.svg?react";
 import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
 import AddForm from "../../components/MemberSelector";
 import TimetableGrid from "../../components/TimeTable/TimetableGrid.jsx";
+
+import StudentIcon from "../../assets/user.svg?react";
+import TeacherIcon from "../../assets/Teacher_icon.svg?react";
+import AdminIcon from "../../assets/shield.svg?react";
+import CourseIcon from "../../assets/book.svg?react";
+import RoomIcon from "../../assets/home.svg?react";
+import ClassIcon from "../../assets/users.svg?react";
+import TimetableIcon from "../../assets/calendar.svg?react";
 
 const ManageTimetable = () => {
   const [activate, setActivate] = useState(1);
@@ -18,7 +25,45 @@ const ManageTimetable = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [data, setData] = useState([]);
   const [editData, setEdtitData] = useState(null);
-
+  const menu = [
+    {
+      text: "Admins",
+      icon: AdminIcon,
+      color: "#FF0000",
+      link: "/admin/Dashboard",
+    },
+    {
+      text: "Students",
+      icon: StudentIcon,
+      color: "#FF7002",
+      link: "/admin/Student",
+    },
+    {
+      text: "Teachers",
+      icon: TeacherIcon,
+      color: "#DCCA00",
+      link: "/admin/Teacher",
+    },
+    {
+      text: "Courses",
+      icon: CourseIcon,
+      color: "#00FF00",
+      link: "/admin/Course",
+    },
+    { text: "Rooms", icon: RoomIcon, color: "#00D6D6", link: "/admin/Room" },
+    {
+      text: "Classes",
+      icon: ClassIcon,
+      color: "#0400FF",
+      link: "/admin/Class",
+    },
+    {
+      text: "Timetable",
+      icon: TimetableIcon,
+      color: "#C800FF",
+      link: "/admin/Timetable",
+    },
+  ];
   const Columns = [
     "courseID",
     "courseName",
@@ -195,7 +240,12 @@ const ManageTimetable = () => {
       </div>
 
       <div className="fixed top-0 z-40 h-screen ">
-        <SideBar activate={activate} setActivate={setActivate} current={6} />
+        <SideBar
+          activate={activate}
+          setActivate={setActivate}
+          current={6}
+          menu={menu}
+        />
       </div>
 
       <div className="flex flex-col min-h-screen">
@@ -260,14 +310,14 @@ const ManageTimetable = () => {
         buttonLabel="Add"
       /> */}
 
-<AddForm
-  fields={addFields}
-  isOpen={isAddOpen}
-  setIsOpen={setIsAddOpen}
-  onSubmit={handleAddSubmit}
-  buttonLabel="Add"
-  openMembers={true}   // 👈 bật nút Add Students & Teachers
-/>
+      <AddForm
+        fields={addFields}
+        isOpen={isAddOpen}
+        setIsOpen={setIsAddOpen}
+        onSubmit={handleAddSubmit}
+        buttonLabel="Add"
+        openMembers={true} // 👈 bật nút Add Students & Teachers
+      />
 
       <AddForm
         fields={addFields}

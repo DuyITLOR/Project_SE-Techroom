@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import StudentSideBar from "../../components/StudentSideBar";
+import SideBar from "../../components/SideBar";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
-import SearchBar from "../../components/SearchBar";
-import SummaryCard from "../../components/SummaryCard";
+import TimetableGrid from "../../components/TimeTable/TimetableGrid.jsx";
 
 import TimetableIcon from "../../assets/calendar.svg?react";
-import SearchIcon from "../../assets/search.svg?react";
-import TimetableGrid from "../../components/TimeTable/TimetableGrid.jsx";
+import RoadmapIcon from "../../assets/map.svg?react";
+import ClassIcon from "../../assets/users.svg?react";
 
 const events = [
   {
@@ -23,6 +22,26 @@ const events = [
 const StudentTimetable = () => {
   const [activate, setActivate] = useState(1);
   const [data, setData] = useState([]);
+  const menu = [
+    {
+      text: "Classes",
+      icon: ClassIcon,
+      color: "#FF0000",
+      link: "/student/Dashboard",
+    },
+    {
+      text: "Timetable",
+      icon: TimetableIcon,
+      color: "#FF7002",
+      link: "/student/Timetable",
+    },
+    {
+      text: "Roadmap",
+      icon: RoadmapIcon,
+      color: "#DCCA00",
+      link: "/student/Roadmap",
+    },
+  ];
 
   return (
     <>
@@ -30,10 +49,11 @@ const StudentTimetable = () => {
         <Header />
       </div>
       <div className="fixed top-0 z-40 h-screen ">
-        <StudentSideBar
+        <SideBar
           activate={activate}
           setActivate={setActivate}
           current={1}
+          menu={menu}
         />
       </div>
 

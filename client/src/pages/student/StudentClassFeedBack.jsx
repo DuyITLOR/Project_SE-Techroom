@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import StudentClassSideBar from "../../components/StudentClassSideBar";
+import SideBar from "../../components/SideBar";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
@@ -10,6 +10,8 @@ import PostCard from "../../components/PostCard";
 
 import SearchIcon from "../../assets/search.svg?react";
 import DiscussionIcon from "../../assets/message-circle.svg?react";
+import FeedbackIcon from "../../assets/star.svg?react";
+import GoBackIcon from "../../assets/chevron-left.svg?react";
 
 import axios from "axios";
 
@@ -18,6 +20,26 @@ const StudentClassFeedBack = () => {
   const [ClassInfo, setClassInfo] = useState({});
   const [discussion, setDiscussion] = useState([]);
   const { ClassID } = useParams();
+  const menu = [
+    {
+      text: "Discussion",
+      icon: DiscussionIcon,
+      color: "#FF0000",
+      link: `/student/Class/${ClassID}/Discussion`,
+    },
+    {
+      text: "Feedback",
+      icon: FeedbackIcon,
+      color: "#FF7002",
+      link: `/student/Class/${ClassID}/Feedback`,
+    },
+    {
+      text: "Go Back",
+      icon: GoBackIcon,
+      color: "#DCCA00",
+      link: `/student/Dashboard`,
+    },
+  ];
 
   const handleSearch = async (searchTerm) => {
     if (!searchTerm) {
@@ -72,11 +94,11 @@ const StudentClassFeedBack = () => {
         <Header />
       </div>
       <div className="fixed top-0 z-40 h-screen ">
-        <StudentClassSideBar
+        <SideBar
           activate={activate}
           setActivate={setActivate}
           current={1}
-          classID={ClassID}
+          menu={menu}
         />
       </div>
 

@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import StudentClassSideBar from "../../components/StudentClassSideBar";
+import SideBar from "../../components/SideBar";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
 import PostBar from "../../components/PostBar";
 import SummaryCard from "../../components/SummaryCard";
 import PostCard from "../../components/PostCard";
+
 import DiscussionIcon from "../../assets/message-circle.svg?react";
+import FeedbackIcon from "../../assets/star.svg?react";
+import GoBackIcon from "../../assets/chevron-left.svg?react";
 
 import axios from "axios";
 
@@ -18,6 +21,26 @@ const StudentClassDashboard = () => {
   const [attachedFile, setAttachedFile] = useState(null);
   const [content, setContent] = useState("");
   const { ClassID } = useParams();
+  const menu = [
+    {
+      text: "Discussion",
+      icon: DiscussionIcon,
+      color: "#FF0000",
+      link: `/student/Class/${ClassID}/Discussion`,
+    },
+    {
+      text: "Feedback",
+      icon: FeedbackIcon,
+      color: "#FF7002",
+      link: `/student/Class/${ClassID}/Feedback`,
+    },
+    {
+      text: "Go Back",
+      icon: GoBackIcon,
+      color: "#DCCA00",
+      link: `/student/Dashboard`,
+    },
+  ];
 
   const handleUploadFile = (file) => {
     if (file) {
@@ -102,11 +125,11 @@ const StudentClassDashboard = () => {
         <Header />
       </div>
       <div className="fixed top-0 z-40 h-screen ">
-        <StudentClassSideBar
+        <SideBar
           activate={activate}
           setActivate={setActivate}
           current={0}
-          classID={ClassID}
+          menu={menu}
         />
       </div>
 
