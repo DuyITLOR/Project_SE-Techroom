@@ -142,6 +142,7 @@ Accounts.hasMany(Post, {
 
 // Export tất cả models
 const db = {
+  sequelize,
   Accounts,
   Rooms,
   Class,
