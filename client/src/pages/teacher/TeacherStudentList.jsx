@@ -20,7 +20,7 @@ const TeacherStudentList = () => {
   const [ClassInfo, setClassInfo] = useState({});
   const [data, setData] = useState([]);
   const { ClassID } = useParams();
-  const Columns = ["id", "name", "dob", "Give Feedback"];
+  const Columns = ["id", "name", "dob"];
 
   const menu = [
     {
@@ -60,21 +60,22 @@ const TeacherStudentList = () => {
     }
   };
 
-  const fecthStudentAccounts = async () => {
+  const fecthStudent = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/admin/account", {
-        params: { role: "student" },
+      const res = await axios.get("http://localhost:4000/api/admin/class", {
+        params: { classID: ClassID, role: "student" },
       });
       console.log("Fetched student accounts: ", res.data);
 
-      const list = res.data.listUsers || [];
+      const list = res.data.classes || [];
+      console.log("List of students: ", list);
 
       const formatted = list.map((item, index) => ({
         id: item.UserID || "N/A",
         name: item.FullName || "N/A",
         dob: item.Birthday || "N/A",
-        password: item.Password || "N/A",
       }));
+      console.log("Formatted student accounts: ", formatted);
       setData(formatted);
     } catch (err) {
       console.log("Error fetching student accounts: ", err);
@@ -109,13 +110,14 @@ const TeacherStudentList = () => {
     }
   };
 
-  const handleFeedback = () => {
+  const handleFeedback = (items) => {
     console.log("Feedback clicked");
   };
   useEffect(() => {
     fecthClassInfo();
-    fecthStudentAccounts();
+    fecthStudent();
   }, []);
+  console.log("data:", data);
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-50">
@@ -165,9 +167,8 @@ const TeacherStudentList = () => {
               <PaginatedTable
                 headers={["UserID", "FullName", "Birthday", "Feedback"]}
                 data={data}
-                onEdit={handleFeedback}
+                onFeedBack={handleFeedback}
                 columns={Columns}
-                allowEdit={false}
                 role="teacher"
               />
             </div>

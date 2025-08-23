@@ -35,39 +35,43 @@ const PostCard = ({ UserID, DateTime, Content, File }) => {
     }
   };
 
+  const fetchByRole = async (role) => {
+    const res = await axios.get(
+      "http://localhost:4000/api/admin/account/search",
+      {
+        params: { user: UserID, role },
+      }
+    );
+    if (res.data && res.data.User?.length > 0) {
+      console.log(`${role} found:`, res.data.User[0].FullName);
+      return res.data.User[0].FullName;
+    }
+    return null;
+  };
+
+  const fetchUserName = async () => {
+    try {
+      console.log("Fetching user name for ID:", UserID);
+      let name = await fetchByRole("student");
+      if (!name) {
+        console.log("Student not found, trying teacher role...");
+        name = await fetchByRole("teacher");
+      }
+
+      if (name) {
+        setUserName(name);
+      } else {
+        console.log("User not found at all.");
+      }
+    } catch (error) {
+      console.error("Error fetching user name:", error);
+    }
+  };
+
   useEffect(() => {
     fetchUserName();
   }, []);
 
-  const fetchUserName = async () => {
-    console.log("Fetching user name for ID: ", UserID);
-    try {
-      let res = await axios.get(
-        "http://localhost:4000/api/admin/account/search",
-        {
-          params: { user: UserID, role: "student" },
-        }
-      );
-      if (res.data) {
-        console.log("Student found: ", res.data);
-        setUserName(res.data.User[0].FullName);
-      } else {
-        console.log("Student not found, trying teacher role...");
-        res = await axios.get(
-          "http://localhost:4000/api/admin/account/search",
-          {
-            params: { user: UserID, role: "teacher" },
-          }
-        );
-        if (res.data) {
-          console.log("Teacher found: ", res.data);
-          setUserName(res.data.User[0].FullName);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching user name: ", error);
-    }
-  };
   return (
     <div className="w-full max-h-[161px] overflow-y-hidden break-words bg-white px-5 py-4 rounded-[10px] shadow-md hover:shadow-lg transition-shadow duration-200">
       <div className="flex flex-col gap-3">

@@ -8,6 +8,7 @@ const PaginatedTable = ({
   data,
   onEdit,
   onDelete,
+  onFeedBack,
   columns,
   allowEdit = true,
   role = "admin",
@@ -35,7 +36,7 @@ const PaginatedTable = ({
       onPageChange={onChangePage}
       renderRow={(row, index) =>
         role === "teacher"
-          ? HandleRow2(row, index, onEdit, columns, allowEdit)
+          ? HandleRow2(row, index, onFeedBack, columns, allowEdit)
           : HandleRow(row, index, onEdit, onDelete, columns, allowEdit)
       }
     />
