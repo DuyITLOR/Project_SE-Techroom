@@ -163,11 +163,12 @@ const TeacherStudentList = () => {
 
             <div className="px-3 py-3">
               <PaginatedTable
-                headers={["UserID", "FullName", "Birthday"]}
+                headers={["UserID", "FullName", "Birthday", "Feedback"]}
                 data={data}
                 onEdit={handleFeedback}
                 columns={Columns}
                 allowEdit={false}
+                role="teacher"
               />
             </div>
           </div>

@@ -40,7 +40,7 @@ export const createPost = async (req, res) => {
     });
   }
   try {
-    const link= req.files ? req.files.map(file => file.path).join(',') : null;
+    const link = req.file ? req.file.path : null;
     const newPost = await Post.addPost(classID, userID, content, link);
     return res.status(201).send({
       success: true,
@@ -86,7 +86,7 @@ export const deletePost = async (req, res) => {
 
 export const updatePost = async (req, res) => {
   const { postID, content } = req.body;
-  const link= req.files ? req.files.map(file => file.path).join(',') : null;
+  const link = req.files ? req.files.map((file) => file.path).join(",") : null;
   if (!postID || !content) {
     return res.status(400).send({
       success: false,
@@ -126,10 +126,12 @@ export const downloadFile = (req, res) => {
     }
 
     // Gửi file về cho client (tải về)
-    return res.download(filePath, filename); 
+    return res.download(filePath, filename);
     // nếu muốn hiển thị trực tiếp thì dùng: res.sendFile(filePath);
   } catch (err) {
-    return res.status(500).json({ message: "Lỗi khi tải file", error: err.message });
+    return res
+      .status(500)
+      .json({ message: "Lỗi khi tải file", error: err.message });
   }
 };
 export default {

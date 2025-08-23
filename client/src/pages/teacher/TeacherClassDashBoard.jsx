@@ -57,9 +57,9 @@ const TeacherClassDashBoard = () => {
     formData.append("content", content);
 
     if (attachedFile) {
-      formData.append("file", attachedFile); // key "file" must match backend expectation
+      formData.append("link", attachedFile); // key "file" must match backend expectation
     }
-    console.log("Posting data:", { ClassID, content, attachedFile });
+    console.log("Posting data:", formData);
     const res = await axios.post(
       "http://localhost:4000/api/admin/discussion",
       formData,
