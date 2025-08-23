@@ -40,6 +40,8 @@ V. discussionRouter
 4. updatePost, api-put: http://localhost:4000/api/admin/discussion, params: { postID, content, link }
 
 VI. timetableRouter
-1. getAllLessonsForTimetable, api-get: http://localhost:4000/api/admin/timetable, params: { weekStartDate }
-2. getRelatedLessonsForTimetable, api-get: http://localhost:4000/api/core/timetable, params: { userID, weekStartDate }
-3. getLessonByID, params: { lessonID }
+1. getAllLessonsForTimetable, api-get: http://localhost:4000/api/admin/timetable, params: { weekStartDate } (weekStartDate format: yyyy-mm-dd)
+2. getRelatedLessonsForTimetable, api-get: http://localhost:4000/api/core/timetable, params: { userID, weekStartDate } (weekStartDate format: yyyy-mm-dd)
+3. getLessonByID, api-get: http://localhost:4000/api/admin/timetable/lessonInfo, params: { lessonID }
+4. addLesson, api-post: http://localhost:4000/api/admin/timetable/add-lesson, params: { classID, date, sessionNumber, roomID }
+5. deleteLesson, api-delete: http://localhost:4000/api/admin/timetable/delete-lesson, params: { lessonID } 
