@@ -9,36 +9,37 @@ import SummaryCard from "../../components/SummaryCard";
 import PostCard from "../../components/PostCard";
 
 import DiscussionIcon from "../../assets/message-circle.svg?react";
-import FeedbackIcon from "../../assets/star.svg?react";
+import StudentIcon from "../../assets/user.svg?react";
 import GoBackIcon from "../../assets/chevron-left.svg?react";
 
 import axios from "axios";
 
-const StudentClassDashboard = () => {
+const TeacherClassDashBoard = () => {
   const [activate, setActivate] = useState(1);
   const [ClassInfo, setClassInfo] = useState({});
   const [discussion, setDiscussion] = useState([]);
   const [attachedFile, setAttachedFile] = useState(null);
   const [content, setContent] = useState("");
   const { ClassID } = useParams();
+
   const menu = [
     {
       text: "Discussion",
       icon: DiscussionIcon,
       color: "#FF0000",
-      link: `/student/Class/${ClassID}/Discussion`,
+      link: `/teacher/Class/${ClassID}/Discussion`,
     },
     {
-      text: "Feedback",
-      icon: FeedbackIcon,
+      text: "Student",
+      icon: StudentIcon,
       color: "#FF7002",
-      link: `/student/Class/${ClassID}/Feedback`,
+      link: `/teacher/Class/${ClassID}/Student`,
     },
     {
       text: "Go Back",
       icon: GoBackIcon,
       color: "#DCCA00",
-      link: `/student/Dashboard`,
+      link: `/teacher/Dashboard`,
     },
   ];
 
@@ -46,9 +47,6 @@ const StudentClassDashboard = () => {
     if (file) {
       setAttachedFile(file);
       console.log("File selected: ", file);
-      console.log("File name: ", file.name);
-      console.log("File size: ", file.size);
-      console.log("File type: ", file.type);
     }
   };
 
@@ -199,4 +197,4 @@ const StudentClassDashboard = () => {
   );
 };
 
-export default StudentClassDashboard;
+export default TeacherClassDashBoard;

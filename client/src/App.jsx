@@ -11,13 +11,14 @@ import ManageCourse from "./pages/admin/ManageCourse.jsx";
 import ManageRoom from "./pages/admin/ManageRoom.jsx";
 import ManageClass from "./pages/admin/ManageClass.jsx";
 import ManageTimetable from "./pages/admin/ManageTimetable.jsx";
-import ConfirmPopup from "./components/Table/ConfirmPopup.jsx";
 import StudentTimetable from "./pages/student/StudentTimetable.jsx";
 import StudentRoadMap from "./pages/student/StudentRoadMap.jsx";
 import StudentClassDashboard from "./pages/student/StudentClassDashboard.jsx";
-import TimetableGrid from "./components/TimeTable/TimetableGrid.jsx";
 import StudentClassFeedBack from "./pages/student/StudentClassFeedBack.jsx";
+import TeacherTimetable from "./pages/teacher/TeacherTimetable.jsx";
+import TeacherClassDashboard from "./pages/teacher/TeacherClassDashBoard.jsx";
 import AddForm from "./components/FormForClass/AddFormForClass.jsx";
+import TeacherStudentList from "./pages/teacher/TeacherStudentList.jsx";
 
 const App = () => {
   return (
@@ -139,6 +140,32 @@ const App = () => {
           element={
             <ProtectedRoute roleRequired="teacher">
               <TeacherDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/teacher/Timetable"
+          element={
+            <ProtectedRoute roleRequired="teacher">
+              <TeacherTimetable />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/teacher/Class/:ClassID/Discussion"
+          element={
+            <ProtectedRoute roleRequired="teacher">
+              <TeacherClassDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/Class/:ClassID/Student"
+          element={
+            <ProtectedRoute roleRequired="teacher">
+              <TeacherStudentList />
             </ProtectedRoute>
           }
         />

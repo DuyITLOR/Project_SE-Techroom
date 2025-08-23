@@ -19,7 +19,7 @@ const PostCard = ({ UserID, DateTime, Content, File }) => {
         }
       );
       if (res.data) {
-        console.log("Student found: ", res.data.User[0].FullName);
+        console.log("Student found: ", res.data);
         setUserName(res.data.User[0].FullName);
       } else {
         console.log("Student not found, trying teacher role...");
@@ -30,7 +30,7 @@ const PostCard = ({ UserID, DateTime, Content, File }) => {
           }
         );
         if (res.data) {
-          console.log("Teacher found: ", res.data.User[0].FullName);
+          console.log("Teacher found: ", res.data);
           setUserName(res.data.User[0].FullName);
         }
       }

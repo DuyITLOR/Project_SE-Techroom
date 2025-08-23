@@ -9,6 +9,7 @@ import SummaryCard from "../../components/SummaryCard";
 import ClassCard from "../../components/ClassCard";
 
 import ClassIcon from "../../assets/users.svg?react";
+import TimetableIcon from "../../assets/calendar.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
 
 import axios from "axios";
@@ -22,13 +23,13 @@ const TeacherDashboard = () => {
       text: "Classes",
       icon: ClassIcon,
       color: "#FF0000",
-      link: "/student/Dashboard",
+      link: "/teacher/Dashboard",
     },
     {
       text: "Timetable",
       icon: TimetableIcon,
       color: "#FF7002",
-      link: "/student/Timetable",
+      link: "/teacher/Timetable",
     },
   ];
 
@@ -38,7 +39,7 @@ const TeacherDashboard = () => {
     }
     try {
       const res = await axios.get("http://localhost:4000/api/core/class", {
-        params: { userID: searchTerm, role: "student" },
+        params: { userID: searchTerm, role: "teacher" },
       });
       console.log("Search results: ", res.data);
       const list = res.data.User || [];
@@ -64,9 +65,9 @@ const TeacherDashboard = () => {
     console.log("Fetching class data...");
     try {
       const res = await axios.get("http://localhost:4000/api/core/class", {
-        params: { userid: localStorage.getItem("username"), role: "student" },
+        params: { userid: localStorage.getItem("username"), role: "teacher" },
       });
-      console.log("Fetched student's class: ", res.data);
+      console.log("Fetched teacher's class: ", res.data);
 
       const list = res.data.listClasses || [];
 
@@ -138,7 +139,7 @@ const TeacherDashboard = () => {
                 ClassName={item.ClassName || "N/A"}
                 TeacherName={item.TeacherName || "None"}
                 onClick={() => {
-                  navigate(`/student/Class/${item.ClassID}/Discussion`);
+                  navigate(`/teacher/Class/${item.ClassID}/Discussion`);
                   console.log("Navgating");
                 }}
               />
