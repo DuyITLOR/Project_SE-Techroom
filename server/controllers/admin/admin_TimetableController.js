@@ -1,4 +1,4 @@
-import { Lesson } from "../../models/lessonModel.js";
+import { Lesson } from '../../models/lessonServices.js';
 
 export const getAllLessonsForTimetable = async(req, res) => {
 	const { weekStartDate } = req.query;
@@ -48,4 +48,57 @@ export const getLessonByID = async (req, res) => {
 			message: "Error retrieving lesson by ID.",
 		});
 	}
+};
+
+export const addLesson = async (req, res) => {
+	const { classID, date, sessionNumber, roomID } = req.body;
+	if (!classID || !date || !sessionNumber || !roomID) {
+		return res.status(400).send({
+			success: false,
+			message: "Class ID, date, session number, or room ID cannot be empty!"
+		});
+	}
+
+	try {
+		const newLesson = await Lesson.addLesson(classID, date, sessionNumber, roomID);
+		return res.status(201).send({
+			success: true,
+			message: 'Lesson added successfully',
+			lesson: newLesson,
+		});
+	} catch (error) {
+		console.error(`Error adding lesson:`, error);
+		return res.status(500).send({
+			success: false,
+			message: "Error adding lesson.",
+		});
+	}
+};
+
+export const deleteLesson = async (req, res) => {
+	const { lessonID } = req.body;
+	if (!lessonID) {
+		return res.status(400).send({
+			success: false,
+			message: "Lesson ID cannot be empty!"
+		});
+	}
+
+	try {
+		await Lesson.deleteLesson(lessonID);
+		return res.status(200).send({
+			success: true,
+			message: 'Lesson deleted successfully',
+		});
+	} catch (error) {
+		console.error(`Error deleting lesson:`, error);
+		return res.status(500).send({
+			success: false,
+			message: "Error deleting lesson.",
+		});
+	}
+};
+
+export const updateLesson = async (req, res) => {
+	
 }

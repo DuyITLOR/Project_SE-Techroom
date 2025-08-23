@@ -4,11 +4,11 @@ import Accounts from './accountModel.js';
 import Rooms from './roomModel.js';
 import Class from './classModel.js';
 import Courses from './courseModel.js';
-import { Participation } from './classParticipationModel.js';
+import Participation from './classParticipationModel.js';
 import { Lesson, Session } from './lessonModel.js';
 import { Attendance } from './attendanceModel.js';
 import { Tag, Feedback } from './feedbackModel.js';
-import { Post } from './postModel.js';
+import Post from './postModel.js';
 
 // // === Khai báo các quan hệ ===
 // Class <--> Courses
@@ -37,11 +37,11 @@ Accounts.belongsToMany(Class, {
 
 // Session <--> Lesson
 Lesson.belongsTo(Session, {
-  foreignKey: 'SessionID',
+  foreignKey: 'SessionNumber',
   as: 'Session',
 });
 Session.hasMany(Lesson, {
-  foreignKey: 'SessionID',
+  foreignKey: 'SessionNumber',
   as: 'Lessons',
 });
 
@@ -68,14 +68,14 @@ Rooms.hasMany(Lesson, {
 // Account <--> Attendance <--> Lesson
 Accounts.belongsToMany(Lesson, {
   through: Attendance,
-  foreignKey: 'StudentID',
+  foreignKey: 'UserID',
   otherKey: 'LessonID',
   as: 'UserAttendances',
 });
 Lesson.belongsToMany(Accounts, {
   through: Attendance,
   foreignKey: 'LessonID',
-  otherKey: 'StudentID',
+  otherKey: 'UserID',
   as: 'UsersAttending',
   onDelete: 'CASCADE',
 });
@@ -141,4 +141,17 @@ Accounts.hasMany(Post, {
 });
 
 // Export tất cả models
-export { sequelize, Accounts, Rooms, Class, Participation, Courses, Lesson, Session, Attendance, Feedback, Tag, Post };
+const db = {
+  Accounts,
+  Rooms,
+  Class,
+  Participation,
+  Courses,
+  Lesson,
+  Session,
+  Attendance,
+  Feedback,
+  Tag,
+  Post,
+};
+export default db;

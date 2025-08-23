@@ -75,8 +75,6 @@ Lesson.addLesson = async function (classID, date, sessionNumber, roomID) {
       throw new Error(`Class with ID ${classID} does not exist.`);
     }
 
-    let result = null;
-
     const newLesson = await Lesson.create({
       ClassID: classID,
       Date: date,
