@@ -1,4 +1,5 @@
 import db from './index.js';
+import { Op, QueryTypes } from 'sequelize';
 
 const { Lesson, Session, Rooms, Class, Accounts } = db;
 
