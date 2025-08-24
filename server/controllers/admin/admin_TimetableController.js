@@ -123,3 +123,20 @@ export const updateLesson = async (req, res) => {
     });
   }
 };
+
+export const getClassNotInTimetable = async (req, res) => {
+	const {} = req.query
+	const classes = await Lesson.getClassNotInTimetable()
+
+	if(!classes.success) {
+		return res.send({
+			success: classes.success,
+			message: classes.message,
+		});
+	}
+	return res.status(200).send({
+		success: classes.success,
+		results: classes.result
+	})
+}
+

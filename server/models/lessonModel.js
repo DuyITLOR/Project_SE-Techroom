@@ -68,4 +68,31 @@ const Lesson = sequelize.define(
   }
 );
 
+Lesson.getClassNotInTimetable = async function () {
+  const results = await sequelize.query(
+    `
+    SELECT c.ClassID, c.ClassName
+    FROM Class c
+    WHERE c.ClassID IN (SELECT c2.ClassID 
+                        FROM Class c2
+                        EXCEPT
+                        SELECT l.ClassID
+                        FROM Lesson l)
+    `
+  );
+
+  if (!results.length) {
+    return {
+      success: false,
+      message: "all classes are available in timetable"
+    };
+  }
+
+  return {
+    success: true,
+    result: results
+  }
+
+}
+
 export { Lesson, Session };

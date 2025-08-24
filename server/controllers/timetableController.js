@@ -1,3 +1,4 @@
+
 import { Lesson } from '../models/lessonModel.js';
 
 // getAllLessonsForWeek retrieves all lessons for the week which the
