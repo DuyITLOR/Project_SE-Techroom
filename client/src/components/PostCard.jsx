@@ -5,39 +5,73 @@ import axios from "axios";
 const PostCard = ({ UserID, DateTime, Content, File }) => {
   const [UserName, setUserName] = useState("Anonymous");
 
+  const downloadFile = async () => {
+    const fileName = File.substring(7).trim();
+    console.log("Downloading file:", fileName);
+    try {
+      const res = await axios.get(
+        "http://localhost:4000/api/admin/discussion/download",
+        {
+          params: { filename: fileName }, // 👈 send file name
+          responseType: "blob", // 👈 receive binary
+        }
+      );
+
+      // create a blob URL
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+
+      // create temporary link for download
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName); // filename from DB
+      document.body.appendChild(link);
+      link.click();
+
+      // cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.log("Error downloading file: ", err);
+    }
+  };
+
+  const fetchByRole = async (role) => {
+    const res = await axios.get(
+      "http://localhost:4000/api/admin/account/search",
+      {
+        params: { user: UserID, role },
+      }
+    );
+    if (res.data && res.data.User?.length > 0) {
+      console.log(`${role} found:`, res.data.User[0].FullName);
+      return res.data.User[0].FullName;
+    }
+    return null;
+  };
+
+  const fetchUserName = async () => {
+    try {
+      console.log("Fetching user name for ID:", UserID);
+      let name = await fetchByRole("student");
+      if (!name) {
+        console.log("Student not found, trying teacher role...");
+        name = await fetchByRole("teacher");
+      }
+
+      if (name) {
+        setUserName(name);
+      } else {
+        console.log("User not found at all.");
+      }
+    } catch (error) {
+      console.error("Error fetching user name:", error);
+    }
+  };
+
   useEffect(() => {
     fetchUserName();
   }, []);
 
-  const fetchUserName = async () => {
-    console.log("Fetching user name for ID: ", UserID);
-    try {
-      let res = await axios.get(
-        "http://localhost:4000/api/admin/account/search",
-        {
-          params: { user: UserID, role: "student" },
-        }
-      );
-      if (res.data) {
-        console.log("Student found: ", res.data.User[0].FullName);
-        setUserName(res.data.User[0].FullName);
-      } else {
-        console.log("Student not found, trying teacher role...");
-        res = await axios.get(
-          "http://localhost:4000/api/admin/account/search",
-          {
-            params: { user: UserID, role: "teacher" },
-          }
-        );
-        if (res.data) {
-          console.log("Teacher found: ", res.data.User[0].FullName);
-          setUserName(res.data.User[0].FullName);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching user name: ", error);
-    }
-  };
   return (
     <div className="w-full max-h-[161px] overflow-y-hidden break-words bg-white px-5 py-4 rounded-[10px] shadow-md hover:shadow-lg transition-shadow duration-200">
       <div className="flex flex-col gap-3">
@@ -57,9 +91,11 @@ const PostCard = ({ UserID, DateTime, Content, File }) => {
         {File !== "N/A" && (
           <div className="flex items-center gap-2">
             <a
-              href={File}
-              target="null"
-              rel="noopener noreferrer"
+              href="#"
+              onClick={async (e) => {
+                e.preventDefault(); // prevent normal navigation
+                await downloadFile();
+              }}
               className="text-blue-500 hover:underline">
               @{File}
             </a>

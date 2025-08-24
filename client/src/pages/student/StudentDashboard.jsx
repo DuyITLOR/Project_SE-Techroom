@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import StudentSideBar from "../../components/StudentSideBar";
+import SideBar from "../../components/SideBar";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
@@ -10,6 +10,8 @@ import ClassCard from "../../components/ClassCard";
 
 import ClassIcon from "../../assets/users.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
+import TimetableIcon from "../../assets/calendar.svg?react";
+import RoadmapIcon from "../../assets/map.svg?react";
 
 import axios from "axios";
 
@@ -17,6 +19,26 @@ const StudentDashboard = () => {
   const navigate = useNavigate();
   const [activate, setActivate] = useState(1);
   const [data, setData] = useState([]);
+  const menu = [
+    {
+      text: "Classes",
+      icon: ClassIcon,
+      color: "#FF0000",
+      link: "/student/Dashboard",
+    },
+    {
+      text: "Timetable",
+      icon: TimetableIcon,
+      color: "#FF7002",
+      link: "/student/Timetable",
+    },
+    {
+      text: "Roadmap",
+      icon: RoadmapIcon,
+      color: "#DCCA00",
+      link: "/student/Roadmap",
+    },
+  ];
 
   const handleSearch = async (searchTerm) => {
     if (!searchTerm) {
@@ -82,10 +104,11 @@ const StudentDashboard = () => {
         <Header />
       </div>
       <div className="fixed top-0 z-40 h-screen ">
-        <StudentSideBar
+        <SideBar
           activate={activate}
           setActivate={setActivate}
           current={0}
+          menu={menu}
         />
       </div>
 

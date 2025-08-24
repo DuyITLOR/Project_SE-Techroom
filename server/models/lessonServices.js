@@ -1,7 +1,103 @@
-import db from "./index.js";
-
+import db from './index.js';
+import { Op, QueryTypes } from 'sequelize';
 
 const { Lesson, Session, Rooms, Class, Accounts } = db;
+
+Lesson.getAllLessonsForWeek = async function (weekStartDate) {
+  const startDate = new Date(weekStartDate);
+  if (isNaN(startDate.getTime())) {
+    throw new Error('Invalid date provided.');
+  }
+
+  const lessons = Lesson.findAll({
+    where: {
+      Date: {
+        [Op.gte]: startDate,
+        [Op.lt]: new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000), // 7 days later
+      },
+    },
+  });
+
+  if (!lessons || lessons.length === 0) {
+    console.log('No lessons found for the specified week.');
+    throw new Error('No lessons found for the specified week.');
+  }
+
+  console.log(`Successfully fetched lessons for the week starting on ${weekStartDate}.`);
+  return lessons;
+};
+
+Lesson.getRelatedLessonsForWeek = async function (userID, weekStartDate) {
+  const start = new Date(weekStartDate);
+  if (isNaN(start.getTime())) {
+    throw new Error('Invalid date provided.');
+  }
+
+  const weekEndDate = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days later
+
+  const lessons = await sequelize.query(
+    `
+    select ls.*
+    from Lesson ls
+    join Attendance at on ls.LessonID = at.LessonID
+    where at.UserID = :userID and ls.Date >= :weekStartDate and ls.Date < :weekEndDate`,
+    {
+      replacements: {
+        userID: userID,
+        weekStartDate: weekStartDate,
+        weekEndDate: weekEndDate.toISOString().slice(0, 10),
+      },
+      type: QueryTypes.SELECT,
+    }
+  );
+
+  if (!lessons || lessons.length === 0) {
+    throw new Error(`No lessons found for user ${userID} for the week starting on ${weekStartDate}.`);
+  }
+
+  console.log(`Successfully fetched lessons related to user ${userID} for the week.`);
+  return lessons;
+};
+
+Lesson.getLessonDetails = async function (lessonID) {
+  const lesson = await Lesson.findByPk(lessonID);
+
+  if (!lesson) {
+    throw new Error(`Lesson with ID ${lessonID} does not exist.`);
+  }
+
+  // find students
+  const studentList = await sequelize.query(
+    `
+    select a.UserID, a.FullName 
+    from Accounts a 
+    join Attendance at on a.UserID = at.UserID 
+    where at.LessonID = :lessonID and a.Role = 'student'`,
+    {
+      replacements: { lessonID },
+      type: QueryTypes.SELECT,
+    }
+  );
+
+  // find teachers
+  const teacherList = await sequelize.query(
+    `
+    select a.UserID, a.FullName
+    from Accounts a 
+    join Attendance at on a.UserID = at.UserID
+    where at.LessonID = :lessonID and a.Role = 'teacher'`,
+    {
+      replacements: { lessonID },
+      type: QueryTypes.SELECT,
+    }
+  );
+  let lessonObj = lesson.toJSON();
+
+  lessonObj.studentList = studentList;
+  lessonObj.teacherList = teacherList;
+  console.log(`Successfully fetched details for lesson with ID ${lessonID}.`);
+  return lessonObj;
+};
 
 Lesson.addLesson = async function (classID, date, sessionNumber, roomID) {
   try {
@@ -9,14 +105,14 @@ Lesson.addLesson = async function (classID, date, sessionNumber, roomID) {
     if (!parentClass) {
       throw new Error(`Class with ID ${classID} does not exist.`);
     }
-    
+
     const parentRoom = await Rooms.findByPk(roomID);
-    if(!parentRoom) {
+    if (!parentRoom) {
       throw new Error(`Room with ID ${roomID} does not exist.`);
     }
 
     const parentSession = await Session.findByPk(sessionNumber);
-    if(!parentSession) {
+    if (!parentSession) {
       throw new Error(`Session with number ${sessionNumber} does not exist.`);
     }
 
@@ -56,38 +152,39 @@ Lesson.deleteLesson = async function (lessonID) {
 };
 
 Lesson.updateLesson = async function (lessonID, updatedInfo) {
+  const transaction = await db.sequelize.transaction();
   try {
-    const lesson = await Lesson.findByPk(lessonID);
+    console.log(`Updating lesson with ID: ${lessonID}`);
+    console.log(`Updated Info:`, updatedInfo);
+    const lesson = await Lesson.findByPk(lessonID, { transaction });
     if (!lesson) {
       throw new Error(`Lesson with ID ${lessonID} does not exist.`);
     }
 
-    let result = null;
-
+    // update a lesson's main data.
     if (updatedInfo.lessonData) {
-      result = await lesson.update(updatedInfo.lessonData);
+      await lesson.update(updatedInfo.lessonData, { transaction });
       console.log(`Lesson with ID ${lessonID} updated successfully.`);
     }
 
-    if (updatedInfo.studentIDs) {
-      const students = await Accounts.findAll({
-        where: { UserID: updatedInfo.studentIDs },
+    if (updatedInfo.studentIDs || updatedInfo.teacherIDs) {
+      const allUserIDs = [...(updatedInfo.studentIDs || []), ...(updatedInfo.teacherIDs || [])];
+      const users = await Accounts.findAll({
+        where: { UserID: allUserIDs },
+        transaction,
       });
-      await Lesson.setUsersAttending(students);
-      console.log(`Students list updated for lesson with ID ${lessonID}.`);
+      await lesson.setUsersAttending(users, { transaction });
+      console.log(`Student and and teacher list updated for lesson with ID ${lessonID}.`);
     }
 
-    if (updatedInfo.teacherIDs) {
-      const teachers = await Accounts.findAll({
-        where: { UserID: updatedInfo.teacherIDs },
-      });
-      await Lesson.setUsersAttending(teachers);
-      console.log(`Teachers list updated for lesson with ID ${lessonID}.`);
-    }
+    await transaction.commit();
 
-    return result;
+    const updatedLesson = await Lesson.getLessonDetails(lessonID);
+    console.log(`Lesson with ID ${lessonID} updated successfully.`);
+    return updatedLesson;
   } catch (error) {
     console.error(`Error updating lesson ${lessonID}:`, error);
+    await transaction.rollback();
     throw error;
   }
 };

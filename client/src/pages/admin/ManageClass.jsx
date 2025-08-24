@@ -4,15 +4,21 @@ import Footer from "../../components/Footer";
 import SideBar from "../../components/SideBar";
 import TitleBanner from "../../components/TitleBanner";
 import SearchBar from "../../components/SearchBar";
-import ClassIcon from "../../assets/users.svg?react";
 import SearchIcon from "../../assets/search.svg?react";
 import SummaryCard from "../../components/SummaryCard";
-import exampleData from "../../assets/ExampleData";
 import PaginatedTable from "../../components/Table/PaginatedTable";
 import Plus from "../../assets/plus.svg?react";
 import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
 import AddFormForClass from "../../components/FormForClass/AddFormForClass";
+
+import StudentIcon from "../../assets/user.svg?react";
+import TeacherIcon from "../../assets/Teacher_icon.svg?react";
+import AdminIcon from "../../assets/shield.svg?react";
+import CourseIcon from "../../assets/book.svg?react";
+import RoomIcon from "../../assets/home.svg?react";
+import ClassIcon from "../../assets/users.svg?react";
+import TimetableIcon from "../../assets/calendar.svg?react";
 
 const ManageClass = () => {
   const [activate, setActivate] = useState(1);
@@ -22,7 +28,45 @@ const ManageClass = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [data, setData] = useState([]);
   const [editData, setEditData] = useState(null);
-
+  const menu = [
+    {
+      text: "Admins",
+      icon: AdminIcon,
+      color: "#FF0000",
+      link: "/admin/Dashboard",
+    },
+    {
+      text: "Students",
+      icon: StudentIcon,
+      color: "#FF7002",
+      link: "/admin/Student",
+    },
+    {
+      text: "Teachers",
+      icon: TeacherIcon,
+      color: "#DCCA00",
+      link: "/admin/Teacher",
+    },
+    {
+      text: "Courses",
+      icon: CourseIcon,
+      color: "#00FF00",
+      link: "/admin/Course",
+    },
+    { text: "Rooms", icon: RoomIcon, color: "#00D6D6", link: "/admin/Room" },
+    {
+      text: "Classes",
+      icon: ClassIcon,
+      color: "#0400FF",
+      link: "/admin/Class",
+    },
+    {
+      text: "Timetable",
+      icon: TimetableIcon,
+      color: "#C800FF",
+      link: "/admin/Timetable",
+    },
+  ];
   const Columns = [
     "classID",
     "className",
@@ -48,7 +92,7 @@ const ManageClass = () => {
         {
           params: { classID: classID },
         }
-      )
+      );
       const list = res.data?.Class || [];
       setEditData({
         classID: list[0].ClassID || "N/A",
@@ -58,24 +102,23 @@ const ManageClass = () => {
         beginDate: list[0].BeginDate || "N/A",
         endDate: list[0].EndDate || "N/A",
         courseID: list[0].CourseID || "N/A",
-        studentOfClass: list[0].students.map(s => s.UserID) || [],
-        teacherOfClass: list[0].teachers.map(t => t.UserID) || [],
-      })
-      setIsEditOpen(true)
-
-
+        studentOfClass: list[0].students.map((s) => s.UserID) || [],
+        teacherOfClass: list[0].teachers.map((t) => t.UserID) || [],
+      });
+      setIsEditOpen(true);
     } catch (err) {
       console.error("Error editing class: ", err);
     }
-  }
-
-
+  };
 
   const fecthClass = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/core/class",
-        { params: { userid: localStorage.getItem("username"), role: "superadmin" } }
-      )
+      const res = await axios.get("http://localhost:4000/api/core/class", {
+        params: {
+          userid: localStorage.getItem("username"),
+          role: "superadmin",
+        },
+      });
       const list = res.data?.listClasses || [];
 
       const formatted = list.map((item, index) => ({
@@ -86,9 +129,11 @@ const ManageClass = () => {
         beginDate: item.BeginDate || "N/A",
         endDate: item.EndDate || "N/A",
         courseID: item.CourseID || "N/A",
-        studentOfClass: (item.students || []).map(s => s.FullName).join(", ") || "N/A",
-        teacherOfClass: (item.teachers || []).map(t => t.FullName).join(", ") || "N/A",
-      }))
+        studentOfClass:
+          (item.students || []).map((s) => s.FullName).join(", ") || "N/A",
+        teacherOfClass:
+          (item.teachers || []).map((t) => t.FullName).join(", ") || "N/A",
+      }));
 
       // console.log("Formatted data: ", formatted);
       setData(formatted);
@@ -123,9 +168,11 @@ const ManageClass = () => {
         beginDate: item.BeginDate || "N/A",
         endDate: item.EndDate || "N/A",
         courseID: item.CourseID || "N/A",
-        studentOfClass: (item.students || []).map(s => s.FullName).join(", ") || "N/A",
-        teacherOfClass: (item.teachers || []).map(t => t.FullName).join(", ") || "N/A",
-      }))
+        studentOfClass:
+          (item.students || []).map((s) => s.FullName).join(", ") || "N/A",
+        teacherOfClass:
+          (item.teachers || []).map((t) => t.FullName).join(", ") || "N/A",
+      }));
 
       setData(formatted);
       console.log("Formatted search results: ", formatted);
@@ -139,14 +186,16 @@ const ManageClass = () => {
     if (!item) return;
 
     try {
-      await axios.delete("http://localhost:4000/api/admin/class", { data: { classID: item }, });
+      await axios.delete("http://localhost:4000/api/admin/class", {
+        data: { classID: item },
+      });
       console.log("Deleted class with ID: ", item);
       fecthClass();
       setItem(null);
     } catch (err) {
       console.error("Error deleting teacher account: ", err);
     }
-  }
+  };
 
   const handleAddSubmit = async (formData) => {
     console.log("Adding new class with data: ", formData);
@@ -180,10 +229,10 @@ const ManageClass = () => {
 
       await fecthClass();
     } catch (err) {
-      throw err
+      throw err;
       console.error("Error adding new class: ", res.data.message, err);
     }
-  }
+  };
 
   const handleUpdateSubmit = async (formData) => {
     const body = {
@@ -211,13 +260,19 @@ const ManageClass = () => {
       </div>
 
       <div className="fixed top-0 z-40 h-screen ">
-        <SideBar activate={activate} setActivate={setActivate} current={5} />
+        <SideBar
+          activate={activate}
+          setActivate={setActivate}
+          current={5}
+          menu={menu}
+        />
       </div>
 
       <div className="flex flex-col min-h-screen">
         <div
-          className={`${activate ? "pl-[239px]" : "pl-[80px]"
-            } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
+          className={`${
+            activate ? "pl-[239px]" : "pl-[80px]"
+          } flex flex-col w-[calc(100%-225px] justify-between pt-[72px] sm:pt-24 transition-all duration-200`}>
           {/* Content will stay in this div */}
           <div>
             <div className="px-3 py-3">
@@ -244,7 +299,7 @@ const ManageClass = () => {
             <div className="px-3">
               <button
                 onClick={() => {
-                  console.log("Add new class"), setIsAddOpen(true)
+                  console.log("Add new class"), setIsAddOpen(true);
                 }}
                 className="flex gap-1 bg-blue-500 text-white text-xl px-2 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200">
                 <Plus />
@@ -254,7 +309,18 @@ const ManageClass = () => {
 
             <div className="px-3 py-3">
               <PaginatedTable
-                headers={["ClassID", "ClassName", "LessonPerWeek", "ClassNumWeek", "BeginDate", "EndDate", "CourseID", "StudentOfClass", "TeacherOfClass", "Actions"]}
+                headers={[
+                  "ClassID",
+                  "ClassName",
+                  "LessonPerWeek",
+                  "ClassNumWeek",
+                  "BeginDate",
+                  "EndDate",
+                  "CourseID",
+                  "StudentOfClass",
+                  "TeacherOfClass",
+                  "Actions",
+                ]}
                 data={data}
                 onEdit={onEdit}
                 onDelete={onDelete}
@@ -264,8 +330,9 @@ const ManageClass = () => {
           </div>
         </div>
         <div
-          className={`${activate ? "w-[calc(100%-223px)]" : "w-full"
-            } transition-all duration-200 ml-auto mt-auto`}>
+          className={`${
+            activate ? "w-[calc(100%-223px)]" : "w-full"
+          } transition-all duration-200 ml-auto mt-auto`}>
           <Footer />
         </div>
       </div>
@@ -284,7 +351,7 @@ const ManageClass = () => {
         isOpen={isAddOpen}
         setIsOpen={setIsAddOpen}
         onSubmit={handleAddSubmit}
-        initialData = {null}
+        initialData={null}
         buttonLabel="Add"
       />
 

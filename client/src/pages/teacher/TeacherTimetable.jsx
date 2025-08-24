@@ -3,12 +3,22 @@ import SideBar from "../../components/SideBar";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
+import TimetableGrid from "../../components/TimeTable/TimetableGrid.jsx";
 
-import RoadmapIcon from "../../assets/map.svg?react";
-import TimetableIcon from "../../assets/calendar.svg?react";
 import ClassIcon from "../../assets/users.svg?react";
+import TimetableIcon from "../../assets/calendar.svg?react";
 
-const StudentRoadMap = () => {
+const events = [
+  {
+    date: "2025-08-12",
+    slot: 3,
+    classID: "CL002",
+    roomName: "Phòng 11C",
+    lecturer: "Đặng Thương",
+  },
+];
+
+const TeacherTimetable = () => {
   const [activate, setActivate] = useState(1);
   const [data, setData] = useState([]);
   const menu = [
@@ -16,19 +26,13 @@ const StudentRoadMap = () => {
       text: "Classes",
       icon: ClassIcon,
       color: "#FF0000",
-      link: "/student/Dashboard",
+      link: "/teacher/Dashboard",
     },
     {
       text: "Timetable",
       icon: TimetableIcon,
       color: "#FF7002",
-      link: "/student/Timetable",
-    },
-    {
-      text: "Roadmap",
-      icon: RoadmapIcon,
-      color: "#DCCA00",
-      link: "/student/Roadmap",
+      link: "/teacher/Timetable",
     },
   ];
 
@@ -41,7 +45,7 @@ const StudentRoadMap = () => {
         <SideBar
           activate={activate}
           setActivate={setActivate}
-          current={2}
+          current={1}
           menu={menu}
         />
       </div>
@@ -54,9 +58,17 @@ const StudentRoadMap = () => {
           <div>
             <div className="px-3 py-3">
               <TitleBanner
-                title="Road Map"
-                subTitle="There is a long way to go"
-                Icon={RoadmapIcon}
+                title="Timetable"
+                subTitle="Time is gold"
+                Icon={TimetableIcon}
+              />
+            </div>
+
+            <div className="px-2 py-3">
+              <TimetableGrid
+                event={events}
+                initialDate={"2025-08-11"}
+                onDelete={() => console.log("Delete event")}
               />
             </div>
           </div>
@@ -72,4 +84,4 @@ const StudentRoadMap = () => {
   );
 };
 
-export default StudentRoadMap;
+export default TeacherTimetable;
