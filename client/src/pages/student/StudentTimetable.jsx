@@ -125,13 +125,14 @@ const StudentTimetable = () => {
               />
             </div>
 
-            <div>
+            <div className="p-2">
               <TimetableGrid
                 event={events}
                 initialDate={initialDate}
                 selectedDate={weekDate}
                 setDate={setWeekDate}
                 setReload={setReload}
+                role = {"student"}
               />
             </div>
 

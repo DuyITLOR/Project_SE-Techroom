@@ -16,7 +16,7 @@ export const TIME_SLOTS = {
 
 export const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, setReload}) => {
+const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, setReload, role = null}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedLesson, setSelectedLesson] = useState(null);
 
@@ -192,6 +192,7 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, setRelo
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
                     lesson={selectedLesson}
+                    role = {role}
                 />
             </div>
 

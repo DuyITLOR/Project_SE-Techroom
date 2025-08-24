@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import EditLesson from './EditLesson';
 
-const LessonDetail = ({ isOpen, setIsOpen, lesson, setReload}) => {
+const LessonDetail = ({ isOpen, setIsOpen, lesson, setReload, role = null }) => {
     const [listStudent, setListStudent] = useState([]);
     const [listTeacher, setListTeacher] = useState([]);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -96,19 +96,23 @@ const LessonDetail = ({ isOpen, setIsOpen, lesson, setReload}) => {
                             }
                         </div>
 
-                        <div className='flex justify-end pt-5'>
-                            <button
-                                onClick={() => setIsEditOpen(true)}
-                            >
-                                <p className='bg-gray-200 text-xl text-shadow-neutral-50 border-1  text-gray-600 rounded-xl p-2'>Edit</p>
-                            </button>
-                        </div>
+                        {
+                            role === null && (
+                                <div className='flex justify-end pt-5'>
+                                    <button
+                                        onClick={() => setIsEditOpen(true)}
+                                    >
+                                        <p className='bg-gray-200 text-xl text-shadow-neutral-50 border-1  text-gray-600 rounded-xl p-2'>Edit</p>
+                                    </button>
+                                </div>
+                            )
+                        }
 
                         <EditLesson
                             isEditOpen={isEditOpen}
                             setIsEditOpen={setIsEditOpen}
                             setIsOpen={setIsOpen}
-                            setReload ={setReload}
+                            setReload={setReload}
                             lesson={lesson}
                             listStudent={listStudent}
                             listTeacher={listTeacher}
