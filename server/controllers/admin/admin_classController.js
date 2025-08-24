@@ -47,17 +47,18 @@ export const addClass = async (req, res) => {
     };
 
     for (const [key, value] of Object.entries(requiredFields)) {
-        if (!value) {
-            return res.status(400).send({
-              success: false,
-              message: `${key} cannot be empty!`
-            });
-        }
+      if (value === 'N/A' || !value || value.length === 0) {
+        return res.send({
+          success: false,
+          msg: `${key} cannot be empty!`
+        });
+      }
     }
 
     const existingClass = await Class.findByPk(classID);
     if (existingClass) {
       return res.send({
+        success: false,
         msg: "Class already exists",
       });
     }
@@ -73,9 +74,10 @@ export const addClass = async (req, res) => {
     );
 
     if (!Array.isArray(userIDs) || userIDs.length === 0) {
-      return res
-        .status(400)
-        .json({ message: "userIDs should be an array or not null" });
+      return res.send({ 
+        success: false,
+        msg: "userIDs should be an array or not null" 
+      });
     }
 
     // 1. Lấy danh sách user đã có trong lớp
@@ -94,7 +96,7 @@ export const addClass = async (req, res) => {
     if (newUsers.length === 0) {
       return res.status(200).json({
         success: false,
-        message: "Every users are already in class",
+        msg: "Every users are already in class",
       });
     }
 
@@ -106,9 +108,9 @@ export const addClass = async (req, res) => {
       newClass: newClass,
     });
   } catch (error) {
-      res.status(400).json({
+      res.json({
         success: false,
-        message: error.message
+        msg: error.message
       });
   }
 };
@@ -135,49 +137,101 @@ export const searchClass = async (req, res) => {
 };
 
 export const updateClass = async (req, res) => {
-  const {
-    ClassID,
-    className,
-    lessonsPerWeek,
-    classNumWeek,
-    beginDate,
-    endDate,
-    courseID,
-    studentIDs,
-    teacherIDs,
-  } = req.body;
-  const updatedClass = await Class.updateClass(
-    ClassID,
-    className,
-    lessonsPerWeek,
-    classNumWeek,
-    beginDate,
-    endDate,
-    courseID
-  );
-  if (!updatedClass) {
-    return res.status(404).send({
-      message: "Class not found",
+  try {
+    const {
+      ClassID,
+      className,
+      lessonsPerWeek,
+      classNumWeek,
+      beginDate,
+      endDate,
+      courseID,
+      studentIDs,
+      teacherIDs,
+    } = req.body;
+
+    const requiredFields = { 
+      ClassID,
+      className,
+      lessonsPerWeek,
+      classNumWeek,
+      beginDate,
+      endDate,
+      courseID,
+      studentIDs,
+      teacherIDs
+    };
+
+    for (const [key, value] of Object.entries(requiredFields)) {
+      if (value === 'N/A' || !value || value.length === 0) {
+        return res.send({
+          success: false,
+          msg: `${key} cannot be empty!`
+        });
+      }
+    }
+
+    const updatedClass = await Class.updateClass(
+      ClassID,
+      className,
+      lessonsPerWeek,
+      classNumWeek,
+      beginDate,
+      endDate,
+      courseID
+    );
+
+    if (!updatedClass) {
+      return res.send({
+        success: false,
+        msg: "Class not found"
+      });
+    }
+
+    const userIDs = studentIDs.concat(teacherIDs);
+    if (!Array.isArray(userIDs) || userIDs.length === 0) {
+      return res.send({ 
+        success: false,
+        msg: "userIDs should be an array or not null" 
+      });
+    }
+
+    // 1. Lấy danh sách user đã có trong lớp
+    const existing = await Participation.findAll({
+      where: { ClassID: ClassID },
+      attributes: ["UserName"],
+    });
+
+    const existingUserIds = existing.map((e) => e.UserName);
+
+    // 2. Lọc những user chưa có
+    const newUsers = userIDs.filter(
+      (userId) => !existingUserIds.includes(userId)
+    );
+
+    if (newUsers.length === 0) {
+      return res.status(200).json({
+        success: false,
+        msg: "Every users are already in class",
+      });
+    }
+
+    await Participation.destroy({
+      where: { ClassID: ClassID },
+    });
+
+    await Participation.addClassParticipation(ClassID, newUsers);
+
+    return res.status(201).json({
+      message: "Class updated successfully!",
+      updatedClass: updatedClass,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      msg: error.message
     });
   }
-
-  const userIDs = studentIDs.concat(teacherIDs);
-  if (!Array.isArray(userIDs) || userIDs.length === 0) {
-    return res
-      .status(400)
-      .json({ message: "userIDs should be an array or not null" });
-  }
-
-  await Participation.destroy({
-    where: { ClassID: ClassID },
-  });
-
-  await Participation.addClassParticipation(updatedClass.ClassID, userIDs);
-
-  return res.status(201).json({
-    message: "Class updated successfully!",
-    updatedClass: updatedClass,
-  });
 };
 
 export const deleteClass = async (req, res) => {

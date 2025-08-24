@@ -208,6 +208,12 @@ const AdminDashBoard = () => {
       body
     );
 
+    if (res?.data?.success === false)  {
+      const err = new Error(res.data.msg);
+      err.response = { data: { message: res.data.msg } };
+      throw err;
+    }
+
     if (res?.data?.msg === "UserID already exists") {
       const err = new Error(res.data.msg);
       err.response = { data: { message: res.data.msg } };
@@ -226,7 +232,12 @@ const AdminDashBoard = () => {
       role: "admin",
     };
 
-    await axios.put("http://localhost:4000/api/admin/account", body);
+    const res = await axios.put("http://localhost:4000/api/admin/account", body);
+    if (res?.data?.success === false)  {
+      const err = new Error(res.data.msg);
+      err.response = { data: { message: res.data.msg } };
+      throw err;
+    }
     await fecthAdminsAccounts();
   };
 

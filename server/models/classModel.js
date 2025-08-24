@@ -201,18 +201,27 @@ Class.updateClass = async function (
   endDate,
   courseID
 ) {
-  const upclass = await this.findByPk(ClassID);
-  if (!upclass) {
-    return null;
+  try {
+    const upclass = await this.findByPk(ClassID);
+    if (!upclass) {
+      return null;
+    }
+    return await this.update(
+      {
+        ClassID: ClassID,
+        ClassName: className,
+        LessonsPerWeek: lessonsPerWeek,
+        ClassNumWeek: classNumWeek,
+        BeginDate: beginDate,
+        EndDate: endDate,
+        CourseID: courseID,
+      }, {
+        where: { ClassID: ClassID }
+      }
+    );
+  } catch (err) {
+    console.error("Validation error:", err.errors?.map(e => e.message));
   }
-  upclass.ClassName = className;
-  upclass.LessonsPerWeek = lessonsPerWeek;
-  upclass.ClassNumWeek = classNumWeek;
-  upclass.BeginDate = beginDate;
-  upclass.EndDate = endDate;
-  upclass.CourseID = courseID;
-  await upclass.save();
-  return upclass;
 };
 //deleteClass(): Delete an existing class from the database
 Class.deleteClass = async function (ClassID) {

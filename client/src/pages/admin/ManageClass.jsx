@@ -218,8 +218,7 @@ const ManageClass = () => {
         body
       );
 
-      if (res?.data?.msg === "Class already exists") {
-        console.error("Class already exists: ", res.data.msg);
+      if (res?.data?.success === false)  {
         const err = new Error(res.data.msg);
         err.response = { data: { message: res.data.msg } };
         throw err;
@@ -249,7 +248,14 @@ const ManageClass = () => {
 
     console.log("Updating data: ", body);
 
-    await axios.put("http://localhost:4000/api/admin/class", body);
+    const res = await axios.put("http://localhost:4000/api/admin/class", body);
+
+    if (res?.data?.success === false)  {
+      const err = new Error(res.data.msg);
+      err.response = { data: { message: res.data.msg } };
+      throw err;
+    }
+    
     await fecthClass();
   };
 

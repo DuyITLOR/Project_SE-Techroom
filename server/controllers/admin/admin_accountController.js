@@ -40,9 +40,9 @@ export const addAccount = async (req, res) => {
 
     for (const [key, value] of Object.entries(requiredFields)) {
         if (!value) {
-            return res.status(400).send({
-            success: false,
-            message: `${key} cannot be empty!`
+            return res.send({
+                success: false,
+                msg: `${key} cannot be empty!`
             });
         }
     }
@@ -73,14 +73,26 @@ export const addAccount = async (req, res) => {
 
 export const updateAccount = async (req, res)=> {
     const { userID, fullName, birthday, password, role } = req.body
+    const requiredFields = { userID, fullName, birthday, password, role };
+
+    for (const [key, value] of Object.entries(requiredFields)) {
+        if (!value) {
+            return res.send({
+                success: false,
+                msg: `${key} cannot be empty!`
+            });
+        }
+    }
+
     const user = await Accounts.updateAccount(userID, fullName, birthday, password, role)
     if(!user) {
         return res.status(404).send({
-            message: "User not found!"
+            success: false,
+            msg: "User not found!"
         })
     }
     return res.status(201).json({
-        message: "User updated successfully!",
+        msg: "User updated successfully!",
         updatedUser: user
     })
 }
