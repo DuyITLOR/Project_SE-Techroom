@@ -16,7 +16,7 @@ export const TIME_SLOTS = {
 
 export const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate }) => {
+const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, setReload}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedLesson, setSelectedLesson] = useState(null);
 
@@ -58,7 +58,7 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate }) => {
     // Use when calculate the value
     const weekDays = useMemo(() => {
         return Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-    }, [weekStart]);
+    }, [weekStart, event]);
 
     const findEvent = (day, slot) => {
         return event.filter(e => e.date === day && e.slot === slot);
@@ -188,6 +188,7 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate }) => {
 
             <div>
                 <LessonDetail
+                    setReload={setReload}
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
                     lesson={selectedLesson}

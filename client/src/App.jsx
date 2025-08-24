@@ -19,6 +19,9 @@ import TeacherTimetable from "./pages/teacher/TeacherTimetable.jsx";
 import TeacherClassDashboard from "./pages/teacher/TeacherClassDashBoard.jsx";
 import AddForm from "./components/FormForClass/AddFormForClass.jsx";
 import TeacherAttendaceList from "./pages/teacher/TeacherAttendanceList.jsx";
+// import StudentTimetable from "./pages/student/StudentTimetable.jsx";
+
+
 
 const App = () => {
   return (
@@ -103,7 +106,7 @@ const App = () => {
           path="/student/Timetable"
           element={
             <ProtectedRoute roleRequired="student">
-              <StudentTimetable />
+              <StudentTimetable/>
             </ProtectedRoute>
           }
         />
@@ -116,6 +119,15 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* <Route
+          path="/student/Timetable"
+          element={
+            <ProtectedRoute roleRequired="student">
+              <StudentTimetable/>
+            </ProtectedRoute>
+          }
+        /> */}
 
         <Route
           path="/student/Class/:ClassID/Discussion"

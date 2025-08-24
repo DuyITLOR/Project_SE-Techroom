@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SelectStudent from '../FormForClass/SelectStudent'
 import SelectTeacher from '../FormForClass/SelectTeacher'
 
-const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent, listTeacher }) => {
+const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent, listTeacher, setReload }) => {
     const [formData, setFormData] = useState({
         classID: lesson.classID,
         date: lesson.date,
@@ -61,10 +61,10 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
                 lessonID: lesson.lessonID,
                 updatedInfo:  {
                     lessonData: {
-                        classID: formData.classID,
-                        date: formData.date,
-                        sessionNumber: formData.sessionNumber,
-                        roomID: formData.roomID,
+                        ClassID: formData.classID,
+                        Date: formData.date,
+                        SessionNumber: formData.sessionNumber,
+                        RoomID: formData.roomID,
                     },
                     studentIDs: formData.listStudent,
                     teacherIDs: formData.listTeacher,
@@ -74,6 +74,8 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
             const res =  await axios.put("http://localhost:4000/api/admin/timetable/update-lesson", body);
             console.log("Update response: ", res.data);
             setIsEditOpen(false);
+            setIsOpen(false);
+            setReload(prev => !prev);
         } catch (error) {
             console.error("Error updating lesson: ", error);
         }

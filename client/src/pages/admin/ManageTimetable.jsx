@@ -26,6 +26,7 @@ const ManageTimetable = () => {
   const [weekDate, setWeekDate] = useState(new Date());
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [events, setEvents] = useState([]);
+  const [reload, setReload] = useState(false);
 
 
 
@@ -69,62 +70,7 @@ const ManageTimetable = () => {
     },
   ];
 
-  const addFields = [
-    {
-      label: "ClassID",
-      name: "ClassID",
-      type: "text",
-      placeholder: "Enter your class ID",
-    },
-    {
-      label: "Room Name",
-      name: "RoomName",
-      type: "text",
-      placeholder: "Enter your room name",
-    },
-    {
-      label: "Time for first lesson of week",
-      name: "TimeForFirstLesson",
-      type: "number",
-      placeholder: "Enter your time for first lesson",
-    },
-    {
-      label: "Date for first lesson of week",
-      name: "DateForFirstLesson",
-      type: "number",
-      placeholder: "Enter your date for first lesson",
-    },
-    {
-      label: "Time for second lesson of week",
-      name: "TimeForSecondLesson",
-      type: "number",
-      placeholder: "Enter your time for second lesson",
-    },
-    {
-      label: "Date for second lesson of week",
-      name: "DateForSecondLesson",
-      type: "number",
-      placeholder: "Enter your date for second lesson",
-    },
-  ];
 
-
-
-  const onEdit = async (courseID) => {
-    console.log("Edit courseID: ", courseID);
-    const itemEdit = data.find((item) => item.courseID === courseID);
-    console.log("Item to edit: ", itemEdit);
-    if (!itemEdit) {
-      console.error("Item not found for editing: ", courseID);
-      return;
-    }
-
-    setEdtitData({
-    });
-
-    setIsEditOpen(true);
-    console.log("Editing item: ", editData);
-  };
 
   const formatDate = (date) => {
     if (!date) return date;
@@ -170,7 +116,7 @@ const ManageTimetable = () => {
 
   useEffect(() => {
     fecthLessonTimeTable();
-  }, [weekDate]);
+  }, [weekDate, reload]);
 
   const handleDelete = async () => {
     console.log("Deleting items: ", item);
@@ -238,6 +184,7 @@ const ManageTimetable = () => {
                 initialDate={"2025-08-11"}
                 selectedDate={weekDate}
                 setDate={setWeekDate}
+                setReload={setReload}
               />
             </div>
           </div>

@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import EditLesson from './EditLesson';
 
-const LessonDetail = ({ isOpen, setIsOpen, lesson }) => {
+const LessonDetail = ({ isOpen, setIsOpen, lesson, setReload}) => {
     const [listStudent, setListStudent] = useState([]);
     const [listTeacher, setListTeacher] = useState([]);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -22,7 +22,7 @@ const LessonDetail = ({ isOpen, setIsOpen, lesson }) => {
             })
 
             const list = res.data.lesson || []
-            // console.log("partipate of class: ", list);
+            console.log("partipate of class: ", list);
             setListTeacher(list.teacherList || []);
             setListStudent(list.studentList || []);
             // console.log("list teacher of class: ", list.teacherList);
@@ -108,6 +108,7 @@ const LessonDetail = ({ isOpen, setIsOpen, lesson }) => {
                             isEditOpen={isEditOpen}
                             setIsEditOpen={setIsEditOpen}
                             setIsOpen={setIsOpen}
+                            setReload ={setReload}
                             lesson={lesson}
                             listStudent={listStudent}
                             listTeacher={listTeacher}
