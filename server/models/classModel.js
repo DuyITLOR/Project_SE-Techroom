@@ -83,11 +83,11 @@ Class.addClass = async function (
 Class.getAllClass = async function () {
   const results = await sequelize.query(
     `
-        SELECT c.FullName, c.Role, cl.*
-        FROM Class cl
-        JOIN Participation p ON cl.ClassID = p.ClassID
-        JOIN Accounts c ON p.Username = c.UserID
-        `,
+    SELECT c.FullName, c.Role, cl.*
+    FROM Class cl
+    LEFT JOIN Participation p ON cl.ClassID = p.ClassID
+    LEFT JOIN Accounts c ON p.Username = c.UserID
+    `,
     {
       type: QueryTypes.SELECT,
     }
