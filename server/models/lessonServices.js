@@ -51,9 +51,10 @@ Lesson.getRelatedLessonsForWeek = async function (userID, weekStartDate) {
 
   const lessons = await sequelize.query(
     `
-    select ls.*
+    select ls.*, r.RoomName
     from Lesson ls
     join Attendance at on ls.LessonID = at.LessonID
+    join Rooms r on ls.RoomID = r.RoomID
     where at.UserID = :userID and ls.Date >= :weekStartDate and ls.Date < :weekEndDate`,
     {
       replacements: {
@@ -74,7 +75,21 @@ Lesson.getRelatedLessonsForWeek = async function (userID, weekStartDate) {
 };
 
 Lesson.getLessonDetails = async function (lessonID) {
-  const lesson = await Lesson.findByPk(lessonID);
+  const lesson = await Lesson.findByPk(lessonID, {
+    attributes: [
+      'LessonID',
+      'ClassID',
+      'Date',
+      'SessionNumber',
+      'RoomID',
+      [sequelize.col('Room.RoomName'), 'RoomName'],
+    ],
+    include: {
+      model: Rooms,
+      as: 'Room',
+      attributes: [],
+    } 
+  });
 
   if (!lesson) {
     throw new Error(`Lesson with ID ${lessonID} does not exist.`);
