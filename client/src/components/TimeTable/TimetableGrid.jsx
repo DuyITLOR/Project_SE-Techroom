@@ -166,7 +166,7 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, setRelo
                                                                 <div className="font-semibold truncate whitespace-nowrap">{ev.classID}</div>
                                                                 <div className="text-gray-700 flex flex-col truncate whitespace-nowrap">
                                                                     {/* <p>{ev.lessonID ? `Lesson: ${ev.lessonID}` : null}</p> */}
-                                                                    <p>{ev.roomID ? `Room: ${ev.roomID}` : null}</p>
+                                                                    <p>{ev.roomID ? `Room: ${ev.roomName}` : null}</p>
                                                                 </div>
                                                             </div>
                                                         )

@@ -49,7 +49,7 @@ const LessonDetail = ({ isOpen, setIsOpen, lesson, setReload, role = null }) => 
                             >X</button>
                         </div>
                         <div className='flex flex-col justify-between mb-1 border-t pt-3'>
-                            <h2 className='text-xl font-semibold text-gray-800'>Phòng: {lesson.roomID}</h2>
+                            <h2 className='text-xl font-semibold text-gray-800'>Phòng: {lesson.roomID} - {lesson.roomName}</h2>
                             <h2 className='text-xl font-semibold text-gray-800'>Ngày: {lesson.date}</h2>
                             <h2 className='text-xl font-semibold text-gray-800'>Giờ: {timeSlot[lesson.slot].start} - {timeSlot[lesson.slot].end}</h2>
                         </div>
