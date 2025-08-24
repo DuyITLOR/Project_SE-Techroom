@@ -152,8 +152,14 @@ export const updateLesson = async (req, res) => {
   }
 
   try {
-    const updatedLesson = await Lesson.updateLesson(lessonID, updatedInfo);
-    return res.status(200).send({
+    const { updatedLesson, isUpdated } = await Lesson.updateLesson(lessonID, updatedInfo);
+    if (!isUpdated) {
+      return res.status(200).send({
+        success: false,
+        message: 'No changes made to the lesson.',
+      });
+    }
+    else return res.status(200).send({
       success: true,
       message: 'Lesson updated successfully',
       lesson: updatedLesson,

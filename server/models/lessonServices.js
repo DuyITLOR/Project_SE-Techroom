@@ -186,32 +186,61 @@ Lesson.updateLesson = async function (lessonID, updatedInfo) {
   try {
     console.log(`Updating lesson with ID: ${lessonID}`);
     console.log(`Updated Info:`, updatedInfo);
-    const lesson = await Lesson.findByPk(lessonID, { transaction });
+
+    const lesson = await Lesson.findByPk(lessonID, {
+      include: [
+        {
+          model: Accounts,
+          as: 'UsersAttending',
+          attributes: ['UserID'],
+          through: {
+            attributes: [],
+          }
+        }
+      ],
+      transaction 
+    });
     if (!lesson) {
       throw new Error(`Lesson with ID ${lessonID} does not exist.`);
     }
 
-    // update a lesson's main data.
+    let isUpdated = false;
+    // update a lesson's main data. get number of affected rows for checking if there is any change
     if (updatedInfo.lessonData) {
-      await lesson.update(updatedInfo.lessonData, { transaction });
+      const [affectedRows] = await Lesson.update(updatedInfo.lessonData, { 
+        where: { LessonID: lessonID },
+        transaction 
+      });
+      
+      if (affectedRows > 0) {
+        isUpdated = true;
+      }
       console.log(`Lesson with ID ${lessonID} updated successfully.`);
     }
-
+    
     if (updatedInfo.studentIDs || updatedInfo.teacherIDs) {
-      const allUserIDs = [...(updatedInfo.studentIDs || []), ...(updatedInfo.teacherIDs || [])];
-      const users = await Accounts.findAll({
-        where: { UserID: allUserIDs },
-        transaction,
-      });
-      await lesson.setUsersAttending(users, { transaction });
-      console.log(`Student and and teacher list updated for lesson with ID ${lessonID}.`);
+      // check if there are any updates.
+      const allNewUserIDs = [...(updatedInfo.studentIDs || []), ...(updatedInfo.teacherIDs || [])].sort();
+      const allCurrentUserIDs = lesson.UsersAttending.map(user => user.UserID).sort();
+
+      // if yes then update
+      if (JSON.stringify(allNewUserIDs) !== JSON.stringify(allCurrentUserIDs)) {
+        const users = await Accounts.findAll({
+          where: { UserID: allNewUserIDs },
+          transaction,
+        });
+
+        await lesson.setUsersAttending(users, { transaction });
+        isUpdated = true;
+        console.log(`Student and and teacher list updated for lesson with ID ${lessonID}.`);
+      }
     }
 
     await transaction.commit();
 
     const updatedLesson = await Lesson.getLessonDetails(lessonID);
     console.log(`Lesson with ID ${lessonID} updated successfully.`);
-    return updatedLesson;
+    return { updatedLesson, isUpdated };
   } catch (error) {
     console.error(`Error updating lesson ${lessonID}:`, error);
     await transaction.rollback();
