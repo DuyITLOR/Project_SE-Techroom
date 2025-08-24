@@ -56,7 +56,7 @@ all date format: "yyyy-mm-dd", studentIDs, teacherIDs: arrays of userIDs: ["0123
 2. getRelatedLessonsForTimetable, api-get: http://localhost:4000/api/core/timetable, params: { userID, weekStartDate } (weekStartDate format: yyyy-mm-dd)
 3. getLessonByID, api-get: http://localhost:4000/api/admin/timetable/lessonInfo, params: { lessonID }
 4. addLesson, api-post: http://localhost:4000/api/admin/timetable/add-lesson, params: { classID, date, sessionNumber, roomID }
-5. addMultipleLessons, api-post: http://localhost:4000/api/admin/timetable/add-multiple-lesson, params: [{lesson1}, {lesson2}, ...]. lesson objects have same params as the addLesson api above (no.4)
+5. addMultipleLessons, api-post: http://localhost:4000/api/admin/timetable/add-multiple-lessons, params: [{lesson1}, {lesson2}, ...]. lesson objects have same params as the addLesson api above (no.4)
 6. deleteLesson, api-delete: http://localhost:4000/api/admin/timetable/delete-lesson, params: { lessonID }
 7. updateLesson: api-put: http://localhost:4000/api/admin/timetable/update-lesson/, params: {lessonID, updatedInfo}
 updatedInfo format: {lessonData, studentIDs, teacherIDs}
