@@ -69,15 +69,12 @@ const Lesson = sequelize.define(
 );
 
 Lesson.getClassNotInTimetable = async function () {
-  const results = await sequelize.query(
+  const [results] = await sequelize.query(
     `
-    SELECT c.ClassID, c.ClassName
-    FROM Class c
-    WHERE c.ClassID IN (SELECT c2.ClassID 
-                        FROM Class c2
-                        EXCEPT
-                        SELECT l.ClassID
-                        FROM Lesson l)
+    SELECT DISTINCT p.ClassID
+    FROM Participation p
+    LEFT JOIN Lesson l ON p.ClassID = l.ClassID
+    WHERE l.ClassID IS NULL
     `
   );
 
