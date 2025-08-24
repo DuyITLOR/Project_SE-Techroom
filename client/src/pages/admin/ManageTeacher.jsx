@@ -112,7 +112,7 @@ const ManageTeacher = () => {
       const res = await axios.get(
         "http://localhost:4000/api/admin/account/search",
         {
-          params: { userID: searchTerm, role: "teacher" },
+          params: { user: searchTerm, role: "teacher" },
         }
       );
       console.log("Search results: ", res.data);

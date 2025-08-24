@@ -112,7 +112,7 @@ const ManageStudent = () => {
       const res = await axios.get(
         "http://localhost:4000/api/admin/account/search",
         {
-          params: { userID: searchTerm, role: "student" },
+          params: { user: searchTerm, role: "student" },
         }
       );
       console.log("Search results: ", res.data);
