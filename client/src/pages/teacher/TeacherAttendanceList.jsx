@@ -8,6 +8,7 @@ import SearchBar from "../../components/SearchBar";
 import SearchIcon from "../../assets/search.svg?react";
 import SummaryCard from "../../components/SummaryCard";
 import PaginatedTable from "../../components/Table/PaginatedTable";
+import FeedBackForm from "../../components/FeedBackForm";
 
 import StudentIcon from "../../assets/user.svg?react";
 import DiscussionIcon from "../../assets/message-circle.svg?react";
@@ -18,7 +19,18 @@ import axios from "axios";
 const TeacherStudentList = () => {
   const [activate, setActivate] = useState(1);
   const [ClassInfo, setClassInfo] = useState({});
-  const [data, setData] = useState([]);
+  const [StudentData, setData] = useState([]);
+  const [openFeedback, setOpenFeedback] = useState(false);
+  const [feedbackData, setFeedbackData] = useState({
+    classID: "",
+    teacherID: "",
+    studentID: "",
+    studentName: "",
+    tagID: null,
+    text: "",
+  });
+  const [FeedbackContent, setFeedbackContent] = useState("");
+  const [FeedbackTag, setFeedbackTag] = useState(1);
   const { ClassID } = useParams();
   const Columns = ["id", "role", "name", "dob"];
 
@@ -116,20 +128,56 @@ const TeacherStudentList = () => {
     }
   };
 
-  const handleFeedback = (items) => {
-    console.log("Feedback clicked");
+  const postFeedback = async (content, tag) => {
+    console.log("Feedback submitted: ", {
+      ...feedbackData,
+      text: content,
+      tagID: tag,
+    });
+
+    const res = await axios.post("http://localhost:4000/api/core/feedback", {
+      classID: feedbackData.classID,
+      teacherID: feedbackData.teacherID,
+      studentID: feedbackData.studentID,
+      text: content,
+      tagID: tag,
+    });
+    console.log("Feedback response: ", res.data);
+    setFeedbackData([]);
+    setFeedbackContent("");
+    setFeedbackTag(1);
   };
+
+  const onFeedBack = (studentID) => {
+    console.log("giving feedback to:", studentID);
+    const student = StudentData.find((s) => s.id === studentID);
+    if (!student) {
+      console.error("Student not found for ID:", studentID);
+      return;
+    }
+    console.log("Found student:", student);
+    setFeedbackData({
+      classID: ClassID,
+      teacherID: localStorage.getItem("username"),
+      studentID: student.id,
+      studentName: student.name,
+      tagID: null,
+      text: "",
+    });
+
+    setOpenFeedback(true);
+  };
+
   useEffect(() => {
     fecthClassInfo();
     fecthAccounts();
   }, []);
-  console.log("data:", data);
+
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-50">
         <Header />
       </div>
-
       <div className="fixed top-0 z-40 h-screen ">
         <SideBar
           activate={activate}
@@ -138,7 +186,6 @@ const TeacherStudentList = () => {
           menu={menu}
         />
       </div>
-
       <div className="flex flex-col min-h-screen">
         <div
           className={`${
@@ -165,15 +212,18 @@ const TeacherStudentList = () => {
                 />
               </div>
               <div className="px-1 py-1 sm:py-2 sm:px-2  pr-2">
-                <SummaryCard number={data.length} name="Total Accounts" />
+                <SummaryCard
+                  number={StudentData.length}
+                  name="Total Accounts"
+                />
               </div>
             </div>
 
             <div className="px-3 py-3">
               <PaginatedTable
                 headers={["UserID", "Role", "FullName", "Birthday", "Feedback"]}
-                data={data}
-                onFeedBack={handleFeedback}
+                data={StudentData}
+                onFeedBack={onFeedBack}
                 columns={Columns}
                 role="teacher"
               />
@@ -187,6 +237,17 @@ const TeacherStudentList = () => {
           <Footer />
         </div>
       </div>
+      <FeedBackForm
+        openFeedback={openFeedback}
+        setOpenFeedback={setOpenFeedback}
+        ClassName={ClassInfo.ClassName || "N/A"}
+        StudentName={feedbackData.studentName || "Null"}
+        handleFeedback={postFeedback}
+        FeedbackContent={FeedbackContent}
+        setFeedbackContent={setFeedbackContent}
+        FeedbackTag={FeedbackTag}
+        setFeedbackTag={setFeedbackTag}
+      />
     </>
   );
 };
