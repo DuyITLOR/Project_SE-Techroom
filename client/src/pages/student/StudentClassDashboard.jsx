@@ -159,7 +159,7 @@ const StudentClassDashboard = () => {
             <div className="flex items-stretch py-1 gap-2 pr-2">
               <div className="flex-1">
                 <PostBar
-                  inputText="Find a discussion"
+                  inputText="Ask something..."
                   Post={onPost}
                   handleInputFile={handleUploadFile}
                   content={content}

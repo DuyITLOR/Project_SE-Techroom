@@ -6,7 +6,7 @@ import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
 import SearchBar from "../../components/SearchBar";
 import SummaryCard from "../../components/SummaryCard";
-import PostCard from "../../components/PostCard";
+import FeedBackCard from "../../components/FeedBackCard";
 
 import SearchIcon from "../../assets/search.svg?react";
 import DiscussionIcon from "../../assets/message-circle.svg?react";
@@ -18,7 +18,7 @@ import axios from "axios";
 const StudentClassFeedBack = () => {
   const [activate, setActivate] = useState(1);
   const [ClassInfo, setClassInfo] = useState({});
-  const [discussion, setDiscussion] = useState([]);
+  const [feedback, setFeedBack] = useState([]);
   const { ClassID } = useParams();
   const menu = [
     {
@@ -84,8 +84,26 @@ const StudentClassFeedBack = () => {
     }
   };
 
+  const fetchFeedback = async () => {
+    console.log("Fetching feedback data...");
+    try {
+      const res = await axios.get("http://localhost:4000/api/core/feedback", {
+        params: {
+          classID: ClassID,
+          studentID: localStorage.getItem("username"),
+        },
+      });
+      console.log("Fetched feedback: ", res.data);
+
+      setFeedBack(res.data.listFeedback || []);
+    } catch (err) {
+      console.log("Error fetching feedback: ", err);
+    }
+  };
+
   useEffect(() => {
     fecthClassInfo();
+    fetchFeedback();
   }, []);
 
   return (
@@ -124,20 +142,17 @@ const StudentClassFeedBack = () => {
                 />
               </div>
               <div>
-                <SummaryCard
-                  number={discussion.length}
-                  name="Total Feedbacks"
-                />
+                <SummaryCard number={feedback.length} name="Total Feedbacks" />
               </div>
             </div>
           </div>
           <div className="grid grid-cols-1 gap-3 py-3 pr-2 justify-center">
-            {discussion.map((item, index) => (
-              <PostCard
-                key={index}
-                UserName={item.UserName}
-                DateTime={item.DateTime}
-                Content={item.Content}
+            {feedback.map((item, index) => (
+              <FeedBackCard
+                key={item.FeedbackID}
+                teacherID={item.TeacherID}
+                tag={item.TagID}
+                content={item.Text}
               />
             ))}
           </div>
