@@ -6,7 +6,7 @@ import TitleBanner from "../../components/TitleBanner";
 import Plus from "../../assets/plus.svg?react";
 import axios from "axios";
 import ConfirmPopup from "../../components/Table/ConfirmPopup";
-import AddForm from "../../components/AddForm";
+import AddForm from "../../components/FormForTimetable/AddFromForTimetable";
 import TimetableGrid from "../../components/TimeTable/TimetableGrid.jsx";
 
 import StudentIcon from "../../assets/user.svg?react";
@@ -26,6 +26,7 @@ const ManageTimetable = () => {
   const [weekDate, setWeekDate] = useState(new Date());
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [events, setEvents] = useState([]);
+
 
 
   const menu = [
@@ -134,13 +135,22 @@ const ManageTimetable = () => {
     return `${y}-${m}-${d}`;
   }
 
+  const getWeekStartMonday = (date) => {
+    const day = date.getDay(); // 0=Sunday, 1=Monday, ...
+    const offset = day === 0 ? -6 : 1 - day; 
+    const monday = new Date(date);
+    monday.setDate(date.getDate() + offset);
+    return monday;
+  };
+
   const fecthLessonTimeTable = async () => {
     try {
+      const monday = getWeekStartMonday(weekDate)
       const res = await axios.get("http://localhost:4000/api/admin/timetable", {
-        params: { weekStartDate: formatDate(weekDate) }
+        params: { weekStartDate: formatDate(monday) }
       })
       console.log("weekDate: ", formatDate(weekDate));
-      console.log("Fetched raw lesson timetable: ", res.data);
+      // console.log("Fetched raw lesson timetable: ", res.data);
       if (res.data?.listLessons) {
         const formatted = res.data.listLessons.map(lesson => ({
           lessonID: lesson.LessonID,
@@ -152,9 +162,6 @@ const ManageTimetable = () => {
         console.log("Formatted lesson timetable: ", formatted);
         setEvents(formatted);
       }
-
-
-      console.log("Formatted lesson timetable: ", events);
     }
     catch (err) {
       console.error("Error fetching lesson timetable: ", err);
@@ -251,7 +258,7 @@ const ManageTimetable = () => {
             <div className="px-3">
               <button
                 onClick={() => {
-                  setIsAddOpen(false);
+                  setIsAddOpen(true);
                 }}
                 className="flex gap-1 bg-blue-500 text-white text-xl px-2 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200">
                 <Plus />
@@ -287,13 +294,6 @@ const ManageTimetable = () => {
         }}
       />
 
-      {/* <AddForm
-        fields={addFields}
-        isOpen={isAddOpen}
-        setIsOpen={setIsAddOpen}
-        onSubmit={handleAddSubmit}
-        buttonLabel="Add"
-      /> */}
 
       <AddForm
         fields={addFields}

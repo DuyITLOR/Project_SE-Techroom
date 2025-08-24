@@ -123,7 +123,7 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, on }) =
                     const { start, end } = TIME_SLOTS[slot];
                     return (
                         <div key={slot}>
-                            <div className='grid grid-cols-8 border-b h-[150px]'>
+                            <div className='grid grid-cols-8 border-b h-[160px]'>
                                 <div className='px-3 py-4 text-sm text-gray-500 whitespace-nowra'>
                                     {start} - {end}
                                 </div>
@@ -132,7 +132,6 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, on }) =
                                     weekDays.map((day) => {
                                         const iso = toISO(day)
                                         const event = findEvent(iso, slot)
-                                        const dynamicFront = event.le
                                         return (
                                             <div key={`${iso}-${slot}`} className="border-l  flex flex-col h-full p-1 gap-1">
                                                 {
@@ -151,7 +150,7 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, on }) =
                                                         if (event.length === 2)
                                                             FrontSize = "text-[10px]"
                                                         else if (event.length >= 3)
-                                                            FrontSize = "text-[8px]"
+                                                            FrontSize = "text-[6px]"
                                                             
                                                         return (
                                                             <div
