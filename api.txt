@@ -40,15 +40,22 @@ V. discussionRouter
 4. updatePost, api-put: http://localhost:4000/api/admin/discussion, params: { postID, content, link }
 5. downloadFile, api-get: http://localhost:4000/api/admin/discussion/download, params:{ filename }
 
-VI. timetableRouter
+VI. feedbackRouter
+1. getAllTask, api-get: http://localhost:4000/api/core/feedback/tag", params:{}
+2. giveFeedback api-post: http://localhost:4000/api/core/feedback", params:{classID, teacherID, studentID, tagID, text}
+3. deleteTeacherFeedback api-delete: http://localhost:4000/api/core/feedback", params:{feedbackID}
+4. updateTeacherFeedback api-put: http://localhost:4000/api/core/feedback", params:{feedbackID,content,tagID}
+5. viewFeedback api-get: http://localhost:4000/api/core/feedback", params:{studentID}
+5. viewOneFeedback api-get: http://localhost:4000/api/core/feedback/one", params:{feedbackID}
+
+VII. timetableRouter
 all date format: "yyyy-mm-dd", studentIDs, teacherIDs: arrays of userIDs: ["0123", "0124",...]
 1. getAllLessonsForTimetable, api-get: http://localhost:4000/api/admin/timetable, params: { weekStartDate } (weekStartDate format: yyyy-mm-dd)
 2. getRelatedLessonsForTimetable, api-get: http://localhost:4000/api/core/timetable, params: { userID, weekStartDate } (weekStartDate format: yyyy-mm-dd)
 3. getLessonByID, api-get: http://localhost:4000/api/admin/timetable/lessonInfo, params: { lessonID }
-4. getClassNotInTimetable, api-get: http://localhost:4000/api/admin/timetable/classNotInTimetable, params: {}
-5. addLesson, api-post: http://localhost:4000/api/admin/timetable/add-lesson, params: { classID, date, sessionNumber, roomID }
-6. deleteLesson, api-delete: http://localhost:4000/api/admin/timetable/delete-lesson, params: { lessonID }
-7. updateLesson: api-put: http://localhost:4000/api/admin/timetable/update-lesson/, params: {lessonID, updatedInfo}
+4. addLesson, api-post: http://localhost:4000/api/admin/timetable/add-lesson, params: { classID, date, sessionNumber, roomID }
+5. deleteLesson, api-delete: http://localhost:4000/api/admin/timetable/delete-lesson, params: { lessonID }
+6. updateLesson: api-put: http://localhost:4000/api/admin/timetable/update-lesson/, params: {lessonID, updatedInfo}
 updatedInfo format: {lessonData, studentIDs, teacherIDs}
 lessonData format: {classID, date, sessionNumber, roomID}
 studentIDs, teacherIDs: arrays of userIDs. 

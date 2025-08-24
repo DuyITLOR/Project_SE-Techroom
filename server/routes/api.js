@@ -7,6 +7,7 @@ import courseRouter from "./courseRouter.js";
 import classRouter from "./classRouter.js";
 import discussionRouter from "./discussionRouter.js";
 import timetableRouter from "./timetableRouter.js";
+import feedbackRouter from "./feedbackRouter.js";
 
 const APIRoute = express.Router();
 
@@ -20,5 +21,6 @@ APIRoute.use('/admin',discussionRouter)
 
 APIRoute.use('/core', timetableRouter)
 APIRoute.use('/admin', timetableRouter);
+APIRoute.use('/core', feedbackRouter);
 
 export default APIRoute;
