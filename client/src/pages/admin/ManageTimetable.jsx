@@ -22,9 +22,7 @@ const ManageTimetable = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [item, setItem] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [editData, setEdtitData] = useState(false);
   const [weekDate, setWeekDate] = useState(new Date());
-  const [isEditOpen, setIsEditOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [reload, setReload] = useState(false);
 
@@ -70,7 +68,8 @@ const ManageTimetable = () => {
     },
   ];
 
-
+  const today = new Date();
+  const initialDate = today.toISOString().split("T")[0]; 
 
   const formatDate = (date) => {
     if (!date) return date;
@@ -181,7 +180,7 @@ const ManageTimetable = () => {
             <div className="px-2 py-3">
               <TimetableGrid
                 event={events}
-                initialDate={"2025-08-11"}
+                initialDate={initialDate}
                 selectedDate={weekDate}
                 setDate={setWeekDate}
                 setReload={setReload}

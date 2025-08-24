@@ -8,16 +8,6 @@ import TimetableGrid from "../../components/TimeTable/TimetableGrid.jsx";
 import ClassIcon from "../../assets/users.svg?react";
 import TimetableIcon from "../../assets/calendar.svg?react";
 
-const events = [
-  {
-    date: "2025-08-12",
-    slot: 3,
-    classID: "CL002",
-    roomName: "Phòng 11C",
-    lecturer: "Đặng Thương",
-  },
-];
-
 const TeacherTimetable = () => {
   const [activate, setActivate] = useState(1);
   const [data, setData] = useState([]);
@@ -35,6 +25,9 @@ const TeacherTimetable = () => {
       link: "/teacher/Timetable",
     },
   ];
+
+
+  
 
   return (
     <>
@@ -64,13 +57,7 @@ const TeacherTimetable = () => {
               />
             </div>
 
-            <div className="px-2 py-3">
-              <TimetableGrid
-                event={events}
-                initialDate={"2025-08-11"}
-                onDelete={() => console.log("Delete event")}
-              />
-            </div>
+
           </div>
         </div>
         <div

@@ -14,6 +14,7 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
     })
 
     const [roomAvailable, setRoomAvailable] = useState([])  
+    const [error, setError] = useState(null);
 
     const timeSlot = {
         1: { start: "07:00", end: "09:00" },
@@ -77,6 +78,7 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
             setIsOpen(false);
             setReload(prev => !prev);
         } catch (error) {
+            setError(error.response?.data?.message);
             console.error("Error updating lesson: ", error);
         }
     }
@@ -165,6 +167,14 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
                                     onSelectChange={(newList) => setFormData({ ...formData, listTeacher: newList })}
                                 />
                             </div>
+
+                            {
+                                error && (
+                                    <div className='text-red-500 mt-2'>
+                                        {error}
+                                    </div>
+                                )
+                            }
 
                             <div className='flex justify-end pt-3'>
                                 <button 
