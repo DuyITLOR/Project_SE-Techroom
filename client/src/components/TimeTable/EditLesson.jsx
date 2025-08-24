@@ -71,12 +71,17 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
                     teacherIDs: formData.listTeacher,
                 },
             }
-            console.log("Body to send: ", body);
             const res =  await axios.put("http://localhost:4000/api/admin/timetable/update-lesson", body);
             console.log("Update response: ", res.data);
-            setIsEditOpen(false);
-            setIsOpen(false);
-            setReload(prev => !prev);
+
+            if (!res.data?.success) {
+                setError(res.data.message);
+            } else {
+                setIsEditOpen(false);
+                setIsOpen(false);
+                setReload(prev => !prev);
+            }
+
         } catch (error) {
             setError(error.response?.data?.message);
             console.error("Error updating lesson: ", error);
