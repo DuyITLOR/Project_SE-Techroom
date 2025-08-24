@@ -7,6 +7,7 @@ import {
   deleteLesson,
   updateLesson,
   getClassNotInTimetable,
+  addMultipleLessons,
 } from '../controllers/admin/admin_TimetableController.js';
 import { getRelatedLessonsForTimetable } from '../controllers/timetableController.js';
 
@@ -51,6 +52,18 @@ timetableRouter.post('/timetable/add-lesson', (req, res, next) => {
     });
   } else {
     const handler = addLesson;
+    handler(req, res, next);
+  }
+});
+
+timetableRouter.post('/timetable/add-multiple-lessons', (req, res, next) => {
+  if (!req.isAdmin) {
+    return res.status(403).send({
+      success: false,
+      message: 'You do not have permission to add multiple lessons.',
+    });
+  } else {
+    const handler = addMultipleLessons;
     handler(req, res, next);
   }
 });

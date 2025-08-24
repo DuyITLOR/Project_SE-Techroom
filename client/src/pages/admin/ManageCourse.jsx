@@ -221,7 +221,7 @@ const ManageCourse = () => {
       body
     );
 
-    if (res?.data?.msg === "UserID already exists") {
+    if (res?.data?.success === false) {
       const err = new Error(res.data.msg);
       err.response = { data: { message: res.data.msg } };
       throw err;
@@ -239,7 +239,12 @@ const ManageCourse = () => {
       equipment: formData.Equipment || "N/A",
     };
 
-    await axios.put("http://localhost:4000/api/admin/course", body);
+    const res = await axios.put("http://localhost:4000/api/admin/course", body);
+    if (res?.data?.success === false) {
+      const err = new Error(res.data.msg);
+      err.response = { data: { message: res.data.msg } };
+      throw err;
+    }
     await fecthAdminsAccounts();
   };
 

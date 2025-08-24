@@ -189,29 +189,7 @@ const ManageTimetable = () => {
     }
   };
 
-  const handleAddSubmit = async (formData) => {
-    const body = {
-      courseID: formData.CourseID || "N/A",
-      courseName: formData.CourseName || "N/A",
-      courseNumber: formData.CourseNumber || "N/A",
-      syllabus: formData.Syllabus || "N/A",
-      equipment: formData.Equipment || "N/A",
-    };
-    console.log("Adding new course with data: ", body);
 
-    const res = await axios.post(
-      "http://localhost:4000/api/admin/course",
-      body
-    );
-
-    if (res?.data?.msg === "UserID already exists") {
-      const err = new Error(res.data.msg);
-      err.response = { data: { message: res.data.msg } };
-      throw err;
-    }
-
-    await fecthAdminsAccounts();
-  };
 
   const handleUpdateSubmit = async (formData) => {
     const body = {
@@ -296,21 +274,8 @@ const ManageTimetable = () => {
 
 
       <AddForm
-        fields={addFields}
         isOpen={isAddOpen}
         setIsOpen={setIsAddOpen}
-        onSubmit={handleAddSubmit}
-        buttonLabel="Add"
-        openMembers={true}
-      />
-
-      <AddForm
-        fields={addFields}
-        isOpen={isEditOpen}
-        setIsOpen={setIsEditOpen}
-        onSubmit={handleUpdateSubmit}
-        initialData={editData}
-        buttonLabel={"Save"}
       />
     </>
   );

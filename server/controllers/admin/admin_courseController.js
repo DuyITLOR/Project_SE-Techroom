@@ -34,15 +34,21 @@ export const searchCourse = async (req, res) => {
 
 export const addCourse = async (req, res) => {
     const { courseID, courseName, courseNumber, syllabus, equipment } = req.body
-    if(!courseID) {
-        return res.status(400).send({
-          success: false, 
-          message: "CourseID cannot be empty!"
-        })
+    const requiredFields = { courseID, courseName, courseNumber, syllabus, equipment };
+
+    for (const [key, value] of Object.entries(requiredFields)) {
+        if (!value || value === "N/A") {
+            return res.send({
+                success: false,
+                msg: `${key} cannot be empty!`
+            });
+        }
     }
+
     const existingCourse = await Courses.findByPk(courseID);
     if (existingCourse) {
         return res.send({
+            success: false,
             msg: "Course already exists"
         });
     }
@@ -57,14 +63,26 @@ export const addCourse = async (req, res) => {
 
 export const updateCourse = async (req, res)=> {
     const { courseID, courseName, courseNumber, syllabus, equipment } = req.body
+    const requiredFields = { courseID, courseName, courseNumber, syllabus, equipment };
+
+    for (const [key, value] of Object.entries(requiredFields)) {
+        if (!value || value === "N/A") {
+            return res.send({
+                success: false,
+                msg: `${key} cannot be empty!`
+            });
+        }
+    }
+
     const course = await Courses.updateCourse(courseID, courseName, courseNumber, syllabus, equipment)
-    if(!course.success) {
-        return res.status(404).send({
-            message: course.message
+    if(!course) {
+        return res.send({
+            success: false,
+            msg: course.message
         })
     }
     return res.status(201).json({
-        message: "Course updated successfully!",
+        msg: "Course updated successfully!",
         updatedCourse: course
     })
 }
