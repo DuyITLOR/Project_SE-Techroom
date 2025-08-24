@@ -4,6 +4,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TitleBanner from "../../components/TitleBanner";
 import TimetableGrid from "../../components/TimeTable/TimetableGrid.jsx";
+import axios from "axios";
 
 import ClassIcon from "../../assets/users.svg?react";
 import TimetableIcon from "../../assets/calendar.svg?react";
@@ -108,12 +109,10 @@ const TeacherTimetable = () => {
 
             <div>
               <TimetableGrid
-                weekDate={weekDate}
-                setWeekDate={setWeekDate}
+                event={events}
                 initialDate={initialDate}
-                events={events}
-                setEvents={setEvents}
-                reload={reload}
+                selectedDate={weekDate}
+                setDate={setWeekDate}
                 setReload={setReload}
                 role = {"teacher"}
               />
