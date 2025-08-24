@@ -10,11 +10,13 @@ II. adminRouter
 5. deleteAccount, api-delete: http://localhost:4000/api/admin/account, params: { userID }
 
 III. roomRouter
+date format: yyyy-mm-dd
 1. getRoom, api-get: http://localhost:4000/api/admin/room, params: {}
 2. addRoom, api-post: http://localhost:4000/api/admin/room, params: { roomID, roomName, note }
 3. searchRoom, api-get: http://localhost:4000/api/admin/room/search, params: { roomID }
 4. updateRoom, api-put: http://localhost:4000/api/admin/room, params: { roomID, roomName, note }
 5. deleteRoom, api-delete: http://localhost:4000/api/admin/room, params: { roomID }
+6. findAvailableRooms, api-get: http://localhost:4000/api/admin/room/get-available, params: { date, sessionNumber }
 
 III. courseRouter
 1. getCourse, api-get: http://localhost:4000/api/admin/course, params: {}

@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, QueryTypes } from "sequelize";
 import { Op } from 'sequelize';
 import sequelize from "../config/db.js";
 
@@ -63,6 +63,23 @@ Rooms.searchRoom = async function (roomID) {
             RoomID: {[Op.like]: `%${roomID}%`}
         } 
     });
+}
+
+Rooms.findAvailableRooms = async function (date, sessionNumber) {
+    const results = await sequelize.query(
+        `select r.RoomID, r.RoomName
+        from Rooms r
+        where r.RoomID not in (
+        select ls.RoomID
+        from Lesson ls
+        where ls.Date = :date and ls.SessionNumber = :sessionNumber
+        )`,
+        {
+            replacements: { date, sessionNumber },
+            type: QueryTypes.SELECT,
+        }
+    );
+    return results;
 }
 
 export default Rooms;

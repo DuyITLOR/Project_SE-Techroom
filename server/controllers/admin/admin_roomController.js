@@ -82,11 +82,39 @@ export const deleteRoom = async (req, res)=> {
     })
 }
 
+export const findAvailableRooms = async (req, res) => {
+    try {
+        const {date, sessionNumber} = req.query;
+        let availableRooms = await Rooms.findAvailableRooms(date, sessionNumber);
+        console.log('Available Rooms:', availableRooms);
+        
+        if(!availableRooms || availableRooms.length === 0) {
+            availableRooms = [ { empty: true }]
+            return res.status(404).send({
+                success: false,
+                availableRooms: availableRooms,
+                message: `No available rooms found for the specified date and session number.`
+            });
+        }
+        return res.status(200).send({
+            success: true,
+            availableRooms: availableRooms
+        });
+    } catch (error) {
+        console.error('Error finding available rooms:', error);
+        return res.status(500).send({
+            success: false,
+            message: 'An error occurred while finding available rooms.'
+        });
+    }
+}
+
 export default {
     getRooms,
     searchRoom,
     addRoom,
     updateRoom,
-    deleteRoom
+    deleteRoom,
+    findAvailableRooms
 }
 
