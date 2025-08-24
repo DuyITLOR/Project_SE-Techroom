@@ -35,11 +35,16 @@ export const searchAccount = async (req, res) => {
 
 export const addAccount = async (req, res) => {
     const { userID, fullName, birthday, password, role } = req.body
-    if(!userID || fullName === '' || birthday === '' || password === '' || role === '') {
-        return res.status(400).send({
-          success: false, 
-          message: "UserID cannot be empty!"
-        })
+
+    const requiredFields = { userID, fullName, birthday, password, role };
+
+    for (const [key, value] of Object.entries(requiredFields)) {
+        if (!value) {
+            return res.status(400).send({
+            success: false,
+            message: `${key} cannot be empty!`
+            });
+        }
     }
     const existingAccount = await Accounts.findByPk(userID);
     if (existingAccount) {

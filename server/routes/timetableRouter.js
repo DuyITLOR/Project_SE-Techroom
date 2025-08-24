@@ -6,6 +6,7 @@ import {
   addLesson,
   deleteLesson,
   updateLesson,
+  getClassNotInTimetable,
 } from '../controllers/admin/admin_TimetableController.js';
 import { getRelatedLessonsForTimetable } from '../controllers/timetableController.js';
 
@@ -29,6 +30,18 @@ timetableRouter.get('/timetable/lessonInfo', (req, res, next) => {
     handler(req, res, next);
   }
 });
+
+timetableRouter.get('/timetable/classNotInTimetable', (req, res, next) => {
+  if (!req.isAdmin) {
+    return res.status(403).send({
+      success: false,
+      message: 'You do not have permission to view class details.',
+    });
+  } else {
+    const handler = getClassNotInTimetable;
+    handler(req, res, next);
+  }
+})
 
 timetableRouter.post('/timetable/add-lesson', (req, res, next) => {
   if (!req.isAdmin) {
