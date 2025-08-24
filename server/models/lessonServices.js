@@ -66,10 +66,6 @@ Lesson.getRelatedLessonsForWeek = async function (userID, weekStartDate) {
     }
   );
 
-  if (!lessons || lessons.length === 0) {
-    throw new Error(`No lessons found for user ${userID} for the week starting on ${weekStartDate}.`);
-  }
-
   console.log(`Successfully fetched lessons related to user ${userID} for the week.`);
   return lessons;
 };
