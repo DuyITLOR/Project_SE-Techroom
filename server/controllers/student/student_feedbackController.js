@@ -2,14 +2,14 @@ import { Feedback} from '../../models/feedbackModel.js';
 
 //viewFeedback()
 export const viewFeedback = async (req, res) => {
-    const { studentID } = req.body
+    const { classID,studentID } = req.query
     if(!studentID) {
         return res.status(400).send({
         success: false,
         message: "StudentID cannot be empty!"
         })
     }
-    const Feedbacks = await Feedback.getStudentFeedbacks(studentID)
+    const Feedbacks = await Feedback.getStudentFeedbacks(classID,studentID)
     if (!Feedbacks) {
         return res.status(400).send({
         success: false,
@@ -24,7 +24,7 @@ export const viewFeedback = async (req, res) => {
 
 //viewOneFeedback(feedbackID)
 export const viewOneFeedback = async (req, res) => {
-    const { feedbackID } = req.body
+    const { feedbackID } = req.query
     if(!feedbackID) {
         return res.status(400).send({
         success: false,

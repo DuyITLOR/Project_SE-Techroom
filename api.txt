@@ -45,7 +45,7 @@ VI. feedbackRouter
 2. giveFeedback api-post: http://localhost:4000/api/core/feedback", params:{classID, teacherID, studentID, tagID, text}
 3. deleteTeacherFeedback api-delete: http://localhost:4000/api/core/feedback", params:{feedbackID}
 4. updateTeacherFeedback api-put: http://localhost:4000/api/core/feedback", params:{feedbackID,content,tagID}
-5. viewFeedback api-get: http://localhost:4000/api/core/feedback", params:{studentID}
+5. viewFeedback api-get: http://localhost:4000/api/core/feedback", params:{classID,studentID}
 5. viewOneFeedback api-get: http://localhost:4000/api/core/feedback/one", params:{feedbackID}
 
 VII. timetableRouter

@@ -144,7 +144,7 @@ Feedback.addFeedback = async function (classID, teacherID, studentID, tagID, tex
 };
 
 //getStudentFeedbacks(): get all feedbacks of a student
-Feedback.getStudentFeedbacks = async function (studentID) {
+Feedback.getStudentFeedbacks = async function (classID,studentID) {
   try {
     const parentStudent = await Accounts.findByPk(studentID);
     if (!parentStudent) {
@@ -154,7 +154,7 @@ Feedback.getStudentFeedbacks = async function (studentID) {
       throw new Error(`Student with ID ${studentID} does not exist.`);
     }
     const Feedbacks=await Feedback.findAll({
-        where: {StudentID:studentID },
+        where: {StudentID:studentID,ClassID:classID} ,
         order: [["FeedbackID", "DESC"]]
     })
     return Feedbacks;
