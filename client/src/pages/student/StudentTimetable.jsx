@@ -83,7 +83,9 @@ const StudentTimetable = () => {
           slot: lesson.SessionNumber,
           classID: lesson.ClassID,
           roomID: lesson.RoomID,
+          roomName: lesson.RoomName,
         }));
+
         console.log("Formatted lesson timetable: ", formatted);
         setEvents(formatted || []);
       }
