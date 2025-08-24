@@ -86,7 +86,6 @@ export const deletePost = async (req, res) => {
 
 export const updatePost = async (req, res) => {
   const { postID, content } = req.body;
-  const link = req.files ? req.files.map((file) => file.path).join(",") : null;
   if (!postID || !content) {
     return res.status(400).send({
       success: false,
@@ -94,6 +93,7 @@ export const updatePost = async (req, res) => {
     });
   }
   try {
+    const link = req.file ? req.file.path : null;
     const post = await Post.editPost(postID, content, link);
     if (!post) {
       return res.status(404).send({
