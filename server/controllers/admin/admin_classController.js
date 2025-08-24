@@ -30,14 +30,32 @@ export const addClass = async (req, res) => {
     studentIDs,
     teacherIDs,
   } = req.body;
+
   const userIDs = studentIDs.concat(teacherIDs);
 
-  if (!classID) {
-    return res.status(400).send({
-      success: false,
-      message: "ClassID cannot be empty!",
-    });
+  const requiredFields = { 
+    classID,
+    className,
+    lessonsPerWeek,
+    classNumWeek,
+    beginDate,
+    endDate,
+    courseID,
+    studentIDs,
+    teacherIDs
+  };
+
+  for (const [key, value] of Object.entries(requiredFields)) {
+      if (!value) {
+          return res.status(400).send({
+          success: false,
+          message: `${key} cannot be empty!`
+          });
+      }
   }
+
+  
+
   const existingClass = await Class.findByPk(classID);
   if (existingClass) {
     return res.send({
