@@ -16,6 +16,20 @@ Lesson.getAllLessonsForWeek = async function (weekStartDate) {
         [Op.lt]: new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000), // 7 days later
       },
     },
+    attributes: [
+      'LessonID',
+      'ClassID',
+      'Date',
+      'SessionNumber',
+      'RoomID',
+      [sequelize.col('Room.RoomName'), 'RoomName'],
+    ],
+    include: {
+      model: Rooms,
+      as: 'Room',
+      attributes: [],
+    },
+    raw: true,
   });
 
   if (!lessons || lessons.length === 0) {
