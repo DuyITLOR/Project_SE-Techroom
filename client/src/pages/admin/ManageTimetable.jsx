@@ -191,19 +191,6 @@ const ManageTimetable = () => {
 
 
 
-  const handleUpdateSubmit = async (formData) => {
-    const body = {
-      courseID: formData.CourseID || "N/A",
-      courseName: formData.CourseName || "N/A",
-      courseNumber: formData.CourseNumber || "N/A",
-      syllabus: formData.Syllabus || "N/A",
-      equipment: formData.Equipment || "N/A",
-    };
-
-    await axios.put("http://localhost:4000/api/admin/course", body);
-    await fecthAdminsAccounts();
-  };
-
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-50">
@@ -227,7 +214,7 @@ const ManageTimetable = () => {
           <div>
             <div className="px-3 py-3">
               <TitleBanner
-                title="Timetabel Management"
+                title="Timetable Management"
                 subTitle="Manage all timetable of the center"
                 Icon={TimetableIcon}
               />

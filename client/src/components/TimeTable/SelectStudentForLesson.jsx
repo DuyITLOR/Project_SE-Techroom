@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios";
 
 
-const SelectStudent = ({ selectedStudent, onSelectChange }) => {
+const SelectStudentForLesson = ({LessonID, selectedStudent, onSelectChange }) => {
 
     const [isOpen, setIsOpen] = useState(false)
     const [students ,setStudents] = useState([]);
@@ -14,15 +14,14 @@ const SelectStudent = ({ selectedStudent, onSelectChange }) => {
         onSelectChange?.(newStudent);
     }
 
-
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const res = await axios.get("http://localhost:4000/api/admin/account", {
-                    params: { role: "student" }
+                const res = await axios.get("http://localhost:4000/api/admin/timetable/lessonInfo", {
+                    params: {lessonID: LessonID }
                 });
-                const list = res.data.listUsers || [];
-                // console.log("Fetched students: ", list);
+                // const list = res.data.listUsers || [];
+                console.log("Fetched students: ", res.data);
                 const formatted = list.map((items) => (
                     {
                         UserID: items.UserID || "N/A",
@@ -107,4 +106,4 @@ const SelectStudent = ({ selectedStudent, onSelectChange }) => {
     )
 }
 
-export default SelectStudent
+export default SelectStudentForLesson
