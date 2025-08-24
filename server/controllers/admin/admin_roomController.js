@@ -85,6 +85,7 @@ export const deleteRoom = async (req, res)=> {
 export const findAvailableRooms = async (req, res) => {
     try {
         const {date, sessionNumber} = req.query;
+        console.log("Finding available rooms for date:", date, "and session number:", sessionNumber);
         let availableRooms = await Rooms.findAvailableRooms(date, sessionNumber);
         console.log('Available Rooms:', availableRooms);
         

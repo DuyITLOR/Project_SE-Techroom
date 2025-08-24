@@ -20,20 +20,32 @@ const AddLesson = ({ ClassID, ClassName, ClassNumWeek }) => {
         }))
     )
 
-    const handleChange = (index, field, value) => {
+    const handleChange = async (index, field, value) => {
         let updatedLessons = lessons.map((lesson, i) =>
             i === index ? { ...lesson, [field]: value, ...(field !== "room" ? { room: "" } : {}) } : lesson
         )
 
         const selected = updatedLessons[index];
         if (selected.date && selected.session) {
+            console.log("Fetching available rooms for: ", selected.date, selected.session);
+            try {
+                const res = await axios.get("http://localhost:4000/api/admin/room/get-available", 
+                {
+                    params: {
+                        date: selected.date,
+                        sessionNumber: selected.session,
+                    }
+                }, 
+            )
+                console.log("Available rooms: ", res.data.availableRooms);
 
-            const room = [
-                { RoomID: "11A", RoomName: "Phòng 11A" },
-                { RoomID: "11B", RoomName: "Phòng 11B" },
-                { RoomID: "R001", RoomName: "Phòng 11C" },
-            ]
-            updatedLessons[index].available = room
+                const room = res.data.availableRooms || [];
+                updatedLessons[index].available = room
+            }
+             catch (error) {
+                console.error("Error fetching available rooms: ", error);
+            }
+            
         } else updatedLessons[index].available = []
         setLessons(updatedLessons);
     }
@@ -112,7 +124,7 @@ const AddLesson = ({ ClassID, ClassName, ClassNumWeek }) => {
                                         <option value="">Chọn phòng</option>
                                         {lesson.available.map((room, idx) => (
                                             <option key={idx} value={room.RoomID}>
-                                                {room.RoomName}
+                                                {room.RoomID} - {room.RoomName}
                                             </option>
                                         ))}
 
