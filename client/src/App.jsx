@@ -18,7 +18,7 @@ import StudentClassFeedBack from "./pages/student/StudentClassFeedBack.jsx";
 import TeacherTimetable from "./pages/teacher/TeacherTimetable.jsx";
 import TeacherClassDashboard from "./pages/teacher/TeacherClassDashBoard.jsx";
 import AddForm from "./components/FormForClass/AddFormForClass.jsx";
-import TeacherStudentList from "./pages/teacher/TeacherStudentList.jsx";
+import TeacherAttendaceList from "./pages/teacher/TeacherAttendanceList.jsx";
 
 const App = () => {
   return (
@@ -162,10 +162,10 @@ const App = () => {
           }
         />
         <Route
-          path="/teacher/Class/:ClassID/Student"
+          path="/teacher/Class/:ClassID/Attendance"
           element={
             <ProtectedRoute roleRequired="teacher">
-              <TeacherStudentList />
+              <TeacherAttendaceList />
             </ProtectedRoute>
           }
         />

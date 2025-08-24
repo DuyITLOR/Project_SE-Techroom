@@ -20,7 +20,7 @@ const TeacherStudentList = () => {
   const [ClassInfo, setClassInfo] = useState({});
   const [data, setData] = useState([]);
   const { ClassID } = useParams();
-  const Columns = ["id", "name", "dob"];
+  const Columns = ["id", "role", "name", "dob"];
 
   const menu = [
     {
@@ -30,10 +30,10 @@ const TeacherStudentList = () => {
       link: `/teacher/Class/${ClassID}/Discussion`,
     },
     {
-      text: "Student",
+      text: "Attendance",
       icon: StudentIcon,
       color: "#FF7002",
-      link: `/teacher/Class/${ClassID}/Student`,
+      link: `/teacher/Class/${ClassID}/Attendance`,
     },
     {
       text: "Go Back",
@@ -60,31 +60,37 @@ const TeacherStudentList = () => {
     }
   };
 
-  const fecthStudent = async () => {
+  const fetchAccountByRole = async (role) => {
     try {
       const res = await axios.get("http://localhost:4000/api/admin/class", {
-        params: { classID: ClassID, role: "student" },
+        params: { classID: ClassID, role: role },
       });
-      console.log("Fetched student accounts: ", res.data);
-
-      const list = res.data.classes || [];
-      console.log("List of students: ", list);
-
-      const formatted = list.map((item, index) => ({
-        id: item.UserID || "N/A",
-        name: item.FullName || "N/A",
-        dob: item.Birthday || "N/A",
-      }));
-      console.log("Formatted student accounts: ", formatted);
-      setData(formatted);
+      console.log(`Fetched ${role} accounts: `, res.data);
+      return res.data.classes || [];
     } catch (err) {
-      console.log("Error fetching student accounts: ", err);
+      console.log(`Error fetching ${role} accounts: `, err);
+      return [];
     }
+  };
+
+  const fecthAccounts = async () => {
+    const students = await fetchAccountByRole("student");
+    console.log("Student accounts: ", students);
+
+    const formatted = students.map((item, index) => ({
+      id: item.UserID || "N/A",
+      role: item.Role || "N/A",
+      name: item.FullName || "N/A",
+      dob: item.Birthday || "N/A",
+    }));
+
+    setData(formatted);
+    console.log("Formatted student accounts: ", formatted);
   };
 
   const handleSearch = async (searchTerm) => {
     if (!searchTerm) {
-      fecthStudentAccounts();
+      fecthAccounts();
     }
     try {
       const res = await axios.get(
@@ -115,7 +121,7 @@ const TeacherStudentList = () => {
   };
   useEffect(() => {
     fecthClassInfo();
-    fecthStudent();
+    fecthAccounts();
   }, []);
   console.log("data:", data);
   return (
@@ -165,7 +171,7 @@ const TeacherStudentList = () => {
 
             <div className="px-3 py-3">
               <PaginatedTable
-                headers={["UserID", "FullName", "Birthday", "Feedback"]}
+                headers={["UserID", "Role", "FullName", "Birthday", "Feedback"]}
                 data={data}
                 onFeedBack={handleFeedback}
                 columns={Columns}

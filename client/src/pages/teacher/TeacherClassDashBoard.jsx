@@ -30,10 +30,10 @@ const TeacherClassDashBoard = () => {
       link: `/teacher/Class/${ClassID}/Discussion`,
     },
     {
-      text: "Student",
+      text: "Attendance",
       icon: StudentIcon,
       color: "#FF7002",
-      link: `/teacher/Class/${ClassID}/Student`,
+      link: `/teacher/Class/${ClassID}/Attendance`,
     },
     {
       text: "Go Back",

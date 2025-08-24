@@ -18,7 +18,7 @@ import axios from "axios";
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const [activate, setActivate] = useState(1);
-  const [data, setData] = useState([]);
+  const [ClassList, setClassList] = useState([]);
   const menu = [
     {
       text: "Classes",
@@ -72,28 +72,48 @@ const StudentDashboard = () => {
     console.log("Fetching class data...");
     try {
       const res = await axios.get("http://localhost:4000/api/core/class", {
-        params: { userid: localStorage.getItem("username"), role: "student" },
+        params: { userid: localStorage.getItem("username"), role: "teacher" },
       });
-      console.log("Fetched student's class: ", res.data);
+      console.log("Fetched teacher's class: ", res.data);
 
       const list = res.data.listClasses || [];
 
       console.log("List of classes: ", list);
-      const formatted = list.map((item, index) => ({
-        ClassID: item.ClassID || "N/A",
-        ClassName: item.ClassName || "N/A",
-        LessonsPerWeek: item.LessonsPerWeek || "N/A",
-        ClassNumWeek: item.ClassNumWeek || "N/A",
-        BeginDate: item.BeginDate || "N/A",
-        EndDate: item.EndDate || "N/A",
-        CourseID: item.CourseID || "N/A",
-      }));
-      setData(formatted);
+      const formatted = await Promise.all(
+        list.map(async (item) => {
+          const teachers = await fetchClassTeacher(item.ClassID);
+          return {
+            ClassID: item.ClassID || "N/A",
+            ClassName: item.ClassName || "N/A",
+            LessonsPerWeek: item.LessonsPerWeek || "N/A",
+            ClassNumWeek: item.ClassNumWeek || "N/A",
+            BeginDate: item.BeginDate || "N/A",
+            EndDate: item.EndDate || "N/A",
+            CourseID: item.CourseID || "N/A",
+            Teachers: teachers || [],
+          };
+        })
+      );
+      setClassList(formatted);
     } catch (err) {
       console.log("Error fetching classes: ", err);
     }
   };
 
+  const fetchClassTeacher = async (ClassID) => {
+    console.log("Fetching class-teacher data...");
+    try {
+      const res = await axios.get("http://localhost:4000/api/admin/class", {
+        params: { classID: ClassID, role: "teacher" },
+      });
+      console.log("Fetched class-teacher data: ", res.data);
+      const list = res.data.classes || [];
+      console.log("List of class-teacher: ", list);
+      return list || "N/A";
+    } catch (err) {
+      console.log("Error fetching class-teacher data: ", err);
+    }
+  };
   useEffect(() => {
     fecthClass();
   }, []);
@@ -134,17 +154,17 @@ const StudentDashboard = () => {
                 />
               </div>
               <div>
-                <SummaryCard number={data.length} name="Total Classes" />
+                <SummaryCard number={ClassList.length} name="Total Classes" />
               </div>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3 py-3 pr-2 justify-center">
-            {data.map((item, index) => (
+            {ClassList.map((item, index) => (
               <ClassCard
                 key={item.ClassID}
                 ClassID={item.ClassID || "N/A"}
                 ClassName={item.ClassName || "N/A"}
-                TeacherName={item.TeacherName || "None"}
+                Teachers={item.Teachers || "None"}
                 onClick={() => {
                   navigate(`/student/Class/${item.ClassID}/Discussion`);
                   console.log("Navgating");
