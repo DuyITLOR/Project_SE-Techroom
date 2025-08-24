@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import ArrowRight from "../../assets/chevron-right.svg?react";
 import ArrowLeft from "../../assets/chevron-left.svg?react";
+import LessonDetail from './LessonDetail';
 
 
 export const TIME_SLOTS = {
@@ -15,7 +16,10 @@ export const TIME_SLOTS = {
 
 export const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, on }) => {
+const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedLesson, setSelectedLesson] = useState(null);
+
     const toISO = (d) => {
         const y = d.getFullYear();
         const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -133,7 +137,9 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, on }) =
                                         const iso = toISO(day)
                                         const event = findEvent(iso, slot)
                                         return (
-                                            <div key={`${iso}-${slot}`} className="border-l  flex flex-col h-full p-1 gap-1">
+                                            <div key={`${iso}-${slot}`}
+
+                                                className="border-l  flex flex-col h-full p-1 gap-1">
                                                 {
                                                     event.map((ev, index) => {
                                                         const ListColor = [
@@ -151,10 +157,11 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, on }) =
                                                             FrontSize = "text-[10px]"
                                                         else if (event.length >= 3)
                                                             FrontSize = "text-[6px]"
-                                                            
+
                                                         return (
                                                             <div
                                                                 key={ev.lessonID}
+                                                                onClick={() => { setIsOpen(true), setSelectedLesson(ev) }}
                                                                 className={`rounded-lg ${color} p-2 flex-1 overflow-hidden ${FrontSize}`}>
                                                                 <div className="font-semibold truncate whitespace-nowrap">{ev.classID}</div>
                                                                 <div className="text-gray-700 flex flex-col truncate whitespace-nowrap">
@@ -174,10 +181,21 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, on }) =
 
                             </div>
                         </div>
+
                     )
                 })}
             </div>
+
+            <div>
+                <LessonDetail
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    lesson={selectedLesson}
+                />
+            </div>
+
         </div>
+
     )
 }
 
