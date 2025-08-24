@@ -91,6 +91,7 @@ const AddFromForTimetable = ({ isOpen, setIsOpen}) => {
                                             ClassID={selectedClass?.ClassID}
                                             ClassName={selectedClass?.ClassName}
                                             ClassNumWeek={selectedClass?.ClassNumWeek}
+                                            setIsOpen={setIsOpen}
                                         />
                                 </div>
                             </div>

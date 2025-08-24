@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 
-const AddLesson = ({ ClassID, ClassName, ClassNumWeek }) => {
+const AddLesson = ({ ClassID, ClassName, ClassNumWeek, setIsOpen}) => {
     const timeSlot = {
         1: { start: "07:00", end: "09:00" },
         2: { start: "09:00", end: "11:00" },
@@ -59,9 +59,8 @@ const AddLesson = ({ ClassID, ClassName, ClassNumWeek }) => {
                 roomID: lesson.room
             }))
             console.log("Lesson Date: ", lessonDate);
-
-            await axios.post("http://localhost:4000/api/admin/timetable/add-Lesson", 
-            {lessonDate})
+            await axios.post("http://localhost:4000/api/admin/timetable/add-multiple-lessons", lessonDate)
+            setIsOpen(false)
         }
         catch (err) {
             console.log("Error saving lessons: ", err);

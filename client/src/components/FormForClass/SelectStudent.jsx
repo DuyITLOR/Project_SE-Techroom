@@ -47,7 +47,7 @@ const SelectStudent = ({ selectedStudent, onSelectChange }) => {
                             const student = students.find((s) => s.UserID === id)
                             return (
                                 <span
-                                    key={id}x
+                                    key={id}
                                     className="bg-blue-100"
                                 >
                                     {student?.FullName}

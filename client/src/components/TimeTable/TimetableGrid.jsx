@@ -158,7 +158,7 @@ const TimetableGrid = ({ event = [], initialDate, selectedDate, setDate, on }) =
                                                                 className={`rounded-lg ${color} p-2 flex-1 overflow-hidden ${FrontSize}`}>
                                                                 <div className="font-semibold truncate whitespace-nowrap">{ev.classID}</div>
                                                                 <div className="text-gray-700 flex flex-col truncate whitespace-nowrap">
-                                                                    <p>{ev.lessonID ? `Lesson: ${ev.lessonID}` : null}</p>
+                                                                    {/* <p>{ev.lessonID ? `Lesson: ${ev.lessonID}` : null}</p> */}
                                                                     <p>{ev.roomID ? `Room: ${ev.roomID}` : null}</p>
                                                                 </div>
                                                             </div>

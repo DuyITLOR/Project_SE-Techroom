@@ -77,7 +77,8 @@ export const addLesson = async (req, res) => {
 
 export const addMultipleLessons = async (req, res) => {
   const lessons = req.body;
-  console.log(`Received lessons:`, lessons);
+  console.log(`Received lessons:`, lessons.classID);
+
   if (!lessons || !Array.isArray(lessons) || lessons.length === 0) {
     return res.status(400).send({
       success: false,
