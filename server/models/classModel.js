@@ -51,6 +51,14 @@ const Class = sequelize.define(
     timestamps: false, // KHÔNG dùng createdAt/updatedAt
   }
 );
+
+// Hook kiểm tra lần cuối trước khi lưu
+Class.beforeSave((instance, options) => {
+  if (instance.EndDate && instance.BeginDate && instance.EndDate < instance.BeginDate) {
+    throw new Error("EndDate must be after or equal to BeginDate");
+  }
+});
+
 //addClass(): Create a new class and then add it into the database
 Class.addClass = async function (
   classID,

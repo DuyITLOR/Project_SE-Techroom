@@ -19,93 +19,98 @@ export const getClassByRole = async (req, res) => {
 };
 
 export const addClass = async (req, res) => {
-  const {
-    classID,
-    className,
-    lessonsPerWeek,
-    classNumWeek,
-    beginDate,
-    endDate,
-    courseID,
-    studentIDs,
-    teacherIDs,
-  } = req.body;
+  try {
+    const {
+      classID,
+      className,
+      lessonsPerWeek,
+      classNumWeek,
+      beginDate,
+      endDate,
+      courseID,
+      studentIDs,
+      teacherIDs
+    } = req.body;
 
-  const userIDs = studentIDs.concat(teacherIDs);
+    const userIDs = studentIDs.concat(teacherIDs);
 
-  const requiredFields = { 
-    classID,
-    className,
-    lessonsPerWeek,
-    classNumWeek,
-    beginDate,
-    endDate,
-    courseID,
-    studentIDs,
-    teacherIDs
-  };
+    const requiredFields = { 
+      classID,
+      className,
+      lessonsPerWeek,
+      classNumWeek,
+      beginDate,
+      endDate,
+      courseID,
+      studentIDs,
+      teacherIDs
+    };
 
-  for (const [key, value] of Object.entries(requiredFields)) {
-      if (!value) {
-          return res.status(400).send({
-          success: false,
-          message: `${key} cannot be empty!`
-          });
-      }
-  }
+    for (const [key, value] of Object.entries(requiredFields)) {
+        if (!value) {
+            return res.status(400).send({
+              success: false,
+              message: `${key} cannot be empty!`
+            });
+        }
+    }
 
-  
+    const existingClass = await Class.findByPk(classID);
+    if (existingClass) {
+      return res.send({
+        msg: "Class already exists",
+      });
+    }
 
-  const existingClass = await Class.findByPk(classID);
-  if (existingClass) {
-    return res.send({
-      msg: "Class already exists",
+    const newClass = await Class.addClass(
+      classID,
+      className,
+      lessonsPerWeek,
+      classNumWeek,
+      beginDate,
+      endDate,
+      courseID
+    );
+
+    if (!Array.isArray(userIDs) || userIDs.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "userIDs should be an array or not null" });
+    }
+
+    // 1. Lấy danh sách user đã có trong lớp
+    const existing = await Participation.findAll({
+      where: { ClassID: classID },
+      attributes: ["UserName"],
     });
-  }
 
-  const newClass = await Class.addClass(
-    classID,
-    className,
-    lessonsPerWeek,
-    classNumWeek,
-    beginDate,
-    endDate,
-    courseID
-  );
+    const existingUserIds = existing.map((e) => e.UserName);
 
-  if (!Array.isArray(userIDs) || userIDs.length === 0) {
-    return res
-      .status(400)
-      .json({ message: "userIDs should be an array or not null" });
-  }
+    // 2. Lọc những user chưa có
+    const newUsers = userIDs.filter(
+      (userId) => !existingUserIds.includes(userId)
+    );
 
-  // 1. Lấy danh sách user đã có trong lớp
-  const existing = await Participation.findAll({
-    where: { ClassID: classID },
-    attributes: ["UserName"],
-  });
+    if (newUsers.length === 0) {
+      return res.status(200).json({
+        success: false,
+        message: "Every users are already in class",
+      });
+    }
 
-  const existingUserIds = existing.map((e) => e.UserName);
+    await Participation.addClassParticipation(newClass.ClassID, newUsers);
 
-  // 2. Lọc những user chưa có
-  const newUsers = userIDs.filter(
-    (userId) => !existingUserIds.includes(userId)
-  );
-
-  if (newUsers.length === 0) {
-    return res.status(200).json({
-      success: false,
-      message: "Every users are already in class",
+    return res.status(200).send({
+      success: true,
+      message: "New class added!",
+      newClass: newClass,
     });
+  } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: error.message
+      });
   }
-
-  await Participation.addClassParticipation(newClass.ClassID, newUsers);
-
-  return res.status(200).send({
-    success: true,
-    message: "New class added!",
-    newClass: newClass,
-  });
 };
 
 export const searchClass = async (req, res) => {
