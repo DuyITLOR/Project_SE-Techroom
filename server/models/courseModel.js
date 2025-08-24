@@ -101,7 +101,10 @@ Courses.updateCourse = async function (CourseID, courseName, courseNumber, sylla
 Courses.searchCourse = async function (courseID) {
     return await this.findAll({ 
         where: { 
-            CourseID: {[Op.like]: `%${courseID}%`},
+            [Op.or]: [
+                {CourseID: {[Op.like]: `%${courseID}%`}},
+                {CourseName: {[Op.like]: `%${courseID}%`}}
+            ]
         } 
     });
 }

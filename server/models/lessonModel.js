@@ -74,9 +74,9 @@ Lesson.getClassNotInTimetable = async function () {
     SELECT c.ClassID, c.ClassName, c.ClassNumWeek
     FROM Class c
     WHERE c.ClassID IN (SELECT DISTINCT p.ClassID
-                        FROM Participation p
-                        LEFT JOIN Lesson l ON p.ClassID = l.ClassID
-                        WHERE l.ClassID IS NULL)
+                      FROM Participation p
+                      LEFT JOIN Lesson l ON p.ClassID = l.ClassID
+                      WHERE l.ClassID IS NULL)
   
     `
   );

@@ -308,8 +308,8 @@ Class.searchClass = async function (classID) {
     `
         SELECT a.UserID, a.FullName, a.Role, c.*
         FROM Class c
-        JOIN Participation p ON c.ClassID = p.ClassID
-        JOIN Accounts a ON p.Username = a.UserID
+        LEFT JOIN Participation p ON c.ClassID = p.ClassID
+        LEFT JOIN Accounts a ON p.Username = a.UserID
         WHERE p.ClassID LIKE :classID
         `,
     {

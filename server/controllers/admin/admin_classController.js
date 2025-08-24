@@ -147,7 +147,7 @@ export const updateClass = async (req, res) => {
       endDate,
       courseID,
       studentIDs,
-      teacherIDs,
+      teacherIDs
     } = req.body;
 
     const requiredFields = { 
