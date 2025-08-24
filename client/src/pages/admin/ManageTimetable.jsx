@@ -296,21 +296,8 @@ const ManageTimetable = () => {
 
 
       <AddForm
-        fields={addFields}
         isOpen={isAddOpen}
         setIsOpen={setIsAddOpen}
-        onSubmit={handleAddSubmit}
-        buttonLabel="Add"
-        openMembers={true}
-      />
-
-      <AddForm
-        fields={addFields}
-        isOpen={isEditOpen}
-        setIsOpen={setIsEditOpen}
-        onSubmit={handleUpdateSubmit}
-        initialData={editData}
-        buttonLabel={"Save"}
       />
     </>
   );

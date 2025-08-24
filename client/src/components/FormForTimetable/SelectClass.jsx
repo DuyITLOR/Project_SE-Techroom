@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react'
 import { use } from 'react';
 
-const SelectClass = () => {
+const SelectClass = ({onSelectClass}) => {
   const [classes, setClasses, setStep] = useState([]);
 
 
@@ -28,6 +28,7 @@ const SelectClass = () => {
         {
             classes.map((cls,index) => (
                 <div key = {index}
+                    onClick={() => onSelectClass(cls)}
                     className='cursor-pointer rounded-2xl border bg-white p-4 shadow-sm hover:shadow-md transition-all'>
                     <h3 className='text-xl font-semibold text-gray-800'>
                         {cls.ClassID} - {cls.ClassName}
