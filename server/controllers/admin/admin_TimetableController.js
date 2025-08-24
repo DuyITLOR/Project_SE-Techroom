@@ -1,4 +1,4 @@
-import { Lesson } from '../../models/lessonServices.js';
+import { sequelize, Lesson } from '../../models/lessonServices.js';
 
 export const getAllLessonsForTimetable = async (req, res) => {
   const { weekStartDate } = req.query;
@@ -71,6 +71,48 @@ export const addLesson = async (req, res) => {
     return res.status(500).send({
       success: false,
       message: 'Error adding lesson.',
+    });
+  }
+};
+
+export const addMultipleLessons = async (req, res) => {
+  const lessons = req.body;
+  console.log(`Received lessons:`, lessons);
+  if (!lessons || !Array.isArray(lessons) || lessons.length === 0) {
+    return res.status(400).send({
+      success: false,
+      message: 'Lessons array cannot be empty!',
+    });
+  }
+
+  const transaction = await sequelize.transaction(); 
+  try {
+    for(let i = 0; i < lessons.length; i++) {
+      const { classID, date, sessionNumber, roomID } = lessons[i];
+
+      if (!classID || !date || !sessionNumber || !roomID) {
+        await transaction.rollback();
+        return res.status(400).send({
+          success: false,
+          message: `Lesson ${i + 1} has missing fields.`,
+        });
+      }
+
+      await Lesson.addLesson(classID, date, sessionNumber, roomID, transaction);
+    }
+
+    await transaction.commit();
+
+    return res.status(201).send({
+      success: true,
+      message: 'Multiple lessons added successfully',
+    });
+  } catch (error) {
+    await transaction.rollback();
+    console.log(`Error adding multiple lessons:`, error);
+    await res.status(500).send({
+      success: false,
+      message: 'Error adding multiple lessons.',
     });
   }
 };

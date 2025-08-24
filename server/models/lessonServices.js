@@ -1,7 +1,7 @@
 import db from './index.js';
 import { Op, QueryTypes } from 'sequelize';
 
-const { Lesson, Session, Rooms, Class, Accounts } = db;
+const { sequelize, Lesson, Session, Rooms, Class, Accounts } = db;
 
 Lesson.getAllLessonsForWeek = async function (weekStartDate) {
   const startDate = new Date(weekStartDate);
@@ -99,35 +99,36 @@ Lesson.getLessonDetails = async function (lessonID) {
   return lessonObj;
 };
 
-Lesson.addLesson = async function (classID, date, sessionNumber, roomID) {
+Lesson.addLesson = async function (classID, date, sessionNumber, roomID, transaction) {
   try {
-    const parentClass = await Class.findByPk(classID);
+    const parentClass = await Class.findByPk(classID, { transaction });
     if (!parentClass) {
       throw new Error(`Class with ID ${classID} does not exist.`);
     }
 
-    const parentRoom = await Rooms.findByPk(roomID);
+    const parentRoom = await Rooms.findByPk(roomID, { transaction });
     if (!parentRoom) {
       throw new Error(`Room with ID ${roomID} does not exist.`);
     }
 
-    const parentSession = await Session.findByPk(sessionNumber);
+    const parentSession = await Session.findByPk(sessionNumber, { transaction });
     if (!parentSession) {
       throw new Error(`Session with number ${sessionNumber} does not exist.`);
     }
 
-    const newLesson = await Lesson.create({
-      ClassID: classID,
-      Date: date,
-      SessionNumber: sessionNumber,
-      RoomID: roomID,
-    });
+    const newLesson = await Lesson.create(
+      {
+        ClassID: classID,
+        Date: date,
+        SessionNumber: sessionNumber,
+        RoomID: roomID,
+      },
+      { transaction }
+    );
 
-    const userInClass = await parentClass.getParticipatedUsers();
+    const userInClass = await parentClass.getParticipatedUsers({ transaction });
 
-    console.log(userInClass);
-
-    await newLesson.setUsersAttending(userInClass);
+    await newLesson.setUsersAttending(userInClass, { transaction });
 
     console.log(`Lesson added successfully with ID: ${newLesson.LessonID}`);
     return newLesson;
@@ -189,4 +190,4 @@ Lesson.updateLesson = async function (lessonID, updatedInfo) {
   }
 };
 
-export { Lesson };
+export { sequelize, Lesson };
