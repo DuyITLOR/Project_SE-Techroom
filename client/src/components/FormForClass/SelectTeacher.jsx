@@ -81,13 +81,13 @@ const SelectTeacher = ({ selectedTeacher, onSelectChange }) => {
                                         <div className='flex justify-between items-center'>
                                             <div>
                                                 <div className='font-medium'>{teacher.FullName}</div>
-                                                <div className='text-sm text-gray-500'>{teacher.FullName}</div>
+                                                <div className='text-sm text-gray-500'>{teacher.UserID}</div>
                                             </div>
 
                                             <div>
                                                 {selectedTeacher.includes(teacher.FullName) && (
                                                     <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                                                        <div className="w-2 h-2 bg-white border-2 rounde    d-full"></div>
+                                                        <div className="w-2 h-2 bg-white border-2 rounde d-full"></div>
                                                     </div>
                                                 )}
                                             </div>
