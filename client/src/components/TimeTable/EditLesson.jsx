@@ -34,7 +34,9 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
                         sessionNumber: formData.sessionNumber,
                     }
                 },)
-
+            console.log("Date: ", formData.date);
+            console.log("Session Number: ", formData.sessionNumber);
+            console.log("Available rooms response: ", res.data);
             setRoomAvailable(res.data.availableRooms || []);
         }
     }
@@ -52,6 +54,11 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
         
         console.log("Form data updated: ", formData);
     }, [isEditOpen])
+
+    useEffect(() => {
+        handleChange();
+
+    }, [formData.date, formData.sessionNumber])
 
 
 
@@ -94,7 +101,7 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
     return (
         isEditOpen && (
             <div className='fixed inset-0 z-[60]'>
-                <div className='absolute inset-0 bg-black/40'>
+                <div className='absolute inset-0 bg-black/40 overflow-auto'>
                     <div className='relative z-[61] mx-auto mt-16 w-[860px] max-w-[92vw] rounded-xl bg-white p-6 shadow-xl '>
                         <div className='flex justify-between'>
                             <h1 className='text-2xl'>Chỉnh sửa thông tin buổi học của lớp: {lesson.classID}</h1>
@@ -110,8 +117,12 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
                                     type="date"
                                     value={formData.date}
                                     onChange={(e) => {
-                                        setFormData({ ...formData, date: e.target.value })
-                                        handleChange()
+                                        // setFormData({ ...formData, date: e.target.value })
+                                        // handleChange()
+                                        const newDate = e.target.value;
+                                        const newFormData = { ...formData, date: newDate };
+                                        setFormData(newFormData);
+                                        // handleChange(newFormData);
                                     }}
                                     className='border rounded p-2 w-40'
                                 />
@@ -122,8 +133,12 @@ const EditLesson = ({ isEditOpen, setIsEditOpen, setIsOpen, lesson, listStudent,
                                 <select
                                     value={formData.sessionNumber}
                                     onChange={(e) => {
-                                        setFormData({ ...formData, sessionNumber: e.target.value })
-                                        handleChange()
+                                        // setFormData({ ...formData, sessionNumber: e.target.value })
+                                        // handleChange()
+                                        const newTime = e.target.value;
+                                        const newFormData = { ...formData, sessionNumber: newTime };
+                                        setFormData(newFormData);
+                                        // handleChange(newFormData);
                                     }}
                                     className='border rounded p-2 w-40'
                                 >
